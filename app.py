@@ -588,7 +588,7 @@ def render_lesson_one():
 
     with tabs[8]:
         st.subheader("Comprehensive Lesson 1 assessment")
-        st.write("10 questions · One point each · No hearts, lives, or failure lockout.")
+        st.write("20 questions · One point each · No hearts, lives, or failure lockout.")
         responses = []
         for i, (question, options, answer, explanation) in enumerate(LESSON_1["assessment"]):
             selected = st.radio(question, options, index=None, key=f"l1_assess_{i}")
@@ -596,7 +596,7 @@ def render_lesson_one():
         if st.button("Submit Lesson 1 assessment", type="primary", key="l1_submit_assessment"):
             unanswered = sum(1 for selected, _, _, _ in responses if selected is None)
             if unanswered:
-                st.warning(f"Please answer all 10 questions. Remaining: {unanswered}.")
+                st.warning(f"Please answer all 20 questions. Remaining: {unanswered}.")
             else:
                 score = sum(1 for selected, options, answer, _ in responses if options.index(selected) == answer)
                 st.session_state.l1_assessment_score = score
@@ -618,7 +618,7 @@ def render_lesson_one():
                     st.caption(f"Correct answer: {options[answer]}. {explanation}")
             if st.button("Retake assessment", key="l1_retake"):
                 st.session_state.l1_assessment_submitted = False
-                for i in range(10):
+                for i in range(len(LESSON_1["assessment"])):
                     st.session_state.pop(f"l1_assess_{i}", None)
                 st.rerun()
 
