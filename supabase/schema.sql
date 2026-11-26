@@ -99,14 +99,13 @@ create table if not exists public.exercises (
     check (exercise_type in ('multiple_choice', 'translation', 'fill_blank', 'matching', 'ordering', 'true_false', 'short_answer')),
   prompt text not null,
   options jsonb not null default '[]'::jsonb,
-  answer_key jsonb not null default '{}'::jsonb,
   explanation text not null default '',
   sort_order integer not null,
   created_at timestamptz not null default now(),
   unique (lesson_id, sort_order)
 );
 
--- Learner-specific progress and XP.
+-- Correct answers are stored separately so ordinary authenticated clients cannot read them.\ncreate table if not exists public.exercise_answer_keys (\n  exercise_id uuid primary key references public.exercises(id) on delete cascade,\n  answer_key jsonb not null default '{}'::jsonb,\n  updated_at timestamptz not null default now()\n);\n\n-- Learner-specific progress and XP.
 create table if not exists public.user_lesson_progress (
   user_id uuid not null references auth.users(id) on delete cascade,
   lesson_id uuid not null references public.lessons(id) on delete cascade,
@@ -196,7 +195,7 @@ alter table public.units enable row level security;
 alter table public.lessons enable row level security;
 alter table public.vocabulary enable row level security;
 alter table public.lesson_vocabulary enable row level security;
-alter table public.exercises enable row level security;
+alter table public.exercises enable row level security;\nalter table public.exercise_answer_keys enable row level security;
 alter table public.user_lesson_progress enable row level security;
 alter table public.user_vocabulary enable row level security;
 alter table public.user_stats enable row level security;
