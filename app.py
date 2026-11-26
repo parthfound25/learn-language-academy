@@ -7,76 +7,39 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- Supabase connection and learner authentication ---
-from supabase import create_client
+# --- Secrets-based username and password authentication ---
+import hmac
 
-def get_supabase_client():
-    try:
-        url = st.secrets['SUPABASE_URL']
-        anon_key = st.secrets['SUPABASE_ANON_KEY']
-    except Exception:
-        return None
-    client = create_client(url, anon_key)
-    access_token = st.session_state.get('supabase_access_token')
-    refresh_token = st.session_state.get('supabase_refresh_token')
-    if access_token and refresh_token:
-        try:
-            client.auth.set_session(access_token, refresh_token)
-        except Exception:
-            for key in ('supabase_access_token', 'supabase_refresh_token', 'supabase_user'):
-                st.session_state.pop(key, None)
-    return client
+try:
+    configured_users = dict(st.secrets["users"])
+except Exception:
+    configured_users = {}
 
-supabase = get_supabase_client()
-if supabase is None:
-    st.title('🍀 Learn Language Academy by Parth')
-    st.warning('Supabase connection details are not configured yet.')
-    st.markdown('Add SUPABASE_URL and SUPABASE_ANON_KEY to Streamlit Secrets using the Project URL and publishable/anon key from Supabase Project Settings → API Keys. Never use a service-role or secret key, and never commit keys to GitHub.')
-    st.code('SUPABASE_URL = "https://YOUR_PROJECT.supabase.co"\nSUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_OR_PUBLISHABLE_KEY"', language='toml')
+if not configured_users:
+    st.title("🍀 Learn Language Academy by Parth")
+    st.error("No learner accounts are configured.")
+    st.markdown("Add usernames and passwords in Streamlit → App settings → Secrets:")
+    st.code('[users]\n"Parth Sharma" = "CHOOSE_A_NEW_PASSWORD"\n"Another User" = "CHOOSE_ANOTHER_PASSWORD"', language="toml")
     st.stop()
 
-if not st.session_state.get('supabase_user'):
-    st.title('🍀 Learn Language Academy by Parth')
-    st.caption('Your personal French-learning journey starts here.')
-    login_tab, signup_tab = st.tabs(['Sign in', 'Create account'])
-    with login_tab:
-        with st.form('sign_in_form'):
-            login_email = st.text_input('Email address')
-            login_password = st.text_input('Password', type='password')
-            login_submit = st.form_submit_button('Sign in', type='primary', use_container_width=True)
-        if login_submit:
-            try:
-                result = supabase.auth.sign_in_with_password({'email': login_email.strip(), 'password': login_password})
-                if result.session and result.user:
-                    st.session_state.supabase_access_token = result.session.access_token
-                    st.session_state.supabase_refresh_token = result.session.refresh_token
-                    st.session_state.supabase_user = {'id': result.user.id, 'email': result.user.email}
-                    st.rerun()
-                else:
-                    st.error('Sign-in did not return a session. Please try again.')
-            except Exception as exc:
-                st.error(f'Sign-in failed: {exc}')
-    with signup_tab:
-        with st.form('sign_up_form'):
-            display_name = st.text_input('Your name')
-            signup_email = st.text_input('Email address')
-            signup_password = st.text_input('Create a password', type='password')
-            signup_submit = st.form_submit_button('Create account', type='primary', use_container_width=True)
-        if signup_submit:
-            if not display_name.strip() or not signup_email.strip() or len(signup_password) < 8:
-                st.error('Enter your name and email, and use a password with at least 8 characters.')
-            else:
-                try:
-                    result = supabase.auth.sign_up({'email': signup_email.strip(), 'password': signup_password, 'options': {'data': {'display_name': display_name.strip()}}})
-                    if result.session and result.user:
-                        st.session_state.supabase_access_token = result.session.access_token
-                        st.session_state.supabase_refresh_token = result.session.refresh_token
-                        st.session_state.supabase_user = {'id': result.user.id, 'email': result.user.email}
-                        st.rerun()
-                    else:
-                        st.success('Account created. Check your email to confirm your address, then sign in.')
-                except Exception as exc:
-                    st.error(f'Account creation failed: {exc}')
+if not st.session_state.get("active_user"):
+    st.title("🍀 Learn Language Academy by Parth")
+    st.caption("Your personal language-learning journey starts here.")
+    with st.form("username_login_form"):
+        login_username = st.text_input("Username")
+        login_password = st.text_input("Password", type="password")
+        login_submit = st.form_submit_button("Sign in", type="primary", use_container_width=True)
+    if login_submit:
+        expected_password = configured_users.get(login_username.strip())
+        if expected_password is not None and hmac.compare_digest(str(expected_password), login_password):
+            username = login_username.strip()
+            st.session_state.active_user = username
+            st.session_state.xp = st.session_state.get(f"learner_{username}_xp", 0)
+            st.session_state.completed = st.session_state.get(f"learner_{username}_completed", [])
+            st.session_state.active_lesson = st.session_state.get(f"learner_{username}_active_lesson", 1)
+            st.rerun()
+        else:
+            st.error("Incorrect username or password.")
     st.stop()
 
 # --- Theme ---
@@ -138,13 +101,14 @@ if "active_lesson" not in st.session_state:
 # --- Sidebar ---
 with st.sidebar:
     st.markdown('## 🍀 Learn Language')
-    st.caption(f"Signed in: {st.session_state.supabase_user.get('email', '')}")
+    st.caption(f"Signed in: {st.session_state.active_user}")
     if st.button('Sign out', use_container_width=True):
-        try:
-            supabase.auth.sign_out()
-        except Exception:
-            pass
-        for key in ('supabase_access_token', 'supabase_refresh_token', 'supabase_user'):
+        username = st.session_state.active_user
+        st.session_state[f"learner_{username}_xp"] = st.session_state.get("xp", 0)
+        st.session_state[f"learner_{username}_completed"] = st.session_state.get("completed", [])
+        st.session_state[f"learner_{username}_active_lesson"] = st.session_state.get("active_lesson", 1)
+        st.session_state.pop("active_user", None)
+        for key in ("xp", "completed", "active_lesson", "page_lesson"):
             st.session_state.pop(key, None)
         st.rerun()
     st.caption("ACADEMY BY PARTH")
@@ -244,10 +208,10 @@ elif page == "Achievements":
 
 elif page == "Settings":
     header("YOUR ACCOUNT", "Settings", "Personalise your learning experience.")
-    st.text_input("Display name", value="Parth", disabled=True)
+    st.text_input("Username", value=st.session_state.active_user, disabled=True)
     st.text_input("Native language", value="English", disabled=True)
     st.text_input("Learning language", value="French", disabled=True)
-    st.caption("Account sign-in and editable preferences will be connected to Supabase in the next stage.")
+    st.caption("Your account is managed through the usernames configured in Streamlit Secrets.")
 
 # Lesson view is opened from the Home page.
 if st.session_state.get("active_lesson") and st.session_state.get("page_lesson"):
@@ -265,3 +229,11 @@ if st.session_state.get("active_lesson") and st.session_state.get("page_lesson")
             st.session_state.page_lesson = False
             st.success(f"Lesson completed! +{lesson['xp']} XP")
             st.rerun()
+
+
+# Save this learner's progress separately within the current Streamlit session.
+if st.session_state.get("active_user"):
+    current_username = st.session_state.active_user
+    st.session_state[f"learner_{current_username}_xp"] = st.session_state.get("xp", 0)
+    st.session_state[f"learner_{current_username}_completed"] = st.session_state.get("completed", [])
+    st.session_state[f"learner_{current_username}_active_lesson"] = st.session_state.get("active_lesson", 1)
