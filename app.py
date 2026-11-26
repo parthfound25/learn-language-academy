@@ -124,10 +124,6 @@ if page == "Home":
                 st.button("Start", key=f"start_{lesson['id']}", type="primary", on_click=start_lesson, args=(lesson["id"],))
             else:
                 st.button("Locked", key=f"locked_{lesson['id']}", disabled=True)
-    if st.session_state.get("page_lesson"):
-        st.session_state.page_lesson = False
-        st.rerun()
-
 elif page == "Learning Path":
     header("YOUR COURSE", "French · A1 Beginner", "Your course is organised into levels, units, lessons and checkpoints.")
     st.info("The complete A1–C2 curriculum will be added in the curriculum build stage. This is the first starter unit.")
