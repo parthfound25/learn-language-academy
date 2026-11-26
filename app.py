@@ -327,7 +327,7 @@ with st.sidebar:
             st.session_state.pop(key, None)
         st.rerun()
     st.markdown("---")
-    page_options = ["Home", "Learning Path", "Vocabulary", "Practice", "Achievements", "Settings"]
+    page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
     selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
     if selected_page != st.session_state.page:
         st.session_state.page = selected_page
