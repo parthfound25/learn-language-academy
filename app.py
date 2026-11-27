@@ -1,4 +1,5 @@
 import hmac
+from datetime import datetime, timezone
 import random
 import streamlit as st
 from a1_lessons import A1_LESSONS
@@ -9,6 +10,11 @@ from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
 from angolan_portuguese_lessons import PORTUGUESE_LESSONS
+from activity_tracking import (
+    end_session, get_admin_activity_data, heartbeat_session,
+    latest_language_for_user, load_progress_snapshot, log_activity_event,
+    save_progress_snapshot, start_session, tracking_available,
+)
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -43,6 +49,16 @@ def load_language_progress(username, language):
             value = default
         st.session_state[field] = list(value) if isinstance(value, list) else value
     st.session_state.selected_language = language
+    # Restore durable progress when this learner returns in a new browser session.
+    snapshot = load_progress_snapshot(username, language)
+    if snapshot:
+        st.session_state.xp = int(snapshot.get("xp", 0))
+        st.session_state.completed = list(snapshot.get("completed_lessons") or [])
+        st.session_state.active_lesson = int(snapshot.get("active_lesson", 1))
+        st.session_state.practice_rounds = int(snapshot.get("practice_rounds", 0))
+        st.session_state.practice_correct = int(snapshot.get("practice_correct", 0))
+        st.session_state.practice_total = int(snapshot.get("practice_total", 0))
+        st.session_state.earned_achievements = list(snapshot.get("achievements") or [])
 
 def clear_transient_learning_state():
     """Clear per-browser lesson and practice widget state between learners."""
@@ -82,7 +98,9 @@ if not st.session_state.get("active_user"):
         if expected_password is not None and hmac.compare_digest(str(expected_password), login_password):
             username = login_username.strip()
             st.session_state.active_user = username
-            preferred_language = st.session_state.get(f"learner_{username}_selected_language", "")
+            preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
+            if not preferred_language and username.casefold() == "parth sharma":
+                preferred_language = "Canadian French"
             st.session_state.selected_language = preferred_language
             if preferred_language:
                 load_language_progress(username, preferred_language)
@@ -96,6 +114,26 @@ if not st.session_state.get("active_user"):
         else:
             st.error("Incorrect username or password.")
     st.stop()
+
+# Record a durable login and keep a lightweight heartbeat while the learner is
+# using the app. The heartbeat runs every minute even during reading time.
+if not st.session_state.get("activity_session_initialized"):
+    session_info = start_session(st.session_state.active_user)
+    st.session_state.activity_session_id = session_info.get("session_id") if session_info else None
+    st.session_state.activity_session_started_at = session_info.get("started_at") if session_info else None
+    st.session_state.activity_session_initialized = True
+
+
+@st.fragment(run_every="60s")
+def _learner_activity_heartbeat():
+    session_id = st.session_state.get("activity_session_id")
+    started_at = st.session_state.get("activity_session_started_at")
+    if session_id and started_at:
+        heartbeat_session(session_id, started_at)
+
+
+_learner_activity_heartbeat()
+
 
 # ---------------------------------------------------------------------
 # Course roadmap: preserve original lesson IDs while presenting the integrated 107-lesson sequence.
@@ -626,6 +664,13 @@ def mark_lesson_complete(lesson_id):
     if lesson_id not in st.session_state.completed:
         st.session_state.completed.append(lesson_id)
         st.session_state.xp += 25
+        log_activity_event(
+            st.session_state.active_user,
+            st.session_state.get("selected_language", ""),
+            "lesson_completed",
+            lesson_id=lesson_id,
+            metadata={"xp_earned": 25},
+        )
         refresh_achievements()
 
 # Reconcile milestones for returning users.
@@ -657,16 +702,19 @@ with st.sidebar:
     st.caption(f"Signed in: {st.session_state.active_user}")
     if st.button("Sign out", use_container_width=True):
         username = st.session_state.active_user
+        end_session(st.session_state.get("activity_session_id"), st.session_state.get("activity_session_started_at"))
         save_language_progress(username)
         for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
         clear_transient_learning_state()
         st.session_state.pop("active_user", None)
-        for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
+        for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language", "activity_session_id", "activity_session_started_at", "activity_session_initialized"):
             st.session_state.pop(key, None)
         st.rerun()
     st.markdown("---")
     page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
+    if st.session_state.active_user.casefold() == "parth sharma":
+        page_options.append("Admin Dashboard")
     selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
     if selected_page != st.session_state.page:
         # Streamlit reruns automatically when the radio value changes. Update
@@ -846,7 +894,102 @@ def render_unified_lesson(lesson_id):
 # ---------------------------------------------------------------------
 page = st.session_state.page
 
-if page == "Home":
+if page == "Admin Dashboard":
+    page_header("ADMINISTRATION", "Learner activity dashboard", "Private overview for Parth Sharma. Learners can only see their own learning space.")
+    if st.session_state.active_user.casefold() != "parth sharma":
+        st.error("You do not have permission to view this page.")
+    elif not tracking_available():
+        st.warning("Durable activity tracking is not configured yet.")
+        st.markdown("1. Run `supabase/activity_tracking.sql` in your Supabase SQL Editor.")
+        st.markdown("2. Add the server-side service-role credentials to Streamlit Secrets:")
+        st.code('[supabase]\nurl = "https://YOUR_PROJECT.supabase.co"\nservice_role_key = "YOUR_SERVICE_ROLE_KEY"', language="toml")
+        st.caption("Never commit the service-role key to GitHub or expose it in browser code.")
+        st.info("Tracking begins after setup. Existing session-only history cannot be reconstructed retroactively.")
+    else:
+        data = get_admin_activity_data()
+        if data is None:
+            st.error("Could not load learner activity data. Check the Supabase migration and Streamlit Secrets.")
+        else:
+            learner_names = sorted(name for name in configured_users if name.casefold() != "parth sharma")
+            learner_set = set(learner_names)
+            progress_rows = [row for row in data["progress"] if row.get("username") in learner_set]
+            session_rows = [row for row in data["sessions"] if row.get("username") in learner_set]
+            event_rows = [row for row in data["events"] if row.get("username") in learner_set]
+            learner_summaries = []
+            for learner in learner_names:
+                learner_progress = [row for row in progress_rows if row.get("username") == learner]
+                learner_sessions = [row for row in session_rows if row.get("username") == learner]
+                xp = sum(int(row.get("xp", 0)) for row in learner_progress)
+                lessons = sum(len(row.get("completed_lessons") or []) for row in learner_progress)
+                rounds = sum(int(row.get("practice_rounds", 0)) for row in learner_progress)
+                correct = sum(int(row.get("practice_correct", 0)) for row in learner_progress)
+                total = sum(int(row.get("practice_total", 0)) for row in learner_progress)
+                duration = sum(int(row.get("duration_seconds", 0)) for row in learner_sessions)
+                latest = learner_sessions[0] if learner_sessions else None
+                status = "No activity yet"
+                if latest:
+                    try:
+                        seen = datetime.fromisoformat(latest["last_seen_at"].replace("Z", "+00:00"))
+                        active = latest.get("status") == "active" and (datetime.now(timezone.utc) - seen).total_seconds() <= 180
+                        status = "Active" if active else "Inactive"
+                    except Exception:
+                        status = "Inactive"
+                learner_summaries.append({
+                    "Learner": learner, "Status": status,
+                    "Last seen": latest.get("last_seen_at", "") if latest else "—",
+                    "Lessons cleared": lessons, "XP": xp, "Practice rounds": rounds,
+                    "Accuracy": f"{100 * correct / total:.1f}%" if total else "—",
+                    "Time spent": f"{duration // 3600}h {(duration % 3600) // 60}m",
+                })
+            active_count = sum(row["Status"] == "Active" for row in learner_summaries)
+            total_seconds = sum(int(row.get("duration_seconds", 0)) for row in session_rows)
+            total_lessons = sum(len(row.get("completed_lessons") or []) for row in progress_rows)
+            total_xp = sum(int(row.get("xp", 0)) for row in progress_rows)
+            total_rounds = sum(int(row.get("practice_rounds", 0)) for row in progress_rows)
+            total_correct = sum(int(row.get("practice_correct", 0)) for row in progress_rows)
+            total_answers = sum(int(row.get("practice_total", 0)) for row in progress_rows)
+            k1, k2, k3, k4, k5 = st.columns(5)
+            k1.metric("Learner accounts", len(learner_names))
+            k2.metric("Currently active", active_count)
+            k3.metric("Lessons cleared", total_lessons)
+            k4.metric("Total XP", total_xp)
+            k5.metric("Practice accuracy", f"{100 * total_correct / total_answers:.1f}%" if total_answers else "—")
+            st.metric("Total recorded learning time", f"{total_seconds // 3600}h {(total_seconds % 3600) // 60}m", f"{total_rounds} practice rounds")
+            st.subheader("All learners")
+            st.dataframe(learner_summaries, use_container_width=True, hide_index=True)
+            if learner_names:
+                selected_learner = st.selectbox("View individual learner", learner_names)
+                selected_progress = [row for row in progress_rows if row.get("username") == selected_learner]
+                selected_sessions = [row for row in session_rows if row.get("username") == selected_learner]
+                selected_events = [row for row in event_rows if row.get("username") == selected_learner]
+                st.subheader(f"{selected_learner} · Course progress")
+                st.dataframe([{
+                    "Language": row.get("language", ""),
+                    "Lessons cleared": len(row.get("completed_lessons") or []),
+                    "Completed lesson IDs": ", ".join(str(value) for value in (row.get("completed_lessons") or [])),
+                    "XP": row.get("xp", 0), "Practice rounds": row.get("practice_rounds", 0),
+                    "Correct answers": row.get("practice_correct", 0), "Questions answered": row.get("practice_total", 0),
+                    "Accuracy": f"{100 * int(row.get('practice_correct', 0)) / int(row.get('practice_total', 1)):.1f}%" if int(row.get("practice_total", 0)) else "—",
+                    "Last updated": row.get("updated_at", ""),
+                } for row in selected_progress], use_container_width=True, hide_index=True)
+                st.subheader("Login and logout history")
+                st.dataframe([{
+                    "Login": row.get("login_at", ""),
+                    "Logout": row.get("logout_at") or ("Session still active" if row.get("status") == "active" else "Not recorded"),
+                    "Duration (minutes)": round(int(row.get("duration_seconds", 0)) / 60, 1),
+                    "Last heartbeat": row.get("last_seen_at", ""),
+                    "Status": "Timed out" if row.get("status") == "timed_out" else row.get("status", ""),
+                } for row in selected_sessions], use_container_width=True, hide_index=True)
+                st.subheader("Recent learning activity")
+                st.dataframe([{
+                    "Time": row.get("created_at", ""), "Activity": row.get("event_type", ""),
+                    "Language": row.get("language", ""), "Lesson ID": row.get("lesson_id") or "—",
+                    "Details": str(row.get("metadata") or {}),
+                } for row in selected_events[:100]], use_container_width=True, hide_index=True)
+            else:
+                st.info("No learner accounts are configured yet. Add usernames and passwords under [users] in Streamlit Secrets.")
+
+elif page == "Home":
     username = st.session_state.active_user
     greeting = "Olá" if st.session_state.selected_language == "Angolan Portuguese" else "Bonjour"
     flag = "🇦🇴" if st.session_state.selected_language == "Angolan Portuguese" else "🇨🇦"
@@ -1525,6 +1668,13 @@ elif page == "Practice":
                 st.session_state.practice_correct += score
                 st.session_state.practice_total += 10
                 st.session_state.xp += 15
+                log_activity_event(
+                    st.session_state.active_user,
+                    st.session_state.get("selected_language", ""),
+                    "practice_round_completed",
+                    lesson_id=selected_id,
+                    metadata={"score": score, "total": 10, "accuracy_percent": score * 10, "xp_earned": 15},
+                )
                 st.session_state.practice_submitted = True
                 refresh_achievements()
                 st.rerun()
@@ -1610,4 +1760,15 @@ elif page == "Settings":
 if st.session_state.get("active_user"):
     current_username = st.session_state.active_user
     save_language_progress(current_username)
-    st.session_state[f"learner_{current_username}_selected_language"] = st.session_state.get("selected_language", "")
+    current_language = st.session_state.get("selected_language", "")
+    st.session_state[f"learner_{current_username}_selected_language"] = current_language
+    if current_language:
+        save_progress_snapshot(current_username, current_language, {
+            "xp": st.session_state.get("xp", 0),
+            "completed": st.session_state.get("completed", []),
+            "active_lesson": st.session_state.get("active_lesson", 1),
+            "practice_rounds": st.session_state.get("practice_rounds", 0),
+            "practice_correct": st.session_state.get("practice_correct", 0),
+            "practice_total": st.session_state.get("practice_total", 0),
+            "earned_achievements": st.session_state.get("earned_achievements", []),
+        })
