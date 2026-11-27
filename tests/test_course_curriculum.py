@@ -99,10 +99,16 @@ class CourseCurriculumTests(unittest.TestCase):
             all_lessons.update(bank)
         all_lessons.update(EXTENSION_LESSONS)
         for lesson_id, lesson in all_lessons.items():
-            exercise_prompts = {question[0] for question in lesson["exercises"]}
-            assessment_prompts = {question[0] for question in lesson["assessment"]}
+            exercise_items = {
+                (question, tuple(options), answer)
+                for question, options, answer, _ in lesson["exercises"]
+            }
+            assessment_items = {
+                (question, tuple(options), answer)
+                for question, options, answer, _ in lesson["assessment"]
+            }
             with self.subTest(lesson_id=lesson_id):
-                self.assertFalse(exercise_prompts.intersection(assessment_prompts))
+                self.assertFalse(exercise_items.intersection(assessment_items))
 
     def test_all_assessments_do_not_repeat_questions(self):
         all_lessons = {}
