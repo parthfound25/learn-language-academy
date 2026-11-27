@@ -532,9 +532,9 @@ for key, default in (("practice_rounds", 0), ("practice_correct", 0), ("practice
 LANGUAGES = {
     "Canadian French": {"flag": "🇨🇦", "status": "available"},
     "Angolan Portuguese": {"flag": "🇦🇴", "status": "coming soon"},
+    "IELTS": {"flag": "🇬🇧", "status": "coming soon"},
     "Gujarati": {"flag": "🇮🇳", "status": "coming soon"},
     "Hindi": {"flag": "🇮🇳", "status": "coming soon"},
-    "English": {"flag": "🇬🇧", "status": "coming soon"},
 }
 ACHIEVEMENTS = [
     ("first_lesson", "🌱", "First steps", "Complete your first lesson", lambda: len(st.session_state.completed) >= 1),
