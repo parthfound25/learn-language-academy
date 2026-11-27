@@ -296,7 +296,7 @@ def _build(lesson_id, spec):
         "conversations": spec["conversations"],
         "pronunciation": spec["pronunciation"],
         "exercises": exercises,
-        "assessment": exercises + exercises[:2],
+        "assessment": exercises,
         "speaking": spec["speaking"],
         "summary": spec["summary"],
         "homework": spec["homework"],
