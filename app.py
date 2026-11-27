@@ -931,7 +931,7 @@ elif page == "Vocabulary":
         for lesson_id, lesson in PORTUGUESE_LESSONS.items():
             if lesson_is_unlocked(lesson_id) or lesson_id in st.session_state.completed:
                 for word, meaning, hint, ipa, example in lesson["vocabulary"]:
-                    portuguese_entries.append((word, meaning, hint, example, lesson["title"]))
+                    portuguese_entries.append((word, meaning, hint, example, display_lesson_title(ALL_LESSONS[COURSE_INDEX[lesson_id]])))
         filtered_entries = [entry for entry in portuguese_entries if not search_word or search_word.casefold() in " ".join(entry).casefold()]
         st.caption(f"{len(filtered_entries)} vocabulary entries available from your unlocked chapters.")
         for word, meaning, hint, example, source_lesson in filtered_entries:
