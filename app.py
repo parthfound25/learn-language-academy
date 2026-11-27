@@ -669,8 +669,9 @@ with st.sidebar:
     page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
     selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
     if selected_page != st.session_state.page:
+        # Streamlit reruns automatically when the radio value changes. Update
+        # the route in that same run instead of forcing a second full rerun.
         st.session_state.page = selected_page
-        st.rerun()
     st.markdown("---")
     st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
     st.progress(min(len(set(st.session_state.completed).intersection(COURSE_INDEX)) / COURSE_TOTAL, 1.0))
