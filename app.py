@@ -911,7 +911,10 @@ if page == "Admin Dashboard":
             st.error("Could not load learner activity data. Check the Supabase migration and Streamlit Secrets.")
         else:
             learner_names = sorted(name for name in configured_users if name.casefold() != "parth sharma")
-            progress_rows, session_rows, event_rows = data["progress"], data["sessions"], data["events"]
+            learner_set = set(learner_names)
+            progress_rows = [row for row in data["progress"] if row.get("username") in learner_set]
+            session_rows = [row for row in data["sessions"] if row.get("username") in learner_set]
+            event_rows = [row for row in data["events"] if row.get("username") in learner_set]
             learner_summaries = []
             for learner in learner_names:
                 learner_progress = [row for row in progress_rows if row.get("username") == learner]
@@ -972,9 +975,10 @@ if page == "Admin Dashboard":
                 st.subheader("Login and logout history")
                 st.dataframe([{
                     "Login": row.get("login_at", ""),
-                    "Logout": row.get("logout_at") or ("Still active / awaiting timeout" if row.get("status") == "active" else "Not recorded"),
+                    "Logout": row.get("logout_at") or ("Session still active" if row.get("status") == "active" else "Not recorded"),
                     "Duration (minutes)": round(int(row.get("duration_seconds", 0)) / 60, 1),
-                    "Last heartbeat": row.get("last_seen_at", ""), "Status": row.get("status", ""),
+                    "Last heartbeat": row.get("last_seen_at", ""),
+                    "Status": "Timed out" if row.get("status") == "timed_out" else row.get("status", ""),
                 } for row in selected_sessions], use_container_width=True, hide_index=True)
                 st.subheader("Recent learning activity")
                 st.dataframe([{
