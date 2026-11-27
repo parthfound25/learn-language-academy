@@ -854,9 +854,14 @@ if page == "Home":
         next_lesson = next((x for x in ALL_LESSONS if x["id"] not in st.session_state.completed), None)
         if next_lesson:
             st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
-            st.info("The course content is being added progressively. Lesson 1 is currently available in full.")
-            if next_lesson["id"] == 2:
-                st.button("Open Lesson 2", disabled=True, help="Lesson 2 content will be added in the next curriculum update.")
+            if next_lesson["id"] == 1 or next_lesson["id"] in A1_LESSONS:
+                st.success("This lesson is ready. Continue your A1 journey!")
+                if st.button(f"Open Lesson {next_lesson['id']}", type="primary", key="home_open_next_lesson"):
+                    st.session_state.active_lesson = next_lesson["id"]
+                    st.session_state.page = "Lesson"
+                    st.rerun()
+            else:
+                st.info("This lesson is on the course roadmap. Its full content will be added in a later course update.")
         else:
             st.success("You have completed all 90 lessons!")
 
@@ -1476,7 +1481,7 @@ elif page == "Settings":
                 for key, value in reset_values.items():
                     st.session_state[key] = value
                 for key in list(st.session_state.keys()):
-                    if key.startswith(("l1_", "practice_round_")) or key in (
+                    if key.startswith(("l1_", "a1_l", "practice_round_")) or key in (
                         "practice_questions", "practice_submitted",
                         "practice_round_score", "practice_lesson_active",
                         "practice_lesson_select", "progress_reset_confirmation_open",
