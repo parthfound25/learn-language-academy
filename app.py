@@ -688,6 +688,13 @@ refresh_achievements()
 # Sidebar
 is_admin_user = st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold()
 
+
+def sync_navigation_page():
+    """Apply a sidebar navigation selection before the app reruns."""
+    selected = st.session_state.get("main_navigation")
+    if selected:
+        st.session_state.page = selected
+
 # A learner may have no saved language yet (or a legacy/invalid preference).
 # Ask them to choose an available course before rendering language-dependent UI.
 if not is_admin_user and st.session_state.get("selected_language") not in {
@@ -726,10 +733,15 @@ with st.sidebar:
         st.radio("ADMINISTRATION", ["Admin Dashboard"], index=0, key="admin_only_navigation", disabled=True)
     else:
         page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
-        selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
-        if selected_page != st.session_state.page:
-            # Streamlit reruns automatically when the radio value changes.
-            st.session_state.page = selected_page
+        # Keep the widget's value aligned when a page is changed by an in-page button.
+        if st.session_state.get("main_navigation") != st.session_state.page:
+            st.session_state.main_navigation = st.session_state.page if st.session_state.page in page_options else "Home"
+        st.radio(
+            "YOUR LEARNING SPACE",
+            page_options,
+            key="main_navigation",
+            on_change=sync_navigation_page,
+        )
         st.markdown("---")
         st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
         st.progress(min(len(set(st.session_state.completed).intersection(COURSE_INDEX)) / COURSE_TOTAL, 1.0))
