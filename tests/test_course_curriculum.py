@@ -133,6 +133,24 @@ class CourseCurriculumTests(unittest.TestCase):
             self.assertEqual(len(example_openers), len(set(example_openers)))
             self.assertEqual(len(conversation_titles), len(set(conversation_titles)))
 
+    def test_every_lesson_has_enough_unique_questions_for_practice(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            prompts = {
+                question[0]
+                for question in lesson["exercises"] + lesson["assessment"]
+            }
+            with self.subTest(lesson_id=lesson_id):
+                self.assertGreaterEqual(len(prompts), 10)
+
+    def test_app_clears_shared_widget_state_between_learners(self):
+        app_source = (pathlib.Path(__file__).resolve().parents[1] / "app.py").read_text()
+        self.assertIn('key.startswith(("unified_l", "practice_round_"))', app_source)
+        self.assertGreaterEqual(app_source.count("clear_transient_learning_state()"), 4)
+
     def test_app_is_valid_python_and_contains_the_sequence_integration(self):
         app_path = pathlib.Path(__file__).resolve().parents[1] / "app.py"
         source = app_path.read_text(encoding="utf-8")
