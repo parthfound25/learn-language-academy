@@ -81,6 +81,15 @@ class AngolanPortugueseCurriculumTests(unittest.TestCase):
                         self.assertLess(answer, len(options))
                         self.assertTrue(explanation.strip())
 
+    def test_first_chapter_teaches_portuguese_alphabet_and_pronunciation(self):
+        lesson = PORTUGUESE_LESSONS[1]
+        grammar_titles = " ".join(title for title, _ in lesson["grammar"]).lower()
+        self.assertIn("alphabet", grammar_titles)
+        self.assertIn("nasal", grammar_titles)
+        self.assertIn("accent", grammar_titles)
+        self.assertIn("filho", " ".join(example[0] for example in lesson["examples"]).lower())
+        self.assertIn("nh", " ".join(q[0] for q in lesson["exercises"]).lower())
+
     def test_angolan_context_and_regional_pronunciation_are_explicit(self):
         funge = [entry for lesson in PORTUGUESE_LESSONS.values() for entry in lesson["vocabulary"] if entry[0] == "o funge"]
         candongueiro = [entry for lesson in PORTUGUESE_LESSONS.values() for entry in lesson["vocabulary"] if entry[0] == "o candongueiro"]
