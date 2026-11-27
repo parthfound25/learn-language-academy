@@ -17,6 +17,33 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+def language_progress_prefix(username, language):
+    slug = "angolan_portuguese" if language == "Angolan Portuguese" else "canadian_french"
+    return f"learner_{username}_{slug}_"
+
+def save_language_progress(username, language=None):
+    language = language or st.session_state.get("selected_language", "")
+    if not language:
+        return
+    prefix = language_progress_prefix(username, language)
+    defaults = {"xp": 0, "completed": [], "active_lesson": 1, "practice_rounds": 0, "practice_correct": 0, "practice_total": 0, "earned_achievements": []}
+    for field, default in defaults.items():
+        value = st.session_state.get(field, default)
+        st.session_state[prefix + field] = list(value) if isinstance(value, list) else value
+
+def load_language_progress(username, language):
+    prefix = language_progress_prefix(username, language)
+    legacy = f"learner_{username}_"
+    defaults = {"xp": 0, "completed": [], "active_lesson": 1, "practice_rounds": 0, "practice_correct": 0, "practice_total": 0, "earned_achievements": []}
+    for field, default in defaults.items():
+        value = st.session_state.get(prefix + field)
+        if value is None and language == "Canadian French":
+            value = st.session_state.get(legacy + field, default)
+        if value is None:
+            value = default
+        st.session_state[field] = list(value) if isinstance(value, list) else value
+    st.session_state.selected_language = language
+
 def clear_transient_learning_state():
     """Clear per-browser lesson and practice widget state between learners."""
     for key in list(st.session_state.keys()):
@@ -55,14 +82,14 @@ if not st.session_state.get("active_user"):
         if expected_password is not None and hmac.compare_digest(str(expected_password), login_password):
             username = login_username.strip()
             st.session_state.active_user = username
-            st.session_state.xp = st.session_state.get(f"learner_{username}_xp", 0)
-            st.session_state.completed = st.session_state.get(f"learner_{username}_completed", [])
-            st.session_state.active_lesson = st.session_state.get(f"learner_{username}_active_lesson", 1)
-            st.session_state.practice_rounds = st.session_state.get(f"learner_{username}_practice_rounds", 0)
-            st.session_state.practice_correct = st.session_state.get(f"learner_{username}_practice_correct", 0)
-            st.session_state.practice_total = st.session_state.get(f"learner_{username}_practice_total", 0)
-            st.session_state.earned_achievements = st.session_state.get(f"learner_{username}_earned_achievements", [])
-            st.session_state.selected_language = st.session_state.get(f"learner_{username}_selected_language", "")
+            preferred_language = st.session_state.get(f"learner_{username}_selected_language", "")
+            st.session_state.selected_language = preferred_language
+            if preferred_language:
+                load_language_progress(username, preferred_language)
+            else:
+                defaults = {"xp": 0, "completed": [], "active_lesson": 1, "practice_rounds": 0, "practice_correct": 0, "practice_total": 0, "earned_achievements": []}
+                for field, default in defaults.items():
+                    st.session_state[field] = list(default) if isinstance(default, list) else default
             clear_transient_learning_state()
             st.session_state.page = "Home"
             st.rerun()
@@ -606,8 +633,9 @@ if not st.session_state.selected_language:
         with right:
             if details["status"] == "available":
                 if st.button("Start learning", key=f"choose_{language}", type="primary"):
-                    st.session_state.selected_language = language
+                    load_language_progress(st.session_state.active_user, language)
                     st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = language
+                    clear_transient_learning_state()
                     st.rerun()
             else:
                 st.button("Coming soon", key=f"soon_{language}", disabled=True)
@@ -618,6 +646,7 @@ with st.sidebar:
     st.caption(f"Signed in: {st.session_state.active_user}")
     if st.button("Sign out", use_container_width=True):
         username = st.session_state.active_user
+        save_language_progress(username)
         for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
         clear_transient_learning_state()
@@ -1505,8 +1534,14 @@ elif page == "Settings":
     current_language = st.session_state.selected_language if st.session_state.selected_language in language_choices else language_choices[0]
     new_language = st.selectbox("Learning language", language_choices, index=language_choices.index(current_language), key="settings_learning_language")
     if st.button("Save language preference", type="primary"):
+        old_language = st.session_state.get("selected_language", "")
+        if old_language and old_language != new_language:
+            save_language_progress(st.session_state.active_user, old_language)
+            load_language_progress(st.session_state.active_user, new_language)
+            clear_transient_learning_state()
         st.session_state.selected_language = new_language
         st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = new_language
+        st.session_state.page = "Home"
         st.success(f"Learning language set to {new_language}.")
         st.rerun()
     st.caption("More languages will appear here when their courses are ready.")
@@ -1556,14 +1591,8 @@ elif page == "Settings":
                 st.session_state.progress_reset_confirmation_open = False
                 st.rerun()
 
-# Session-level per-user cache only. Official launch will move this to durable database storage.
+# Session-level per-user, per-language cache only. This is not durable database storage.
 if st.session_state.get("active_user"):
     current_username = st.session_state.active_user
-    st.session_state[f"learner_{current_username}_xp"] = st.session_state.get("xp", 0)
-    st.session_state[f"learner_{current_username}_completed"] = list(st.session_state.get("completed", []))
-    st.session_state[f"learner_{current_username}_active_lesson"] = st.session_state.get("active_lesson", 1)
-    st.session_state[f"learner_{current_username}_practice_rounds"] = st.session_state.get("practice_rounds", 0)
-    st.session_state[f"learner_{current_username}_practice_correct"] = st.session_state.get("practice_correct", 0)
-    st.session_state[f"learner_{current_username}_practice_total"] = st.session_state.get("practice_total", 0)
-    st.session_state[f"learner_{current_username}_earned_achievements"] = list(st.session_state.get("earned_achievements", []))
+    save_language_progress(current_username)
     st.session_state[f"learner_{current_username}_selected_language"] = st.session_state.get("selected_language", "")
