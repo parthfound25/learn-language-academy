@@ -1341,7 +1341,7 @@ def render_unified_lesson(lesson_id):
     pronunciation = lesson.get("pronunciation") or (lesson.get("speaking", []) + ["Use IPA as a reference; English-style pronunciation hints are approximations.", "Practise difficult sounds in complete words and connected phrases.", "Notice regional variation without assuming that one Canadian French accent represents every speaker."])
     homework = lesson.get("homework") or (["Write the French alphabet from memory and spell your name aloud.", "Create ten short word cards with spelling, meaning and IPA or a sound hint.", "Read five example sentences aloud, then write their English meanings.", "Practise one dialogue and prepare two original responses."] if lesson_id == 1 else ["Write eight original sentences using the lesson vocabulary and grammar.", "Adapt one dialogue to your own life and read both roles aloud.", "Write a short paragraph or message using at least five target expressions.", "Review the summary and create a personal list of five items to revisit."])
     st.markdown(f'<div class="eyebrow">{level_label} · LESSON {number} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
-    st.title(lesson["title"])
+    st.title(course_item["title"])
     lesson_goal = lesson.get("goal", "Recognise the French alphabet, understand essential sound patterns and read simple French words." if lesson_id == 1 else "Develop accurate and practical French communication.")
     st.markdown(f"**Learning goal:** {lesson_goal}")
     st.caption("Canadian French focus · English explanations · Suggested study time: 35–55 minutes")
