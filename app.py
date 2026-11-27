@@ -1329,17 +1329,55 @@ elif page == "Settings":
         st.success(f"Learning language set to {new_language}.")
         st.rerun()
     st.caption("More languages will appear here when their courses are ready.")
-    if st.session_state.active_user.strip().lower() == "parth sharma":
-        st.divider()
-        st.subheader("Development test account")
-        st.warning("Resetting this account affects only the Parth Sharma test account.")
-        if st.button("Reset Parth Sharma test progress", type="secondary"):
-            for key in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements"):
-                st.session_state[key] = [] if key in ("completed", "earned_achievements") else (1 if key == "active_lesson" else 0)
-            st.session_state.pop("practice_questions", None)
-            st.session_state.pop("practice_submitted", None)
-            st.success("Test account progress reset for this session.")
+    st.divider()
+    st.subheader("Reset learning progress")
+    st.warning("This resets the progress for the account currently signed in: lessons, XP, practice history and achievements. Your username, password and learning-language preference will stay unchanged.")
+    if not st.session_state.get("confirm_progress_reset", False):
+        if st.button("Reset my learning progress", type="secondary", key="start_progress_reset"):
+            st.session_state.confirm_progress_reset = True
             st.rerun()
+    else:
+        st.error(f"Are you sure you want to reset all learning progress for {st.session_state.active_user}? This cannot be undone.")
+        confirm_col, cancel_col = st.columns(2)
+        with confirm_col:
+            if st.button("Yes, reset my progress", type="primary", key="confirm_progress_reset"):
+                username = st.session_state.active_user
+                language_preference = st.session_state.get("selected_language", "")
+                # Remove this learner's cached progress while retaining their language preference.
+                prefix = f"learner_{username}_"
+                for cache_key in list(st.session_state.keys()):
+                    if cache_key.startswith(prefix) and not cache_key.endswith("_selected_language"):
+                        st.session_state.pop(cache_key, None)
+                # Reset the active session's progress and transient lesson/practice state.
+                reset_values = {
+                    "xp": 0, "completed": [], "active_lesson": 1,
+                    "practice_rounds": 0, "practice_correct": 0,
+                    "practice_total": 0, "earned_achievements": [],
+                }
+                for key, value in reset_values.items():
+                    st.session_state[key] = value
+                for key in list(st.session_state.keys()):
+                    if key.startswith(("l1_", "practice_round_")) or key in (
+                        "practice_questions", "practice_submitted",
+                        "practice_round_score", "practice_lesson_active",
+                        "practice_lesson_select", "confirm_progress_reset",
+                    ):
+                        st.session_state.pop(key, None)
+                st.session_state.selected_language = language_preference
+                st.session_state[f"learner_{username}_selected_language"] = language_preference
+                st.session_state[f"learner_{username}_xp"] = 0
+                st.session_state[f"learner_{username}_completed"] = []
+                st.session_state[f"learner_{username}_active_lesson"] = 1
+                st.session_state[f"learner_{username}_practice_rounds"] = 0
+                st.session_state[f"learner_{username}_practice_correct"] = 0
+                st.session_state[f"learner_{username}_practice_total"] = 0
+                st.session_state[f"learner_{username}_earned_achievements"] = []
+                st.session_state.page = "Home"
+                st.rerun()
+        with cancel_col:
+            if st.button("Cancel", key="cancel_progress_reset"):
+                st.session_state.confirm_progress_reset = False
+                st.rerun()
 
 # Session-level per-user cache only. Official launch will move this to durable database storage.
 if st.session_state.get("active_user"):
