@@ -108,6 +108,31 @@ class AngolanPortugueseA2C2EditorialTests(unittest.TestCase):
             grammar = " ".join(part for lesson_id in ids for pair in PORTUGUESE_LESSONS[lesson_id]["grammar"] for part in pair).casefold()
             self.assertIn(expected[level], grammar)
 
+    def test_portuguese_examples_do_not_embed_english_scenario_text(self):
+        from angolan_portuguese_a2_c2_editorial import SCENARIO_PT, SCENARIOS
+        for level, ids in LEVEL_IDS.items():
+            self.assertEqual(len(SCENARIO_PT[level]), len(SCENARIOS[level]))
+            for lesson_id in ids:
+                lesson = PORTUGUESE_LESSONS[lesson_id]
+                with self.subTest(level=level, lesson_id=lesson_id):
+                    vocabulary_examples = [entry[4] for entry in lesson["vocabulary"]]
+                    example_sentences = [entry[0] for entry in lesson["examples"]]
+                    self.assertTrue(all("A expressão «" in item for item in vocabulary_examples))
+                    self.assertTrue(all("Em contextos como " in item for item in example_sentences))
+                    for english_scenario in SCENARIOS[level]:
+                        self.assertFalse(any(english_scenario in item for item in vocabulary_examples + example_sentences))
+
+    def test_a2_dialogues_and_expressions_are_elementary_not_advanced_discourse(self):
+        for lesson_id in LEVEL_IDS["A2"]:
+            lesson = PORTUGUESE_LESSONS[lesson_id]
+            with self.subTest(lesson_id=lesson_id):
+                phrases = " ".join(item[0] for item in lesson["expressions"])
+                dialogue = " ".join(line for _, turns, _ in lesson["conversations"] for _, line in turns)
+                self.assertIn("Quanto custa?", phrases)
+                self.assertIn("Pode ajudar-me", phrases)
+                self.assertIn("Bom dia.", dialogue)
+                self.assertNotIn("delimitar o objectivo", dialogue)
+
 
 if __name__ == "__main__":
     unittest.main()
