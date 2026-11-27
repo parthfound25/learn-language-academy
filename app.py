@@ -8,6 +8,7 @@ from b2_lessons import B2_LESSONS
 from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
+from angolan_portuguese_lessons import PORTUGUESE_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -220,12 +221,29 @@ def next_course_lesson(lesson_id):
     return ALL_LESSONS[index + 1] if 0 <= index + 1 < COURSE_TOTAL else None
 
 def get_lesson_content(lesson_id):
+    if st.session_state.get("selected_language") == "Angolan Portuguese":
+        return PORTUGUESE_LESSONS.get(lesson_id)
     if lesson_id == 1:
         return LESSON_1
     for bank in (A1_LESSONS, A2_LESSONS, B1_LESSONS, B2_LESSONS, C1_LESSONS, C2_LESSONS, EXTENSION_LESSONS):
         if lesson_id in bank:
             return bank[lesson_id]
     return None
+
+def display_lesson_title(course_item):
+    title = course_item["title"]
+    if st.session_state.get("selected_language") == "Angolan Portuguese":
+        replacements = {
+            "French Alphabet": "Portuguese Alphabet", "Verb ÊTRE": "Verbs SER and ESTAR",
+            "Verb AVOIR": "Verb TER", "Passé Composé": "Pretérito Perfeito",
+            "Imparfait": "Pretérito Imperfeito", "Future Simple": "Future Tense",
+            "Subjunctive Present": "Present Subjunctive", "Canadian French": "Angolan Portuguese",
+            "Quebec French": "Angolan Portuguese", "Regional Canadian French": "Regional Angolan Portuguese",
+            "Native-Level Pronunciation": "Advanced Pronunciation", "Native-Level Conversation": "Advanced Communication",
+        }
+        for old, new in replacements.items():
+            title = title.replace(old, new)
+    return title
 
 def shuffled_question(question_data, seed):
     question, options, answer, explanation = question_data
@@ -531,7 +549,7 @@ for key, default in (("practice_rounds", 0), ("practice_correct", 0), ("practice
 
 LANGUAGES = {
     "Canadian French": {"flag": "🇨🇦", "status": "available"},
-    "Angolan Portuguese": {"flag": "🇦🇴", "status": "coming soon"},
+    "Angolan Portuguese": {"flag": "🇦🇴", "status": "available"},
     "Gujarati": {"flag": "🇮🇳", "status": "coming soon"},
     "Hindi": {"flag": "🇮🇳", "status": "coming soon"},
     "English": {"flag": "🇬🇧", "status": "coming soon"},
@@ -630,6 +648,8 @@ def render_unified_lesson(lesson_id):
     course_item = ALL_LESSONS[COURSE_INDEX[lesson_id]]
     number = course_number(lesson_id)
     level_label = course_item["level"].split("–")[0].strip()
+    is_portuguese = st.session_state.get("selected_language") == "Angolan Portuguese"
+    language_name = "Angolan Portuguese" if is_portuguese else "Canadian French"
     vocabulary = lesson.get("vocabulary", lesson.get("vocab", []))
     grammar = lesson.get("grammar", [])
     expressions = lesson.get("expressions", [])
@@ -643,10 +663,10 @@ def render_unified_lesson(lesson_id):
     pronunciation = lesson.get("pronunciation") or (lesson.get("speaking", []) + ["Use IPA as a reference; English-style pronunciation hints are approximations.", "Practise difficult sounds in complete words and connected phrases.", "Notice regional variation without assuming that one Canadian French accent represents every speaker."])
     homework = lesson.get("homework") or (["Write the French alphabet from memory and spell your name aloud.", "Create ten short word cards with spelling, meaning and IPA or a sound hint.", "Read five example sentences aloud, then write their English meanings.", "Practise one dialogue and prepare two original responses."] if lesson_id == 1 else ["Write eight original sentences using the lesson vocabulary and grammar.", "Adapt one dialogue to your own life and read both roles aloud.", "Write a short paragraph or message using at least five target expressions.", "Review the summary and create a personal list of five items to revisit."])
     st.markdown(f'<div class="eyebrow">{level_label} · LESSON {number} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
-    st.title(course_item["title"])
-    lesson_goal = lesson.get("goal", "Recognise the French alphabet, understand essential sound patterns and read simple French words." if lesson_id == 1 else "Develop accurate and practical French communication.")
+    st.title(display_lesson_title(course_item))
+    lesson_goal = lesson.get("goal", "Recognise the alphabet, understand essential sound patterns and read simple words." if lesson_id == 1 else "Develop accurate and practical communication.")
     st.markdown(f"**Learning goal:** {lesson_goal}")
-    st.caption("Canadian French focus · English explanations · Suggested study time: 35–55 minutes")
+    st.caption(f"{language_name} focus · English explanations · Suggested study time: 35–55 minutes")
     st.progress(number / COURSE_TOTAL, text=f"Course progress · Lesson {number} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
     with tabs[0]:
@@ -667,8 +687,8 @@ def render_unified_lesson(lesson_id):
                     st.write(meaning)
                     st.markdown(f"*{example}*")
         if lesson_id == 1:
-            st.subheader("The 26 French letter names")
-            alphabet = [("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),("X","eeks"),("Y","ee-grek"),("Z","zed")]
+            st.subheader("The 26 Portuguese letter names" if is_portuguese else "The 26 French letter names")
+            alphabet = ([("A","á"),("B","bê"),("C","cê"),("D","dê"),("E","é"),("F","éfe"),("G","gê"),("H","agá"),("I","i"),("J","jóta"),("K","capa"),("L","éle"),("M","ême"),("N","êne"),("O","ó"),("P","pê"),("Q","quê"),("R","érre"),("S","ésse"),("T","tê"),("U","u"),("V","vê"),("W","dáblio"),("X","xis"),("Y","ípsilon"),("Z","zê")] if is_portuguese else [("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),("X","eeks"),("Y","ee-grek"),("Z","zed")])
             cols = st.columns(4)
             for index, (letter, sound) in enumerate(alphabet):
                 with cols[index % 4]:
@@ -679,7 +699,7 @@ def render_unified_lesson(lesson_id):
         for title, explanation in grammar:
             with st.expander(title, expanded=True):
                 st.write(explanation)
-        st.info("Canadian French note: learn the broadly understood standard form first; regional vocabulary and spoken forms should be labelled by region and register.")
+        st.info("Angolan Portuguese note: learn broadly understood forms first. Vocabulary, pronunciation and usage vary across Angola and by situation." if is_portuguese else "Canadian French note: learn the broadly understood standard form first; regional vocabulary and spoken forms should be labelled by region and register.")
     with tabs[3]:
         st.subheader("Useful expressions")
         for phrase, meaning, context in expressions:
@@ -704,7 +724,7 @@ def render_unified_lesson(lesson_id):
         st.subheader("Pronunciation guidance")
         for instruction in pronunciation:
             st.markdown(f"- {instruction}")
-        st.caption("IPA is more precise than English-style pronunciation hints. Accent and pronunciation vary among French speakers, including across Canada.")
+        st.caption("Pronunciation hints are approximations, not a single mandatory Angolan accent. Speech varies across Angola." if is_portuguese else "IPA is more precise than English-style pronunciation hints. Accent and pronunciation vary among French speakers, including across Canada.")
     with tabs[6]:
         st.subheader("Interactive exercises")
         st.write("Check each answer immediately and read the explanation. Mistakes never block lesson completion.")
@@ -784,10 +804,12 @@ page = st.session_state.page
 
 if page == "Home":
     username = st.session_state.active_user
+    greeting = "Olá" if st.session_state.selected_language == "Angolan Portuguese" else "Bonjour"
+    flag = "🇦🇴" if st.session_state.selected_language == "Angolan Portuguese" else "🇨🇦"
     st.markdown(f"""
     <div class="hero">
       <div class="eyebrow">YOUR {st.session_state.selected_language.upper()} JOURNEY</div>
-      <div class="hero-title">Bonjour, {username}! 🇨🇦</div>
+      <div class="hero-title">{greeting}, {username}! {flag}</div>
       <div class="hero-copy">A structured {COURSE_TOTAL}-lesson journey from A1 beginner to C2 mastery. Learn step by step, with progress and XP — never hearts or lives.</div>
     </div>
     """, unsafe_allow_html=True)
@@ -804,7 +826,7 @@ if page == "Home":
     st.caption(f"Practice answers: {st.session_state.practice_correct} correct out of {st.session_state.practice_total} · Starting level: A1")
     page_header("CONTINUE LEARNING", "Your next lesson")
     if 1 not in st.session_state.completed:
-        st.markdown("**Lesson 1 · French Alphabet, Sounds and Pronunciation**")
+        st.markdown(f"**Lesson 1 · {display_lesson_title(ALL_LESSONS[0])}**")
         st.write("Your first complete lesson is ready, with vocabulary, grammar, expressions, examples, conversations, exercises, speaking practice, summary and assessment.")
         if st.button("Start Lesson 1", type="primary"):
             st.session_state.page = "Lesson"
@@ -860,7 +882,7 @@ elif page == "Lesson":
             st.rerun()
 
 elif page == "Vocabulary":
-    page_header("YOUR WORD BANK", "French foundations & vocabulary", "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
+    page_header("YOUR WORD BANK", "Portuguese foundations & vocabulary" if st.session_state.selected_language == "Angolan Portuguese" else "French foundations & vocabulary", "A growing Angolan Portuguese reference library." if st.session_state.selected_language == "Angolan Portuguese" else "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
 
     def french_number_under_100(number):
         units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
@@ -1363,7 +1385,7 @@ elif page == "Vocabulary":
             vocabulary_groups[collection_name] = entries
 
     chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
-    search_word = st.text_input("Search this collection", placeholder="Search a French word or English meaning")
+    search_word = st.text_input("Search this collection", placeholder="Search a Portuguese word or English meaning" if st.session_state.selected_language == "Angolan Portuguese" else "Search a French word or English meaning")
     entries = vocabulary_groups[chosen_group]
     if search_word.strip():
         needle = search_word.strip().lower()
