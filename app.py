@@ -1332,15 +1332,15 @@ elif page == "Settings":
     st.divider()
     st.subheader("Reset learning progress")
     st.warning("This resets the progress for the account currently signed in: lessons, XP, practice history and achievements. Your username, password and learning-language preference will stay unchanged.")
-    if not st.session_state.get("show_progress_reset_confirmation", False):
+    if not st.session_state.get("progress_reset_confirmation_open", False):
         if st.button("Reset my learning progress", type="secondary", key="start_progress_reset"):
-            st.session_state.confirm_progress_reset = True
+            st.session_state.progress_reset_confirmation_open = True
             st.rerun()
     else:
         st.error(f"Are you sure you want to reset all learning progress for {st.session_state.active_user}? This cannot be undone.")
         confirm_col, cancel_col = st.columns(2)
         with confirm_col:
-            if st.button("Yes, reset my progress", type="primary", key="show_progress_reset_confirmation"):
+            if st.button("Yes, reset my progress", type="primary", key="confirm_progress_reset_button"):
                 username = st.session_state.active_user
                 language_preference = st.session_state.get("selected_language", "")
                 # Remove this learner's cached progress while retaining their language preference.
@@ -1360,7 +1360,7 @@ elif page == "Settings":
                     if key.startswith(("l1_", "practice_round_")) or key in (
                         "practice_questions", "practice_submitted",
                         "practice_round_score", "practice_lesson_active",
-                        "practice_lesson_select", "show_progress_reset_confirmation",
+                        "practice_lesson_select", "progress_reset_confirmation_open",
                     ):
                         st.session_state.pop(key, None)
                 st.session_state.selected_language = language_preference
@@ -1376,7 +1376,7 @@ elif page == "Settings":
                 st.rerun()
         with cancel_col:
             if st.button("Cancel", key="cancel_progress_reset"):
-                st.session_state.confirm_progress_reset = False
+                st.session_state.progress_reset_confirmation_open = False
                 st.rerun()
 
 # Session-level per-user cache only. Official launch will move this to durable database storage.
