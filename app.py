@@ -473,6 +473,12 @@ LESSON_1["assessment"] += [
     ("Which expression means “I don't understand”?", ["Je comprends.", "Je ne comprends pas.", "Je parle français.", "Au revoir."], 1, "Je ne comprends pas means I don't understand."),
     ("Which is the best description of Canadian French?", ["There is only one Canadian accent", "It is identical in every region", "It includes regional varieties with pronunciation differences", "It never uses standard French"], 2, "Canadian French includes multiple regional varieties and speaker styles."),
 ]
+# Keep the final check distinct from the guided Lesson 1 exercises.
+lesson_1_exercise_prompts = {question[0] for question in LESSON_1["exercises"]}
+LESSON_1["assessment"] = [
+    question for question in LESSON_1["assessment"]
+    if question[0] not in lesson_1_exercise_prompts
+]
 LESSON_1["summary"] += [
     "IPA can show sounds more accurately than English-style pronunciation hints.",
     "French R is usually /ʁ/; nasal vowels are produced with nasal resonance.",
