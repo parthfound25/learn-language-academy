@@ -35,7 +35,7 @@ class ActivityTrackingTests(unittest.TestCase):
         self.assertIn('st.session_state.page = "Admin Dashboard"', app)
         self.assertIn('if is_admin_user:', app)
         self.assertIn('st.radio("ADMINISTRATION", ["Admin Dashboard"]', app)
-        self.assertIn('if not st.session_state.selected_language and st.session_state.active_user.casefold() != ADMIN_USERNAME.casefold():', app)
+        self.assertIn('st.session_state.selected_language = ""', app)
         self.assertIn('if not is_admin_user:', app)
         self.assertNotIn('page_options.append("Admin Dashboard")', app)
         self.assertIn('name.casefold() != ADMIN_USERNAME.casefold()', app)
