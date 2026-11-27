@@ -166,6 +166,7 @@ def _angolan_title(title):
         "Canadian French": "Angolan Portuguese",
         "Quebec French": "Angolan Portuguese",
         "French Spelling": "Portuguese Spelling",
+        "French-Canadian Society": "Angolan Society",
         "Y and EN Pronouns": "Object Pronouns and Prepositional Complements",
         "Regular -ER, -IR and -RE Verbs": "Regular -AR, -ER and -IR Verbs",
         "NE...PAS": "NÃO",
