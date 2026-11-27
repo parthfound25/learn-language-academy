@@ -76,6 +76,13 @@ class CourseCurriculumTests(unittest.TestCase):
                 for field in ("objectives", "pronunciation", "homework"):
                     self.assertGreaterEqual(len(lesson[field]), 3)
 
+    def test_advanced_lessons_have_lesson_specific_examples_and_dialogues(self):
+        for bank in (B1_LESSONS, B2_LESSONS, C1_LESSONS, C2_LESSONS):
+            example_openers = [lesson["examples"][0][0] for lesson in bank.values()]
+            conversation_titles = [lesson["conversations"][0][0] for lesson in bank.values()]
+            self.assertEqual(len(example_openers), len(set(example_openers)))
+            self.assertEqual(len(conversation_titles), len(set(conversation_titles)))
+
     def test_app_is_valid_python_and_contains_the_sequence_integration(self):
         app_path = pathlib.Path(__file__).resolve().parents[1] / "app.py"
         source = app_path.read_text(encoding="utf-8")
