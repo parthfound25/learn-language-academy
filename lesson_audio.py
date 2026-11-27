@@ -12,7 +12,10 @@ import json
 import re
 from urllib.parse import quote
 
-import requests
+try:
+    import requests
+except ImportError:  # Pure content tests do not need the HTTP client.
+    requests = None
 
 BUCKET = "lesson-audio"
 MODEL_ID = "eleven_multilingual_v2"
@@ -150,7 +153,13 @@ def _storage_config(secrets):
     return url, key
 
 
+def _require_http_client():
+    if requests is None:
+        raise AudioConfigurationError("Install the requests package before generating or loading stored lesson audio.")
+
+
 def _headers(key: str) -> dict:
+    _require_http_client()
     return {"apikey": key, "Authorization": f"Bearer {key}"}
 
 
