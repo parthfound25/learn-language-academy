@@ -1,9 +1,9 @@
 # Canadian French — complete course map
 
 **Learn Language Academy by Parth**  
-**Course scope:** 102 lessons · CEFR A1–C2 · English explanations · Canadian French regional focus
+**Course scope:** 107 lessons · CEFR A1–C2 · English explanations · Canadian French regional focus
 
-This curriculum retains all 90 original lesson topics and inserts 12 additional lessons where they are pedagogically needed. Original lesson IDs 1–90 remain stable internally for learner progress. New extension IDs 91–102 are displayed in their correct learning positions; the app derives visible lesson numbers from the course sequence.
+This curriculum retains all 90 original lesson topics and inserts 17 additional lessons where they are pedagogically needed. Original lesson IDs 1–90 remain stable internally for learner progress. New extension IDs 91–107 are displayed in their correct learning positions; the app derives visible lesson numbers from the course sequence.
 
 ## Learning progression
 
@@ -139,7 +139,7 @@ This curriculum retains all 90 original lesson topics and inserts 12 additional 
 | 16 | 102 | Integrated C2 Capstone and Independent Language Portfolio |
 | 17 | 90 | C2 Final Comprehensive Assessment |
 
-## Why the 12 additional lessons were added
+## Why the 17 additional lessons were added
 
 | New lesson ID | Inserted after original lesson | Gap addressed |
 |---:|---:|---|
@@ -203,7 +203,7 @@ The course intentionally develops all four major skills and interaction/mediatio
 
 The repository includes automated tests for:
 - Original lesson ID coverage (2–90) and extension IDs (91–102).
-- The 102-lesson total including the separately authored Lesson 1.
+- The 107-lesson total including the separately authored Lesson 1.
 - Required lesson content sections.
 - Vocabulary, grammar, examples, conversations, exercises and assessment presence.
 - Valid answer indexes and explanations.
