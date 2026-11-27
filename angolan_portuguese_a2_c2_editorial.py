@@ -178,13 +178,44 @@ def apply_editorial(lessons, topics, vocab_pools, pool_for):
                 f"In {scenario}, select forms by considering who is speaking, the relationship between participants, the time frame and the intended emphasis. Build complete clauses, check agreement and prepositions, then reread the whole exchange for naturalness. The target vocabulary in this chapter is presented in context within Angolan Portuguese rather than as isolated translations."
             ))
             lesson["grammar"] = grammar
-            lesson["expressions"] = [
-                ("Na minha opinião, ...", "In my opinion, ...", "Introduce a view and then support it with a reason or example."),
-                ("Pode explicar melhor esse ponto?", "Could you explain that point more clearly?", "Ask for clarification politely in a discussion."),
-                ("Por um lado ..., por outro ...", "On the one hand ..., on the other ...", "Present a balanced comparison."),
-                ("Se percebi bem, ...", "If I understood correctly, ...", "Check your understanding before responding."),
-                ("É importante ter em conta que ...", "It is important to bear in mind that ...", "Introduce a qualification or relevant limitation.")
-            ]
+            expressions_by_level = {
+                "A2": [
+                    ("Pode ajudar-me, por favor?", "Could you help me, please?", "A polite everyday request."),
+                    ("Onde fica ...?", "Where is ...?", "Ask for the location of a place."),
+                    ("Quanto custa?", "How much does it cost?", "Ask the price of an item or service."),
+                    ("Não percebi. Pode repetir?", "I did not understand. Could you repeat?", "Ask someone to repeat information."),
+                    ("Vou ... mais tarde.", "I am going to ... later.", "Use ir + infinitive for a near-future plan.")
+                ],
+                "B1": [
+                    ("Na minha experiência, ...", "In my experience, ...", "Introduce a personal account or observation."),
+                    ("O que aconteceu foi que ...", "What happened was that ...", "Explain an event or misunderstanding."),
+                    ("Embora ..., ...", "Although ..., ...", "Introduce a contrast; use the appropriate subjunctive form."),
+                    ("Por isso, ...", "For that reason, ...", "Connect a cause with its consequence."),
+                    ("Se fosse possível, ...", "If it were possible, ...", "Introduce a hypothetical situation.")
+                ],
+                "B2": [
+                    ("É provável que ...", "It is likely that ...", "Express a qualified expectation; normally followed by the subjunctive."),
+                    ("Caso seja necessário, ...", "If it is necessary, ...", "Introduce a condition with the subjunctive."),
+                    ("Apesar de ..., ...", "Despite ..., ...", "Introduce a concession."),
+                    ("Convém salientar que ...", "It is worth pointing out that ...", "Highlight a relevant point in formal discussion."),
+                    ("Em contrapartida, ...", "By contrast, ...", "Present a contrasting consideration.")
+                ],
+                "C1": [
+                    ("Importa distinguir entre ...", "It is important to distinguish between ...", "Make a precise conceptual distinction."),
+                    ("Os dados sugerem que ...", "The data suggest that ...", "Introduce a claim proportionate to evidence."),
+                    ("Ainda que se reconheça ..., ...", "Even while acknowledging ..., ...", "Concede a point before developing an argument."),
+                    ("A questão coloca-se sobretudo ao nível de ...", "The issue arises primarily at the level of ...", "Frame an analytical discussion."),
+                    ("É necessário ponderar as implicações de ...", "It is necessary to weigh the implications of ...", "Introduce a careful evaluation.")
+                ],
+                "C2": [
+                    ("A leitura mais plausível, à luz dos dados, é ...", "The most plausible reading, in light of the data, is ...", "Calibrate an interpretation to the available evidence."),
+                    ("Importa não perder de vista que ...", "It is important not to lose sight of the fact that ...", "Keep a central qualification in view."),
+                    ("Essa formulação admite duas interpretações distintas.", "That wording allows two distinct interpretations.", "Discuss ambiguity precisely."),
+                    ("A ressalva não invalida o argumento; delimita o seu alcance.", "The qualification does not invalidate the argument; it limits its scope.", "Clarify the force and limits of a claim."),
+                    ("Em última análise, ...", "Ultimately, ...", "Signal a considered concluding point.")
+                ]
+            }
+            lesson["expressions"] = expressions_by_level[level]
             lesson["examples"] = [
                 (f"Em contextos como {scenario_pt}, a expressão «{core[0]}» pode ser útil.", f"In contexts such as {scenario}, the expression «{core[0]}» can be useful.", "The Portuguese example and its English translation keep the scenario in the same language as the sentence."),
                 (f"É necessário compreender o contexto antes de tirar uma conclusão.", "It is necessary to understand the context before drawing a conclusion.", "An impersonal evaluation followed by an infinitive."),
@@ -192,24 +223,63 @@ def apply_editorial(lessons, topics, vocab_pools, pool_for):
                 (f"A proposta foi discutida e as recomendações foram registadas.", "The proposal was discussed and the recommendations were recorded.", "A passive construction foregrounds the proposal and recommendations."),
                 (f"Se houver dúvidas, podemos rever os exemplos em conjunto.", "If there are questions, we can review the examples together.", "A future-oriented condition uses the future subjunctive after se.")
             ]
-            lesson["conversations"] = [
-                ("Discussing the chapter topic", [
-                    ("A", "Podemos começar por esclarecer o objectivo desta conversa?"),
-                    ("B", "Claro. Quero perceber melhor os pontos principais e as suas consequências."),
-                    ("A", f"Um dos aspectos importantes é {core[0]}. Como o interpreta?"),
-                    ("B", "Depende do contexto. Convém comparar os dados antes de chegar a uma conclusão."),
-                    ("A", "Concordo. Podemos também considerar outra perspectiva."),
-                    ("B", "Sim. Assim, a análise fica mais completa.")
-                ], "A: Can we begin by clarifying the purpose of this conversation? B: Of course. I want to understand the main points and their consequences better. A: One important aspect is the chapter vocabulary. How do you interpret it? B: It depends on the context. We should compare the data before reaching a conclusion. A: I agree. We can also consider another perspective. B: Yes. That makes the analysis more complete."),
-                ("Clarifying and responding", [
-                    ("A", "Não tenho a certeza de ter compreendido essa parte."),
-                    ("B", "Posso reformular. O ponto principal é distinguir os factos das interpretações."),
-                    ("A", "Nesse caso, que exemplo poderíamos usar?"),
-                    ("B", "Podemos analisar uma situação real e explicar por que razão escolhemos essa forma."),
-                    ("A", "Agora está mais claro. Obrigado pela explicação."),
-                    ("B", "De nada. É sempre útil confirmar o sentido.")
-                ], "A: I am not sure I understood that part. B: I can rephrase it. The main point is to distinguish facts from interpretations. A: In that case, what example could we use? B: We can analyse a real situation and explain why we chose that form. A: It is clearer now. Thank you for the explanation. B: You're welcome. It is always useful to confirm the meaning.")
-            ]
+            if level == "A2":
+                lesson["conversations"] = [
+                    ("Asking for help", [
+                        ("A", "Bom dia. Pode ajudar-me, por favor?"),
+                        ("B", "Claro. O que precisa?"),
+                        ("A", f"Estou a aprender palavras para {scenario_pt}."),
+                        ("B", f"Podemos começar pela expressão «{core[0]}»."),
+                        ("A", "Obrigado. Pode repetir mais devagar?"),
+                        ("B", "Com certeza. Vamos praticar juntos.")
+                    ], "A: Good morning. Could you help me, please? B: Of course. What do you need? A: I am learning words for this situation. B: We can start with the expression shown. A: Thank you. Could you repeat more slowly? B: Certainly. Let's practise together."),
+                    ("Checking a price", [
+                        ("A", "Bom dia. Quanto custa este produto?"),
+                        ("B", "Custa dois mil kwanzas."),
+                        ("A", "Pode repetir o preço, por favor?"),
+                        ("B", "Sim, dois mil kwanzas."),
+                        ("A", "Está bem. Vou levar um."),
+                        ("B", "Muito obrigado. Tenha um bom dia.")
+                    ], "A: Good morning. How much does this product cost? B: It costs two thousand kwanzas. A: Could you repeat the price, please? B: Yes, two thousand kwanzas. A: All right. I will take one. B: Thank you very much. Have a good day.")
+                ]
+            elif level == "B1":
+                lesson["conversations"] = [
+                    ("Explaining an experience", [
+                        ("A", "Como correu a viagem a Benguela?"),
+                        ("B", "Correu bem, embora tenha havido um pequeno imprevisto."),
+                        ("A", "O que aconteceu?"),
+                        ("B", "O transporte atrasou-se e tivemos de alterar os planos."),
+                        ("A", "E como resolveram a situação?"),
+                        ("B", "Falámos com o responsável e encontrámos outra solução.")
+                    ], "A: How did the trip to Benguela go? B: It went well, although there was a small unexpected problem. A: What happened? B: The transport was delayed and we had to change our plans. A: And how did you resolve the situation? B: We spoke to the person in charge and found another solution."),
+                    ("Giving an opinion", [
+                        ("A", "O que pensa deste projecto comunitário?"),
+                        ("B", "Parece-me útil, sobretudo porque responde a uma necessidade local."),
+                        ("A", "Há algum aspecto que deva ser melhorado?"),
+                        ("B", "Sim. Seria importante ouvir mais moradores antes de avançar."),
+                        ("A", "Concordo. Assim, a decisão será mais informada."),
+                        ("B", "Exactamente. A participação pode melhorar o resultado.")
+                    ], "A: What do you think of this community project? B: It seems useful to me, especially because it responds to a local need. A: Is there anything that should be improved? B: Yes. It would be important to hear from more residents before proceeding. A: I agree. That way, the decision will be better informed. B: Exactly. Participation can improve the result.")
+                ]
+            else:
+                lesson["conversations"] = [
+                    ("Analysing a proposal", [
+                        ("A", "Podemos começar por delimitar o objectivo da proposta?"),
+                        ("B", "Sim. Pretende-se avaliar os resultados e identificar possíveis limitações."),
+                        ("A", f"Um dos elementos a considerar é «{core[0]}». Que leitura faz desse ponto?"),
+                        ("B", "A interpretação depende do contexto e da qualidade da evidência disponível."),
+                        ("A", "Nesse caso, devemos comparar perspectivas antes de formular a conclusão."),
+                        ("B", "Concordo. A conclusão deve reflectir o alcance real dos dados.")
+                    ], "A: Can we begin by defining the proposal's objective? B: Yes. The aim is to evaluate the results and identify possible limitations. A: One element to consider is the expression shown. How do you interpret that point? B: The interpretation depends on context and the quality of the available evidence. A: In that case, we should compare perspectives before drawing a conclusion. B: I agree. The conclusion should reflect the actual scope of the data."),
+                    ("Clarifying an interpretation", [
+                        ("A", "Não tenho a certeza de que este argumento esteja suficientemente fundamentado."),
+                        ("B", "A sua reserva diz respeito aos dados ou à interpretação?"),
+                        ("A", "Sobretudo à relação entre os resultados e a conclusão."),
+                        ("B", "Nesse caso, podemos explicitar as limitações e considerar hipóteses alternativas."),
+                        ("A", "Isso tornaria a análise mais rigorosa."),
+                        ("B", "Exactamente. A precisão também exige reconhecer o que não sabemos.")
+                    ], "A: I am not sure this argument is sufficiently supported. B: Does your reservation concern the data or the interpretation? A: Mainly the relationship between the results and the conclusion. B: In that case, we can make the limitations explicit and consider alternative hypotheses. A: That would make the analysis more rigorous. B: Exactly. Precision also requires acknowledging what we do not know.")
+                ]
             lesson["pronunciation"] = [
                 "These pronunciation notes are learning guidance, not a claim that Angola has one uniform accent.",
                 "Practise lexical stress in complete phrases, not only in isolated vocabulary items.",
