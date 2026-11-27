@@ -26,11 +26,11 @@ class CourseCurriculumTests(unittest.TestCase):
         self.assertEqual(original_ids, set(range(2, 91)))
 
     def test_extension_ids_are_complete(self):
-        self.assertEqual(set(EXTENSION_LESSONS), set(range(91, 103)))
+        self.assertEqual(set(EXTENSION_LESSONS), set(range(91, 108)))
 
     def test_total_course_count_is_102(self):
         # Lesson 1 is authored in app.py; 2-90 are the six original content banks.
-        self.assertEqual(1 + sum(len(bank) for bank in BANKS) + len(EXTENSION_LESSONS), 102)
+        self.assertEqual(1 + sum(len(bank) for bank in BANKS) + len(EXTENSION_LESSONS), 107)
 
     def test_every_authored_lesson_has_the_shared_content_contract(self):
         all_lessons = {}
