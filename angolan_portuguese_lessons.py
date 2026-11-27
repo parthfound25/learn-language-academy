@@ -203,7 +203,7 @@ def _build_lesson(lesson_id, topic):
             ("Pode soletrar, por favor?","Can you spell it, please?","A polite spelling request."),
             ("Fale mais devagar, por favor.","Please speak more slowly.","Ask for a slower repetition.")
         ]
-        conversations = [
+        alphabet_conversations = [
             ("Spelling a name", [("A","Como se escreve o seu nome?"),("B","Escreve-se P-A-R-T-H."),("A","Pode repetir mais devagar?"),("B","Claro. P-A-R-T-H.")], "A: How do you spell your name? B: It is spelled P-A-R-T-H. A: Can you repeat more slowly? B: Of course. P-A-R-T-H."),
             ("Checking a sound", [("A","Como se pronuncia esta palavra?"),("B","Pronuncia-se manhã."),("A","O til indica um som nasal?"),("B","Sim. Ouça a palavra e repita.")], "A: How is this word pronounced? B: It is pronounced manhã. A: Does the tilde indicate a nasal sound? B: Yes. Listen to the word and repeat.")
         ]
@@ -220,7 +220,8 @@ def _build_lesson(lesson_id, topic):
         ("A short everyday exchange", [("A","Bom dia! Como está?"),("B","Estou bem, obrigado/a. E você?"),("A","Também estou bem. Está a aprender português?"),("B","Sim, estou a aprender português de Angola.")], "A: Good morning! How are you? B: I am well, thank you. And you? A: I am well too. Are you learning Portuguese? B: Yes, I am learning Angolan Portuguese."),
         ("Asking for help", [("A","Desculpe, pode ajudar-me?"),("B","Claro. O que precisa?"),("A","Como se diz isto em português?"),("B","Diz-se ..."),("A","Muito obrigado/a!"),("B","De nada.")], "A: Excuse me, can you help me? B: Of course. What do you need? A: How do you say this in Portuguese? B: It is said ... A: Thank you very much! B: You're welcome.")
     ]
-    questions = QUESTION_TEMPLATES[key]
+    if lesson_id == 1:
+        conversations = alphabet_conversations
     # Rotate prompts so each chapter's practice and assessment begin at a different
     # point while keeping the answer key and distractors intact.
     shift = lesson_id % len(questions)
