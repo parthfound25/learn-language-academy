@@ -37,7 +37,9 @@ def _make_lesson(item):
         ("Je vous tiens au courant.","I'll keep you informed.","Useful in professional communication.")
     ]
     examples = [
-        (v[4], v[1].capitalize() + ".", "Notice the target expression in a complete, natural sentence."),
+        (v[4], f"Key vocabulary: {v[0]} means {v[1]}.", "The French example demonstrates this lesson's target vocabulary in context.")
+        for v in vocabulary[:1]
+    ] + [
         ("Quand j'étais plus jeune, je faisais souvent du sport.","When I was younger, I often played sports.","Imparfait describes a past habit."),
         ("Hier, j'ai rencontré une collègue qui travaille à Ottawa.","Yesterday, I met a colleague who works in Ottawa.","Passé composé reports the event; qui introduces a relative clause."),
         ("Si j'avais plus de temps, je voyagerais davantage.","If I had more time, I would travel more.","Si + imparfait is followed by the conditional."),
