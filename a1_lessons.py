@@ -1320,7 +1320,12 @@ LESSON_EXPANSIONS = {
 def build_lesson(lesson_id):
     source = LESSON_DATA[lesson_id]
     expansion = LESSON_EXPANSIONS.get(lesson_id, {})
-    vocab = source["vocab"] + expansion.get("vocabulary", [])
+    # Expansion content can intentionally refine an original entry; keep the
+    # latest version of each French headword so generated quizzes do not repeat it.
+    vocabulary_by_term = {}
+    for entry in source["vocab"] + expansion.get("vocabulary", []):
+        vocabulary_by_term[entry[0].strip().casefold()] = entry
+    vocab = list(vocabulary_by_term.values())
     grammar = source["grammar"] + expansion.get("grammar", [])
     expressions = source["expressions"] + expansion.get("expressions", [])
     examples = source["examples"] + expansion.get("examples", [])
