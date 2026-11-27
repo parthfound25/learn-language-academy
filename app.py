@@ -79,6 +79,8 @@ try:
 except Exception:
     configured_users = {}
 
+ADMIN_USERNAME = "Admin"
+
 if not configured_users:
     st.title("🍀 Learn Language Academy by Parth")
     st.error("No learner accounts are configured.")
@@ -99,7 +101,7 @@ if not st.session_state.get("active_user"):
             username = login_username.strip()
             st.session_state.active_user = username
             preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
-            if not preferred_language and username.casefold() == "parth sharma":
+            if not preferred_language and username.casefold() == ADMIN_USERNAME.casefold():
                 preferred_language = "Canadian French"
             st.session_state.selected_language = preferred_language
             if preferred_language:
@@ -713,7 +715,7 @@ with st.sidebar:
         st.rerun()
     st.markdown("---")
     page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
-    if st.session_state.active_user.casefold() == "parth sharma":
+    if st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold():
         page_options.append("Admin Dashboard")
     selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
     if selected_page != st.session_state.page:
@@ -895,8 +897,8 @@ def render_unified_lesson(lesson_id):
 page = st.session_state.page
 
 if page == "Admin Dashboard":
-    page_header("ADMINISTRATION", "Learner activity dashboard", "Private overview for Parth Sharma. Learners can only see their own learning space.")
-    if st.session_state.active_user.casefold() != "parth sharma":
+    page_header("ADMINISTRATION", "Learner activity dashboard", "Private administrator overview. Learners can only see their own learning space.")
+    if st.session_state.active_user.casefold() != ADMIN_USERNAME.casefold():
         st.error("You do not have permission to view this page.")
     elif not tracking_available():
         st.warning("Durable activity tracking is not configured yet.")
@@ -910,7 +912,7 @@ if page == "Admin Dashboard":
         if data is None:
             st.error("Could not load learner activity data. Check the Supabase migration and Streamlit Secrets.")
         else:
-            learner_names = sorted(name for name in configured_users if name.casefold() != "parth sharma")
+            learner_names = sorted(name for name in configured_users if name.casefold() != ADMIN_USERNAME.casefold())
             learner_set = set(learner_names)
             progress_rows = [row for row in data["progress"] if row.get("username") in learner_set]
             session_rows = [row for row in data["sessions"] if row.get("username") in learner_set]
