@@ -43,7 +43,7 @@ def _build(item):
       ("In Quebec French, « un dépanneur » commonly means…",["a convenience store","a mechanic","a pharmacy only","a bus stop"],0,"Un dépanneur is a convenience store in Quebec usage."),
       ("Which phrase qualifies a statement formally?",["Dans une certaine mesure","Pantoute","Ça roule","À tantôt"],0,"Dans une certaine mesure means to a certain extent.")
     ])
-    assessment=(questions*2)[:20]
+    assessment=questions[:]
     speaking=[
       "Read all twelve vocabulary entries aloud, focusing on liaison, nasal vowels and the French R.",
       "Explain the central grammar pattern in your own words and create three original examples.",
