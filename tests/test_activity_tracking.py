@@ -27,9 +27,13 @@ class ActivityTrackingTests(unittest.TestCase):
             with self.subTest(token=token):
                 self.assertIn(token, module)
 
-    def test_admin_dashboard_is_restricted_to_parth_and_shows_learner_metrics(self):
+    def test_admin_dashboard_uses_dedicated_admin_username_and_shows_learner_metrics(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
-        self.assertIn('st.session_state.active_user.casefold() == "parth sharma"', app)
+        self.assertIn('ADMIN_USERNAME = "Admin"', app)
+        self.assertIn('st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold()', app)
+        self.assertIn('st.session_state.active_user.casefold() != ADMIN_USERNAME.casefold()', app)
+        self.assertIn('name.casefold() != ADMIN_USERNAME.casefold()', app)
+        self.assertIn('"Parth Sharma" = "YOUR_LEARNER_PASSWORD"', app)
         self.assertIn('page_options.append("Admin Dashboard")', app)
         for label in (
             "Login and logout history", "Lessons cleared", "Practice rounds",
