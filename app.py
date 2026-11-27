@@ -269,6 +269,13 @@ def display_lesson_title(course_item):
             "Native-Level Pronunciation": "Advanced Pronunciation", "Native-Level Conversation": "Advanced Communication",
             "French Spelling": "Portuguese Spelling", "Y and EN Pronouns": "Object Pronouns and Prepositional Complements",
             "Plus-Que-Parfait": "Pretérito Mais-que-perfeito", "French-Canadian Society": "Angolan Society",
+            "Regular -ER, -IR and -RE Verbs": "Regular -AR, -ER and -IR Verbs",
+            "NE...PAS": "NÃO", "QUI, QUE, OÙ": "QUE, QUEM, ONDE",
+            "Canadian French Idioms": "Angolan Portuguese Expressions",
+            "Colloquial Quebec French": "Colloquial Angolan Portuguese",
+            "Regional Canadian French Accents": "Regional Angolan Portuguese Varieties",
+            "Mastering Native-Level Pronunciation and Intonation": "Advanced Pronunciation and Intonation",
+            "Native-Level Conversation and Communication Simulation": "Advanced Communication Simulation",
         }
         for old, new in replacements.items():
             title = title.replace(old, new)
@@ -579,6 +586,7 @@ for key, default in (("practice_rounds", 0), ("practice_correct", 0), ("practice
 LANGUAGES = {
     "Canadian French": {"flag": "🇨🇦", "status": "available"},
     "Angolan Portuguese": {"flag": "🇦🇴", "status": "available"},
+    "IELTS": {"flag": "🇬🇧", "status": "coming soon"},
     "Gujarati": {"flag": "🇮🇳", "status": "coming soon"},
     "Hindi": {"flag": "🇮🇳", "status": "coming soon"},
     "English": {"flag": "🇬🇧", "status": "coming soon"},
@@ -937,7 +945,7 @@ elif page == "Vocabulary":
                     st.markdown(f"*{example}*")
                     st.caption(source_lesson)
     else:
-        page_header("YOUR WORD BANK", "Portuguese foundations & vocabulary" if st.session_state.selected_language == "Angolan Portuguese" else "French foundations & vocabulary", "A growing Angolan Portuguese reference library." if st.session_state.selected_language == "Angolan Portuguese" else "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
+        page_header("YOUR WORD BANK", "French foundations & vocabulary", "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
 
         def french_number_under_100(number):
             units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
