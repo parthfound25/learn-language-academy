@@ -593,8 +593,8 @@ with st.sidebar:
         st.rerun()
     st.markdown("---")
     st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
-    st.progress(len(st.session_state.completed) / 90)
-    st.caption(f"{len(st.session_state.completed)} of 90 lessons completed")
+    st.progress(min(len(set(st.session_state.completed).intersection(COURSE_INDEX)) / COURSE_TOTAL, 1.0))
+    st.caption(f"{len(set(st.session_state.completed).intersection(COURSE_INDEX))} of {COURSE_TOTAL} lessons completed")
     st.markdown(f"**⭐ {st.session_state.xp} XP**")
 
 def page_header(kicker, title, subtitle=None):
@@ -1603,7 +1603,7 @@ if page == "Home":
         next_lesson = next((x for x in ALL_LESSONS if x["id"] not in st.session_state.completed), None)
         if next_lesson:
             st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
-            if next_lesson["id"] == 1 or next_lesson["id"] in A1_LESSONS or next_lesson["id"] in A2_LESSONS or next_lesson["id"] in B1_LESSONS or next_lesson["id"] in B2_LESSONS or next_lesson["id"] in C1_LESSONS or next_lesson["id"] in C2_LESSONS:
+            if get_lesson_content(next_lesson["id"]) is not None:
                 st.success("This lesson is ready. Continue your learning journey!")
                 if st.button(f"Open Lesson {next_lesson['id']}", type="primary", key="home_open_next_lesson"):
                     st.session_state.active_lesson = next_lesson["id"]
@@ -1612,7 +1612,7 @@ if page == "Home":
             else:
                 st.info("This lesson is on the course roadmap. Its full content will be added in a later course update.")
         else:
-            st.success("You have completed all {COURSE_TOTAL} lessons!")
+            st.success(f"You have completed all {COURSE_TOTAL} lessons!")
 
 elif page == "Learning Path":
     page_header("YOUR COURSE", f"{st.session_state.selected_language} · A1 to C2", f"A complete {COURSE_TOTAL}-lesson learning path, expanded with additional foundations, skills and mastery practice.")
