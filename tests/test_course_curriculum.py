@@ -93,6 +93,17 @@ class CourseCurriculumTests(unittest.TestCase):
             with self.subTest(lesson_id=lesson_id):
                 self.assertEqual(len(headwords), len(set(headwords)))
 
+    def test_assessments_are_distinct_from_guided_exercises(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            exercise_prompts = {question[0] for question in lesson["exercises"]}
+            assessment_prompts = {question[0] for question in lesson["assessment"]}
+            with self.subTest(lesson_id=lesson_id):
+                self.assertFalse(exercise_prompts.intersection(assessment_prompts))
+
     def test_all_assessments_do_not_repeat_questions(self):
         all_lessons = {}
         for bank in BANKS:
