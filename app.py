@@ -168,17 +168,54 @@ LEVELS = {
     ],
 }
 
-ALL_LESSONS = []
+BASE_ALL_LESSONS = []
 lesson_number = 1
 for level_name, titles in LEVELS.items():
     for title in titles:
-        ALL_LESSONS.append({
+        BASE_ALL_LESSONS.append({
             "id": lesson_number,
             "title": title,
             "level": level_name,
             "xp": 25 if lesson_number == 1 else 30,
         })
         lesson_number += 1
+
+# Insert targeted CEFR extensions at their pedagogically appropriate points.
+# Original IDs 1-90 remain stable to preserve existing learner progress.
+EXTENSION_INSERT_AFTER = {
+    3: [91], 7: [92], 20: [93], 25: [94],
+    33: [95], 44: [96], 48: [97], 54: [98],
+    67: [99], 70: [100], 85: [101], 89: [102],
+}
+ALL_LESSONS = []
+for base_item in BASE_ALL_LESSONS:
+    ALL_LESSONS.append(base_item)
+    for extension_id in EXTENSION_INSERT_AFTER.get(base_item["id"], []):
+        extension = EXTENSION_LESSONS[extension_id]
+        ALL_LESSONS.append({
+            "id": extension_id,
+            "title": extension["title"],
+            "level": extension["level"],
+            "xp": 30,
+        })
+
+COURSE_TOTAL = len(ALL_LESSONS)
+COURSE_INDEX = {item["id"]: index for index, item in enumerate(ALL_LESSONS)}
+
+def course_number(lesson_id):
+    return COURSE_INDEX.get(lesson_id, 0) + 1
+
+def next_course_lesson(lesson_id):
+    index = COURSE_INDEX.get(lesson_id, -1)
+    return ALL_LESSONS[index + 1] if 0 <= index + 1 < COURSE_TOTAL else None
+
+def get_lesson_content(lesson_id):
+    if lesson_id == 1:
+        return LESSON_1
+    for bank in (A1_LESSONS, A2_LESSONS, B1_LESSONS, B2_LESSONS, C1_LESSONS, C2_LESSONS, EXTENSION_LESSONS):
+        if lesson_id in bank:
+            return bank[lesson_id]
+    return None
 
 # ---------------------------------------------------------------------
 # Complete Lesson 1 content. Teaching language: simple English.
