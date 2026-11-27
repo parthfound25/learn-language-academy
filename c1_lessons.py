@@ -195,7 +195,13 @@ def _build(lesson_id):
     grammar = GRAMMAR[lesson_id]
     exercises = []
     for i, item in enumerate(vocab[:5]):
-        options = [item[1], vocab[(i+1)%10][1], vocab[(i+2)%10][1], vocab[(i+3)%10][1]]
+        options = [item[1]]
+        for step in range(1, len(vocab)):
+            candidate = vocab[(i + step) % len(vocab)][1]
+            if candidate not in options:
+                options.append(candidate)
+            if len(options) == 4:
+                break
         exercises.append((f"What does « {item[0]} » mean?", options, 0, f"« {item[0]} » means {item[1]}."))
     for i, item in enumerate(grammar[:5]):
         exercises.append((f"Which statement best describes: {item[0]}?", [item[1], grammar[(i+1)%6][1], grammar[(i+2)%6][1], grammar[(i+3)%6][1]], 0, item[1]))
