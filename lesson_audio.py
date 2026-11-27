@@ -63,6 +63,8 @@ def build_lesson_audio_segments(lesson: dict, lesson_id: int, language: str) -> 
     for index, item in enumerate(vocabulary, 1):
         if len(item) >= 1:
             add("vocabulary", f"word-{index}", item[0])
+        if len(item) >= 2:
+            add("vocabulary-meanings", f"meaning-{index}", item[1], speech_language="en")
         if len(item) >= 5:
             example = str(item[4]).split(" — ", 1)[0].strip()
             add("vocabulary-examples", f"example-{index}", example)
@@ -75,16 +77,26 @@ def build_lesson_audio_segments(lesson: dict, lesson_id: int, language: str) -> 
     for index, item in enumerate(lesson.get("expressions", []) or [], 1):
         if len(item) >= 1:
             add("expressions", f"phrase-{index}", item[0])
+        if len(item) >= 2:
+            add("expression-meanings", f"meaning-{index}", item[1], speech_language="en")
+        if len(item) >= 3:
+            add("expression-notes", f"note-{index}", item[2], speech_language="en")
 
     for index, item in enumerate(lesson.get("examples", []) or [], 1):
         if len(item) >= 1:
             add("examples", f"sentence-{index}", item[0])
+        if len(item) >= 2:
+            add("example-translations", f"translation-{index}", item[1], speech_language="en")
+        if len(item) >= 3:
+            add("example-notes", f"note-{index}", item[2], speech_language="en")
 
     for dialogue_index, item in enumerate(lesson.get("conversations", []) or [], 1):
         if len(item) < 2:
             continue
         title, dialogue = item[0], item[1]
         add("dialogues", f"dialogue-{dialogue_index}-title", title, speech_language="en")
+        if len(item) >= 3:
+            add("dialogue-translations", f"dialogue-{dialogue_index}-translation", item[2], speech_language="en")
         for line_index, line in enumerate(dialogue, 1):
             if len(line) < 2:
                 continue
@@ -100,6 +112,15 @@ def build_lesson_audio_segments(lesson: dict, lesson_id: int, language: str) -> 
     ):
         for index, text in enumerate(lesson.get(field, []) or [], 1):
             add(section, f"item-{index}", text, speech_language="en")
+
+    for section in ("exercises", "assessment"):
+        for question_index, question in enumerate(lesson.get(section, []) or [], 1):
+            if len(question) < 4:
+                continue
+            add(section, f"question-{question_index}", question[0], speech_language="en")
+            for option_index, option in enumerate(question[1], 1):
+                add(section + "-options", f"question-{question_index}-option-{option_index}", option, speech_language="en")
+            add(section + "-feedback", f"question-{question_index}-explanation", question[3], speech_language="en")
 
     # Stable order and IDs let a regenerated lesson reuse unchanged clips.
     unique = {}
@@ -149,6 +170,14 @@ def _download_object(url: str, key: str, path: str):
     return response.content
 
 
+def _object_exists(url: str, key: str, path: str) -> bool:
+    response = requests.head(_object_url(url, path), headers=_headers(key), timeout=30)
+    if response.status_code == 404:
+        return False
+    response.raise_for_status()
+    return True
+
+
 def _upload_object(url: str, key: str, path: str, data: bytes, content_type: str):
     headers = _headers(key)
     headers.update({"Content-Type": content_type, "x-upsert": "true"})
@@ -196,8 +225,8 @@ def generate_lesson_audio(lesson: dict, lesson_id: int, language: str, secrets) 
         previous = existing.get(segment["id"], {})
         path = previous.get("path") or f"{prefix}/{segment['id']}.mp3"
         # Reuse the object if it still exists; otherwise synthesize it.
-        cached = _download_object(storage_url, storage_key, path)
-        if cached is None:
+        cached = _object_exists(storage_url, storage_key, path)
+        if not cached:
             role = segment["voice_role"]
             voice_id = _voice_id(secrets, segment["language"], role)
             audio_bytes = _synthesize(segment["text"], voice_id, api_key, segment["language"])
