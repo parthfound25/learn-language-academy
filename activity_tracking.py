@@ -95,9 +95,81 @@ def end_session(session_id: str, started_at: str):
             "logout_at": now.isoformat(),
             "duration_seconds": duration,
             "status": "logged_out",
-        }).eq("session_id", session_id).execute()
+        }).eq("session_id", session_id).is_("logout_at", "null").execute()
     except Exception:
         return
+
+
+def session_is_active(session_id: str) -> bool:
+    """Return whether a session remains valid for progress persistence."""
+    client = _client()
+    if client is None or not session_id:
+        return False
+    try:
+        response = (
+            client.table("learner_sessions")
+            .select("session_id")
+            .eq("session_id", session_id)
+            .eq("status", "active")
+            .is_("logout_at", "null")
+            .limit(1)
+            .execute()
+        )
+        return bool(response.data)
+    except Exception:
+        return False
+
+
+def reset_learner_data(username: str, invalidate_active_sessions: bool = True) -> bool:
+    """Reset durable progress and time while preserving account and session history.
+
+    Admin resets invalidate open learner sessions so their stale in-memory progress
+    cannot be written back. A learner resetting their own progress keeps their
+    current session alive and restarts its timer.
+    """
+    client = _client()
+    if client is None or not username:
+        return False
+    now = _now().isoformat()
+    try:
+        client.table("learner_progress").update({
+            "xp": 0,
+            "completed_lessons": [],
+            "active_lesson": 1,
+            "practice_rounds": 0,
+            "practice_correct": 0,
+            "practice_total": 0,
+            "achievements": [],
+            "updated_at": now,
+        }).eq("username", username).execute()
+
+        client.table("learner_sessions").update({
+            "duration_seconds": 0,
+        }).eq("username", username).execute()
+
+        active_sessions = (
+            client.table("learner_sessions")
+            .select("session_id")
+            .eq("username", username)
+            .eq("status", "active")
+            .is_("logout_at", "null")
+            .execute()
+        ).data or []
+        for row in active_sessions:
+            session_update = {
+                "last_seen_at": now,
+                "duration_seconds": 0,
+            }
+            if invalidate_active_sessions:
+                session_update.update({"status": "logged_out", "logout_at": now})
+            else:
+                session_update["login_at"] = now
+            client.table("learner_sessions").update(session_update).eq(
+                "session_id", row["session_id"]
+            ).execute()
+        return True
+    except Exception:
+        return False
 
 
 def log_activity_event(username: str, language: str, event_type: str,
