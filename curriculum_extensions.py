@@ -279,9 +279,63 @@ def _make_questions(spec):
         questions.append((f"Which explanation best describes “{title}”?", options, options.index(explanation), explanation))
     return questions
 
+def _make_assessment(spec):
+    """Build a short transfer check that does not repeat guided exercise prompts."""
+    vocabulary = spec["vocab"]
+    questions = []
+    for index in (6, 7):
+        item = vocabulary[index]
+        correct = item[1]
+        options = [correct]
+        for candidate in (entry[1] for entry in vocabulary):
+            if candidate not in options:
+                options.append(candidate)
+            if len(options) == 4:
+                break
+        shift = (index + 1) % 4
+        options = options[shift:] + options[:shift]
+        questions.append((
+            f"What does « {item[0]} » mean in this lesson?",
+            options,
+            options.index(correct),
+            f"« {item[0]} » means {correct}.",
+        ))
+
+    example_pool = spec["examples"][:4]
+    for index, example in enumerate(spec["examples"][:2]):
+        french, english, note = example
+        options = [entry[0] for entry in example_pool]
+        shift = (index + 1) % 4
+        options = options[shift:] + options[:shift]
+        questions.append((
+            f"Which French sentence means “{english}”?",
+            options,
+            options.index(french),
+            f"{french} means “{english}”. {note}",
+        ))
+
+    title, explanation = spec["grammar"][4]
+    options = []
+    for candidate in [explanation] + [entry[1] for entry in spec["grammar"][:4]]:
+        if candidate not in options:
+            options.append(candidate)
+        if len(options) == 4:
+            break
+    shift = 2
+    options = options[shift:] + options[:shift]
+    questions.append((
+        f"Which explanation best describes “{title}”?",
+        options,
+        options.index(explanation),
+        explanation,
+    ))
+    return questions
+
+
 def _build(lesson_id, spec):
     vocabulary = [(fr, meaning, pronunciation, ipa, example) for fr, meaning, pronunciation, ipa, example in spec["vocab"]]
     exercises = _make_questions(spec)
+    assessment = _make_assessment(spec)
     return {
         "id": lesson_id,
         "level": spec["level"],
@@ -296,7 +350,7 @@ def _build(lesson_id, spec):
         "conversations": spec["conversations"],
         "pronunciation": spec["pronunciation"],
         "exercises": exercises,
-        "assessment": exercises,
+        "assessment": assessment,
         "speaking": spec["speaking"],
         "summary": spec["summary"],
         "homework": spec["homework"],
