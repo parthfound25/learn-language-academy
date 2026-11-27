@@ -50,8 +50,8 @@ class AngolanPortugueseA1EditorialTests(unittest.TestCase):
         grammar_text = " ".join(text for _, text in lesson_3["grammar"]).lower()
         self.assertIn("ter", grammar_text)
         self.assertIn("age", grammar_text)
-        lesson_4 = PORTUGUESE_LESSONS[4]
-        grammar_text = " ".join(text for _, text in lesson_4["grammar"]).lower()
+        lesson_91 = PORTUGUESE_LESSONS[91]
+        grammar_text = " ".join(text for _, text in lesson_91["grammar"]).lower()
         self.assertIn("não", grammar_text)
 
 
