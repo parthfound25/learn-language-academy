@@ -1516,7 +1516,7 @@ LESSON_DATA = {
 ("Complete: Je paie ___ espèces.", ["en","par","à","de"], 0, "The phrase is payer en espèces."),
 ("Choose the correct phrase for 'by subway'.", ["en métro","à métro","au métro","dans métro"], 0, "Use en métro for the mode of transport."),
 ("Which weather expression is correct?", ["Il pleut.","Il est pleut.","Il a pleut.","Il fait pleut."], 0, "Pleuvoir is used impersonally: il pleut."),
-("Complete: J'ai mal ___ épaule.", ["au","à la","aux","à l'"], 1, "Épaule is feminine: à l'épaule would be correct because it begins with a vowel. Correct answer is à l'."),
+("Complete: J'ai mal ___ épaule.", ["au","à la","aux","à l'"], 3, "Épaule begins with a vowel, so use à l'épaule."),
 ("Which phrase means 'I've just arrived'?", ["Je vais arriver.","Je viens d'arriver.","Je viens arriver.","Je vais d'arriver."], 1, "Venir de + infinitive; de elides to d' before a vowel."),
 ("Choose the correct near future sentence.", ["Ils vont partir demain.","Ils va partir demain.","Ils vont partent demain.","Ils allez partir demain."], 0, "Ils takes vont, followed by the infinitive partir."),
 ("Which phrase means 'return ticket'?", ["un aller-retour","un aller simple","un billet simple","un quai retour"], 0, "Aller-retour is a return ticket."),
