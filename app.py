@@ -10,6 +10,7 @@ from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
 from angolan_portuguese_lessons import PORTUGUESE_LESSONS
+from lesson_audio import AudioConfigurationError, generate_lesson_audio, load_lesson_audio
 from activity_tracking import (
     end_session, get_admin_activity_data, heartbeat_session,
     latest_language_for_user, load_progress_snapshot, log_activity_event,
@@ -802,13 +803,54 @@ def render_unified_lesson(lesson_id):
     st.markdown(f"**Learning goal:** {lesson_goal}")
     st.caption(f"{language_name} focus · English explanations · Suggested study time: 35–55 minutes")
     st.progress(number / COURSE_TOTAL, text=f"Course progress · Lesson {number} of {COURSE_TOTAL}")
-    tabs = st.tabs(["1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
+    language_slug = "angolan_portuguese" if is_portuguese else "canadian_french"
+    audio_state_key = f"lesson_audio_{language_slug}_{lesson_id}"
+    if st.button("Generate complete lesson audio", type="primary", key=f"generate_audio_{language_slug}_{lesson_id}"):
+        try:
+            with st.spinner("Creating and saving the spoken lesson. This may take a few minutes the first time."):
+                audio_result = generate_lesson_audio(lesson, lesson_id, language_name, st.secrets)
+            st.session_state[audio_state_key] = audio_result["manifest"]
+            st.success("Audio ready: " + str(audio_result["manifest"]["clip_count"]) + " clips · " + str(audio_result["generated"]) + " newly generated · " + str(audio_result["reused"]) + " reused.")
+        except AudioConfigurationError as exc:
+            st.error(str(exc))
+        except Exception as exc:
+            st.error("Audio generation failed: " + str(exc))
+    audio_manifest = st.session_state.get(audio_state_key)
+    if audio_manifest is None:
+        try:
+            audio_manifest = load_lesson_audio(lesson_id, language_name, st.secrets)
+            if audio_manifest:
+                st.session_state[audio_state_key] = audio_manifest
+        except AudioConfigurationError:
+            audio_manifest = None
+        except Exception as exc:
+            st.warning("Could not load saved lesson audio: " + str(exc))
+
+    tabs = st.tabs(["0 · Audio", "1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
     with tabs[0]:
+        st.subheader("Listen to the complete lesson")
+        st.caption("Generate once; saved clips are reused. Vocabulary, expressions, examples and dialogue lines use the target language. Teaching explanations and study instructions use English narration. Dialogue turns alternate female and male voices.")
+        if audio_manifest:
+            grouped = {}
+            for clip in audio_manifest.get("clips", []):
+                grouped.setdefault(clip.get("section", "Lesson audio"), []).append(clip)
+            for section, clips in grouped.items():
+                with st.expander(section.replace("-", " ").title() + " · " + str(len(clips)) + " clips", expanded=section in ("vocabulary", "dialogues")):
+                    for clip in clips:
+                        st.markdown("**" + str(clip.get("label", "Audio")) + "** · " + str(clip.get("voice_role", "female")).title() + " voice")
+                        st.caption(clip.get("text", ""))
+                        st.audio(clip["url"], format="audio/mpeg")
+        else:
+            st.info("No audio has been generated for this lesson yet. Select Generate complete lesson audio above. Your first generation requires the audio and storage settings described in AUDIO_SETUP.md.")
+        st.divider()
+        st.subheader("Audio access")
+        st.write("The same saved lesson clips are available to every learner. Generating audio does not change lesson completion, XP or course progress.")
+    with tabs[1]:
         st.subheader("What you will learn")
         for objective in objectives:
             st.markdown(f"- {objective}")
         st.info("Suggested method: study the explanations, say the examples aloud, complete the exercises, then do the homework without looking at the answers.")
-    with tabs[1]:
+    with tabs[2]:
         st.subheader("Vocabulary")
         for french, meaning, pronunciation_hint, ipa, example in vocabulary:
             with st.container(border=True):
@@ -831,13 +873,13 @@ def render_unified_lesson(lesson_id):
                 with cols[index % 4]:
                     st.markdown(f"**{letter}**")
                     st.caption(sound)
-    with tabs[2]:
+    with tabs[3]:
         st.subheader("Grammar and usage")
         for title, explanation in grammar:
             with st.expander(title, expanded=True):
                 st.write(explanation)
         st.info("Angolan Portuguese note: learn broadly understood forms first. Vocabulary, pronunciation and usage vary across Angola and by situation." if is_portuguese else "Canadian French note: learn the broadly understood standard form first; regional vocabulary and spoken forms should be labelled by region and register.")
-    with tabs[3]:
+    with tabs[4]:
         st.subheader("Useful expressions")
         for phrase, meaning, context in expressions:
             with st.container(border=True):
@@ -849,7 +891,7 @@ def render_unified_lesson(lesson_id):
                 st.markdown(f"**{french}**")
                 st.write(english)
                 st.caption(explanation)
-    with tabs[4]:
+    with tabs[5]:
         st.subheader("Dialogues and conversations")
         for title, dialogue, translation in conversations:
             st.markdown(f"**{title}**")
@@ -857,12 +899,12 @@ def render_unified_lesson(lesson_id):
                 st.markdown(f"- **{speaker}:** {line}")
             with st.expander("Show English translation"):
                 st.write(translation)
-    with tabs[5]:
+    with tabs[6]:
         st.subheader("Pronunciation guidance")
         for instruction in pronunciation:
             st.markdown(f"- {instruction}")
         st.caption("Pronunciation hints are approximations, not a single mandatory Angolan accent. Speech varies across Angola." if is_portuguese else "IPA is more precise than English-style pronunciation hints. Accent and pronunciation vary among French speakers, including across Canada.")
-    with tabs[6]:
+    with tabs[7]:
         st.subheader("Interactive exercises")
         st.write("Check each answer immediately and read the explanation. Mistakes never block lesson completion.")
         for index, question_data in enumerate(exercises):
@@ -875,14 +917,14 @@ def render_unified_lesson(lesson_id):
                     st.success("Correct! " + explanation)
                 else:
                     st.error("Not quite. " + explanation)
-    with tabs[7]:
+    with tabs[8]:
         st.subheader("Speaking and practical activities")
         for index, instruction in enumerate(speaking, start=1):
             st.markdown(f"{index}. {instruction}")
         st.subheader("Lesson review")
         for item in summary:
             st.markdown(f"- {item}")
-    with tabs[8]:
+    with tabs[9]:
         st.subheader("Homework and independent practice")
         for index, task in enumerate(homework, start=1):
             st.markdown(f"{index}. {task}")
