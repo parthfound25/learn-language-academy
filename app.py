@@ -1748,7 +1748,7 @@ elif page == "Settings":
                 st.rerun()
 
 # Session-level per-user, per-language cache only. This is not durable database storage.
-if st.session_state.get("active_user"):
+if st.session_state.get("active_user") and st.session_state.active_user.casefold() != ADMIN_USERNAME.casefold():
     current_username = st.session_state.active_user
     save_language_progress(current_username)
     current_language = st.session_state.get("selected_language", "")
