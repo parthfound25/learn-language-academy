@@ -1392,41 +1392,41 @@ elif page == "Practice":
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
     lesson_bank = LESSON_1 if selected_id == 1 else A1_LESSONS[selected_id]
     question_bank = lesson_bank["exercises"] + lesson_bank["assessment"]
-        if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
+    if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
+        st.session_state.practice_questions = random.sample(question_bank, 10)
+        st.session_state.practice_lesson_active = selected_id
+        st.session_state.practice_submitted = False
+    if "practice_submitted" not in st.session_state:
+        st.session_state.practice_submitted = False
+    if st.session_state.practice_submitted:
+        score = st.session_state.practice_round_score
+        st.subheader("Your practice result")
+        st.metric("Score", f"{score}/10", f"{score * 10}% accuracy")
+        st.write(f"You got **{score} out of 10** correct.")
+        st.progress(score / 10)
+        st.success("Practice round completed · +15 XP earned")
+        st.caption("Your next attempt will use a different shuffled set of questions.")
+        if st.button("Try again · New 10 questions", type="primary", key="new_practice_round"):
             st.session_state.practice_questions = random.sample(question_bank, 10)
-            st.session_state.practice_lesson_active = selected_id
             st.session_state.practice_submitted = False
-        if "practice_submitted" not in st.session_state:
-            st.session_state.practice_submitted = False
-        if st.session_state.practice_submitted:
-            score = st.session_state.practice_round_score
-            st.subheader("Your practice result")
-            st.metric("Score", f"{score}/10", f"{score * 10}% accuracy")
-            st.write(f"You got **{score} out of 10** correct.")
-            st.progress(score / 10)
-            st.success("Practice round completed · +15 XP earned")
-            st.caption("Your next attempt will use a different shuffled set of questions.")
-            if st.button("Try again · New 10 questions", type="primary", key="new_practice_round"):
-                st.session_state.practice_questions = random.sample(question_bank, 10)
-                st.session_state.practice_submitted = False
+            st.rerun()
+    else:
+        for i, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
+            st.radio(f"{i+1}. {question}", options, index=None, key=f"practice_round_{st.session_state.practice_rounds}_{i}")
+        if st.button("Submit 10-question practice", type="primary", key="submit_practice_round"):
+            responses = [st.session_state.get(f"practice_round_{st.session_state.practice_rounds}_{i}") for i in range(10)]
+            if any(value is None for value in responses):
+                st.warning(f"Please answer all 10 questions. Answered: {sum(value is not None for value in responses)}/10.")
+            else:
+                score = sum(1 for response, (_, options, answer, _) in zip(responses, st.session_state.practice_questions) if options.index(response) == answer)
+                st.session_state.practice_round_score = score
+                st.session_state.practice_rounds += 1
+                st.session_state.practice_correct += score
+                st.session_state.practice_total += 10
+                st.session_state.xp += 15
+                st.session_state.practice_submitted = True
+                refresh_achievements()
                 st.rerun()
-        else:
-            for i, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
-                st.radio(f"{i+1}. {question}", options, index=None, key=f"practice_round_{st.session_state.practice_rounds}_{i}")
-            if st.button("Submit 10-question practice", type="primary", key="submit_practice_round"):
-                responses = [st.session_state.get(f"practice_round_{st.session_state.practice_rounds}_{i}") for i in range(10)]
-                if any(value is None for value in responses):
-                    st.warning(f"Please answer all 10 questions. Answered: {sum(value is not None for value in responses)}/10.")
-                else:
-                    score = sum(1 for response, (_, options, answer, _) in zip(responses, st.session_state.practice_questions) if options.index(response) == answer)
-                    st.session_state.practice_round_score = score
-                    st.session_state.practice_rounds += 1
-                    st.session_state.practice_correct += score
-                    st.session_state.practice_total += 10
-                    st.session_state.xp += 15
-                    st.session_state.practice_submitted = True
-                    refresh_achievements()
-                    st.rerun()
 
 elif page == "Achievements":
     page_header("YOUR MILESTONES", "Achievements", "Earn milestones through lessons and practice. Newly unlocked achievements appear as notifications.")
