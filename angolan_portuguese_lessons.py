@@ -283,4 +283,14 @@ A1_NEXT_LESSONS[4] = A1_QUALITY_LESSONS[5]  # Numbers belong in chapter 4.
 A1_NEXT_LESSONS[91] = A1_QUALITY_LESSONS[4]  # Sentence patterns are the A1 extension chapter.
 PORTUGUESE_LESSONS.update(A1_NEXT_LESSONS)
 
+# Replace the generic A2-C2 templates with chapter-focused Angolan Portuguese content.
+from angolan_portuguese_a2_c2_editorial import apply_editorial as _apply_a2_c2_editorial
+_apply_a2_c2_editorial(PORTUGUESE_LESSONS, TOPICS, VOCAB_POOLS, _pool_for)
+
+# Correct remaining A1 source labels in the metadata as well as in the visible lessons.
+TOPICS[1]["title"] = "Portuguese Alphabet, Sounds and Pronunciation"
+TOPICS[8]["title"] = "Subject Pronouns and the Verbs SER and ESTAR"
+TOPICS[9]["title"] = "The Verb TER and Possession"
+
+
 
