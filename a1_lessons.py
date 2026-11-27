@@ -434,23 +434,41 @@ LESSON_DATA = {
 }
 
 def _make_questions(vocabulary, count=20):
-    questions = []
+    """Create a balanced set of meaning-to-French and French-to-meaning questions."""
+    forward = []
+    reverse = []
     meanings = [entry[1] for entry in vocabulary]
-    for index, entry in enumerate(vocabulary):
-        word, meaning = entry[0], entry[1]
-        distractors = [meanings[(index + step) % len(meanings)] for step in range(1, min(4, len(meanings)))]
-        options = [meaning] + distractors[:3]
+    words = [entry[0] for entry in vocabulary]
+    for index, (word, meaning, *_rest) in enumerate(vocabulary):
+        distractors = []
+        for step in range(1, len(vocabulary)):
+            candidate = meanings[(index + step) % len(vocabulary)]
+            if candidate != meaning and candidate not in distractors:
+                distractors.append(candidate)
+            if len(distractors) == 3:
+                break
+        options = [meaning] + distractors
         correct_position = index % len(options)
         options = options[correct_position:] + options[:correct_position]
-        questions.append((f"What does “{word}” mean?", options, (len(options) - correct_position) % len(options), f"{word} means {meaning}."))
-    # Add reverse recognition items so the assessment tests both directions.
-    for index, entry in enumerate(vocabulary):
-        word, meaning = entry[0], entry[1]
-        distractors = [vocabulary[(index + step) % len(vocabulary)][0] for step in range(1, 4)]
+        forward.append((f"What does “{word}” mean?", options, (len(options) - correct_position) % len(options), f"{word} means {meaning}."))
+    for index, (word, meaning, *_rest) in enumerate(vocabulary):
+        distractors = []
+        for step in range(1, len(vocabulary)):
+            candidate = words[(index + step) % len(vocabulary)]
+            if candidate != word and candidate not in distractors:
+                distractors.append(candidate)
+            if len(distractors) == 3:
+                break
         options = [word] + distractors
         correct_position = (index + 1) % len(options)
         options = options[correct_position:] + options[:correct_position]
-        questions.append((f"Which French expression means “{meaning}”?", options, (len(options) - correct_position) % len(options), f"The correct French expression is {word}."))
+        reverse.append((f"Which French expression means “{meaning}”?", options, (len(options) - correct_position) % len(options), f"The correct French expression is {word}."))
+    questions = []
+    for index in range(max(len(forward), len(reverse))):
+        if index < len(forward):
+            questions.append(forward[index])
+        if index < len(reverse):
+            questions.append(reverse[index])
     return questions[:count]
 
 
@@ -575,14 +593,14 @@ LESSON_EXPANSIONS = {
 ("cinquante","fifty","sank-ahnt","/sɛ̃.kɑ̃t/","Il a cinquante ans."),
 ("soixante","sixty","swah-sahnt","/swa.sɑ̃t/","Le trajet dure soixante minutes."),
 ("soixante-dix","seventy","swah-sahnt-dees","/swa.sɑ̃t.dis/","Il y a soixante-dix pages."),
-("quatre-vingts","eighty","kah-truh-van","/ka.tʁə.vɛ̃/","Le magasin ferme à quatre-vingts heures (incorrect example to notice)."),
+("quatre-vingts","eighty","kah-truh-van","/ka.tʁə.vɛ̃/","Il y a quatre-vingts personnes dans la salle."),
 ("quatre-vingt-dix","ninety","kah-truh-van-dees","/ka.tʁə.vɛ̃.dis/","Le livre a quatre-vingt-dix pages."),
 ("cent","one hundred","sahn","/sɑ̃/","Le billet coûte cent dollars."),
 ("mille","one thousand","meel","/mil/","La ville compte mille habitants.")
 ],
 "grammar":[
 ("Numbers 0–16 must be learned individually","French number words from zéro through seize do not follow one fully predictable pattern, so learn them as a sequence. Practise them forward, backward and in random order. Pay attention to the nasal vowels in onze, onze-like forms and quinze; the final consonants are not always pronounced the way an English speaker expects."),
-("Building numbers from 17 to  o 69","From 17 to 19, combine dix with the unit: dix-sept, dix-huit, dix-neuf. The tens are vingt, trente, quarante, cinquante and soixante. Most numbers combine tens and units with a hyphen: vingt-deux, trente-cinq, cinquante-neuf. With 21, 31, 41, 51 and 61, use et un: vingt et un."),
+("Building numbers from 17 to 69","From 17 to 19, combine dix with the unit: dix-sept, dix-huit, dix-neuf. The tens are vingt, trente, quarante, cinquante and soixante. Most numbers combine tens and units with a hyphen: vingt-deux, trente-cinq, cinquante-neuf. With 21, 31, 41, 51 and 61, use et un: vingt et un."),
 ("The traditional French counting pattern from 70 to 99","In standard French used in Quebec, 70 is soixante-dix (60+10), 71 is soixante et onze, 72 is soixante-douze, and 80 is quatre-vingts (four twenties). 90 is quatre-vingt-dix. In everyday Quebec speech, septante and nonante may also be encountered in some communities or contexts, but soixante-dix and quatre-vingt-dix are widely understood and safe to learn first."),
 ("When vingt and cent take an s","Quatre-vingts takes an s when it means exactly eighty and nothing follows it: quatre-vingts. It loses the s when another number follows: quatre-vingt-deux. Cent takes an s when multiplied and not followed by another number: trois cents, but trois cent cinq. Mille is invariable in number names: deux mille."),
 ("Using numbers in age, prices, dates and time","Use avoir + number + ans for age. Use euros or dollars after a price, and use à before a clock time. Dates use cardinal numbers except for the first day of the month: le premier mai, le deux mai. In Quebec, prices are commonly expressed in dollars and cents; practise hearing numbers in realistic price contexts.")
