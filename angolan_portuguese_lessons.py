@@ -153,6 +153,30 @@ QUESTION_TEMPLATES = {
 def _level_key(level):
     return level.split(" ")[0]
 
+def _angolan_title(title):
+    replacements = {
+        "French Alphabet": "Portuguese Alphabet",
+        "Verb ÊTRE": "Verbs SER and ESTAR",
+        "Verb AVOIR": "Verb TER",
+        "Passé Composé": "Pretérito Perfeito",
+        "Imparfait": "Pretérito Imperfeito",
+        "Plus-Que-Parfait": "Pretérito Mais-que-perfeito",
+        "Future Simple": "Future Tense",
+        "Subjunctive Present": "Present Subjunctive",
+        "Canadian French": "Angolan Portuguese",
+        "Quebec French": "Angolan Portuguese",
+        "French Spelling": "Portuguese Spelling",
+        "Y and EN Pronouns": "Object Pronouns and Prepositional Complements",
+        "Regular -ER, -IR and -RE Verbs": "Regular -AR, -ER and -IR Verbs",
+        "NE...PAS": "NÃO",
+        "QUI, QUE, OÙ": "QUE, QUEM, ONDE",
+        "Native-Level Pronunciation": "Advanced Pronunciation",
+        "Native-Level Conversation": "Advanced Communication",
+    }
+    for old, new in replacements.items():
+        title = title.replace(old, new)
+    return title
+
 def _lesson_vocab(title, lesson_id):
     pool = _pool_for(title)
     # Rotate the selected pool by chapter so related chapters can revisit vocabulary
@@ -164,9 +188,10 @@ def _lesson_vocab(title, lesson_id):
     return [(pt, en, hint, "—", f"Hoje aprendo {pt}.") for pt,en,hint in selected]
 
 def _build_lesson(lesson_id, topic):
-    title, level = topic["title"], topic["level"]
+    source_title, level = topic["title"], topic["level"]
+    title = _angolan_title(source_title)
     key = _level_key(level)
-    vocab = _lesson_vocab(title, lesson_id)
+    vocab = _lesson_vocab(source_title, lesson_id)
     core = vocab[:5]
     grammar = GRAMMAR[key]
     examples = [
