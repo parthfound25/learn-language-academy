@@ -1485,6 +1485,13 @@ elif page == "Vocabulary":
         ])),
     }
 
+    # A2 vocabulary is sourced directly from each authored chapter so the reference library grows automatically.
+    for lesson_id, lesson_data in A2_LESSONS.items():
+        lesson_topic_collections[lesson_id] = (
+            f"A2 · Lesson {lesson_id} · {lesson_data['title']}",
+            lesson_data["vocab"],
+        )
+
     for lesson_id, (collection_name, entries) in lesson_topic_collections.items():
         if lesson_is_unlocked(lesson_id):
             vocabulary_groups[collection_name] = entries
