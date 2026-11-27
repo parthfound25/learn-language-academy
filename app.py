@@ -80,6 +80,7 @@ except Exception:
     configured_users = {}
 
 ADMIN_USERNAME = "Admin"
+AVAILABLE_LEARNING_LANGUAGES = ("Canadian French", "Angolan Portuguese")
 
 if not configured_users:
     st.title("🍀 Learn Language Academy by Parth")
@@ -107,8 +108,7 @@ if not st.session_state.get("active_user"):
                 st.session_state.page = "Admin Dashboard"
             else:
                 preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
-                available_languages = {name for name, details in LANGUAGES.items() if details["status"] == "available"}
-                if preferred_language not in available_languages:
+                if preferred_language not in AVAILABLE_LEARNING_LANGUAGES:
                     preferred_language = ""
                 st.session_state.selected_language = preferred_language
                 if preferred_language:
