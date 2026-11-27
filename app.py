@@ -834,7 +834,7 @@ def render_authored_a2_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_a2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_a2_lesson_{lesson_id}"):
@@ -954,7 +954,7 @@ def render_authored_b1_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_b1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_b1_lesson_{lesson_id}"):
@@ -1074,7 +1074,7 @@ def render_authored_b2_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_b2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_b2_lesson_{lesson_id}"):
@@ -1193,7 +1193,7 @@ def render_authored_c1_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_c1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_c1_lesson_{lesson_id}"):
@@ -1313,7 +1313,7 @@ def render_authored_c2_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_c2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_c2_lesson_{lesson_id}"):
