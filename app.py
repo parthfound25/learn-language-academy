@@ -700,22 +700,25 @@ def render_lesson_one():
 page = st.session_state.page
 
 if page == "Home":
-    st.markdown("""
+    username = st.session_state.active_user
+    st.markdown(f"""
     <div class="hero">
-      <div class="eyebrow">YOUR CANADIAN FRENCH JOURNEY</div>
-      <div class="hero-title">Bonjour, learner! 🇨🇦</div>
+      <div class="eyebrow">YOUR {st.session_state.selected_language.upper()} JOURNEY</div>
+      <div class="hero-title">Bonjour, {username}! 🇨🇦</div>
       <div class="hero-copy">A structured 90-lesson journey from A1 beginner to C2 mastery. Learn step by step, with progress and XP — never hearts or lives.</div>
     </div>
     """, unsafe_allow_html=True)
-    st.write("")
-    a, b, c = st.columns(3)
+    accuracy = 100 * st.session_state.practice_correct / st.session_state.practice_total if st.session_state.practice_total else 0
+    a, b, c, d = st.columns(4)
     with a:
         st.markdown(f'<div class="stat"><div class="stat-number">⭐ {st.session_state.xp}</div><div class="stat-label">TOTAL XP</div></div>', unsafe_allow_html=True)
     with b:
         st.markdown(f'<div class="stat"><div class="stat-number">{len(st.session_state.completed)}/90</div><div class="stat-label">LESSONS COMPLETED</div></div>', unsafe_allow_html=True)
     with c:
-        st.markdown('<div class="stat"><div class="stat-number">A1</div><div class="stat-label">STARTING LEVEL</div></div>', unsafe_allow_html=True)
-    st.write("")
+        st.markdown(f'<div class="stat"><div class="stat-number">{st.session_state.practice_rounds}</div><div class="stat-label">PRACTICE ROUNDS</div></div>', unsafe_allow_html=True)
+    with d:
+        st.markdown(f'<div class="stat"><div class="stat-number">{accuracy:.0f}%</div><div class="stat-label">PRACTICE ACCURACY</div></div>', unsafe_allow_html=True)
+    st.caption(f"Practice answers: {st.session_state.practice_correct} correct out of {st.session_state.practice_total} · Starting level: A1")
     page_header("CONTINUE LEARNING", "Your next lesson")
     if 1 not in st.session_state.completed:
         st.markdown("**Lesson 1 · French Alphabet, Sounds and Pronunciation**")
@@ -727,14 +730,14 @@ if page == "Home":
         next_lesson = next((x for x in ALL_LESSONS if x["id"] not in st.session_state.completed), None)
         if next_lesson:
             st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
-            st.info("The full detailed content for each lesson is being added one lesson at a time. Lesson 1 is currently available in full.")
+            st.info("The course content is being added progressively. Lesson 1 is currently available in full.")
             if next_lesson["id"] == 2:
                 st.button("Open Lesson 2", disabled=True, help="Lesson 2 content will be added in the next curriculum update.")
         else:
             st.success("You have completed all 90 lessons!")
 
 elif page == "Learning Path":
-    page_header("YOUR COURSE", "Canadian French · A1 to C2", "All 90 lessons are listed in the exact course order. Detailed lesson content is being built progressively.")
+    page_header("YOUR COURSE", f"{st.session_state.selected_language} · A1 to C2", "All 90 lessons are listed in the exact course order. Detailed lesson content is being built progressively.")
     for level_name, titles in LEVELS.items():
         first_id = sum(len(v) for k, v in LEVELS.items() if list(LEVELS).index(k) < list(LEVELS).index(level_name)) + 1
         done_in_level = sum(1 for lesson_id in range(first_id, first_id + len(titles)) if lesson_id in st.session_state.completed)
@@ -747,12 +750,7 @@ elif page == "Learning Path":
                 with col1:
                     icon = "✅" if completed else ("🌱" if unlocked else "🔒")
                     st.markdown(f"**{icon} Lesson {lesson_id}: {title}**")
-                    if lesson_id == 1:
-                        st.caption("Complete lesson available now · Canadian French pronunciation focus")
-                    elif lesson_id == 2:
-                        st.caption("Next lesson in the sequence · Detailed content will be added next")
-                    else:
-                        st.caption("On the course roadmap")
+                    st.caption("Complete lesson available now" if lesson_id == 1 else ("Next lesson in sequence · Content coming next" if lesson_id == 2 else "On the course roadmap"))
                 with col2:
                     if lesson_id == 1:
                         st.button("Review" if completed else "Start", key=f"path_lesson_{lesson_id}", type="primary" if not completed else "secondary", on_click=open_lesson, args=(1,))
@@ -773,56 +771,133 @@ elif page == "Lesson":
             st.rerun()
 
 elif page == "Vocabulary":
-    page_header("YOUR WORD BANK", "French vocabulary", "Vocabulary from the complete Lesson 1 course content.")
-    for fr, meaning, pron, ipa, example in LESSON_1["vocabulary"]:
+    page_header("YOUR WORD BANK", "French foundations & vocabulary", "A reference library for the building blocks of French, alongside the vocabulary from your lessons.")
+    vocabulary_groups = {
+        "Alphabet & letter names": [(a, b, "", "", f"Letter {a} is pronounced approximately {b}.") for a, b in [
+            ("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),
+            ("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),
+            ("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),
+            ("X","eeks"),("Y","ee-grek"),("Z","zed")]],
+        "Numbers 0–20": [(fr, en, "", "", f"{fr} = {en}") for fr, en in [
+            ("zéro","zero"),("un","one"),("deux","two"),("trois","three"),("quatre","four"),("cinq","five"),
+            ("six","six"),("sept","seven"),("huit","eight"),("neuf","nine"),("dix","ten"),("onze","eleven"),
+            ("douze","twelve"),("treize","thirteen"),("quatorze","fourteen"),("quinze","fifteen"),
+            ("seize","sixteen"),("dix-sept","seventeen"),("dix-huit","eighteen"),("dix-neuf","nineteen"),("vingt","twenty")]],
+        "Days of the week": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
+            ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
+            ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday")]],
+        "Months": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
+            ("janvier","January"),("février","February"),("mars","March"),("avril","April"),("mai","May"),
+            ("juin","June"),("juillet","July"),("août","August"),("septembre","September"),
+            ("octobre","October"),("novembre","November"),("décembre","December")]],
+        "Seasons": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
+            ("le printemps","spring"),("l'été","summer"),("l'automne","autumn/fall"),("l'hiver","winter")]],
+        "Colours": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
+            ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
+            ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),("rose","pink"),
+            ("orange","orange"),("violet / violette","purple")]],
+        "Lesson 1 vocabulary": LESSON_1["vocabulary"],
+    }
+    chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
+    search_word = st.text_input("Search this collection", placeholder="Search a French word or English meaning")
+    entries = vocabulary_groups[chosen_group]
+    if search_word.strip():
+        needle = search_word.strip().lower()
+        entries = [entry for entry in entries if needle in " ".join(str(x) for x in entry).lower()]
+    st.caption(f"{len(entries)} entries")
+    for fr, meaning, pron, ipa, example in entries:
         with st.container(border=True):
             left, right = st.columns([1, 2])
             with left:
                 st.markdown(f"**{fr}**")
-                st.caption(f"{pron} · {ipa}")
+                if pron or ipa:
+                    st.caption(f"{pron} · {ipa}")
             with right:
                 st.write(meaning)
                 st.caption(example)
 
 elif page == "Practice":
-    page_header("QUICK PRACTICE", "Practise your French", "Try a question from Lesson 1. Mistakes never block your progress.")
-    practice_items = LESSON_1["exercises"]
-    if "practice_question" not in st.session_state:
-        st.session_state.practice_question = 0
-    idx = st.session_state.practice_question % len(practice_items)
-    question, options, answer, explanation = practice_items[idx]
-    selected = st.radio(question, options, index=None, key=f"practice_choice_{idx}")
-    if st.button("Check answer", type="primary"):
-        if selected is None:
-            st.warning("Choose an answer first.")
-        elif options.index(selected) == answer:
-            st.success("Correct! " + explanation)
+    page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
+    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"])]
+    practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
+    selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
+    selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
+    if selected_id != 1:
+        st.info("Practice questions for this lesson will become available when its full lesson content is added.")
+    else:
+        question_bank = LESSON_1["exercises"] + LESSON_1["assessment"]
+        if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
+            st.session_state.practice_questions = random.sample(question_bank, 10)
+            st.session_state.practice_lesson_active = selected_id
+            st.session_state.practice_submitted = False
+        if "practice_submitted" not in st.session_state:
+            st.session_state.practice_submitted = False
+        if st.session_state.practice_submitted:
+            score = st.session_state.practice_round_score
+            st.subheader("Your practice result")
+            st.metric("Score", f"{score}/10", f"{score * 10}% accuracy")
+            st.write(f"You got **{score} out of 10** correct.")
+            st.progress(score / 10)
+            st.success("Practice round completed · +15 XP earned")
+            st.caption("Your next attempt will use a different shuffled set of questions.")
+            if st.button("Try again · New 10 questions", type="primary", key="new_practice_round"):
+                st.session_state.practice_questions = random.sample(question_bank, 10)
+                st.session_state.practice_submitted = False
+                st.rerun()
         else:
-            st.info("Not quite. " + explanation)
-    if st.button("Next question"):
-        st.session_state.practice_question += 1
-        st.rerun()
+            for i, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
+                st.radio(f"{i+1}. {question}", options, index=None, key=f"practice_round_{st.session_state.practice_rounds}_{i}")
+            if st.button("Submit 10-question practice", type="primary", key="submit_practice_round"):
+                responses = [st.session_state.get(f"practice_round_{st.session_state.practice_rounds}_{i}") for i in range(10)]
+                if any(value is None for value in responses):
+                    st.warning(f"Please answer all 10 questions. Answered: {sum(value is not None for value in responses)}/10.")
+                else:
+                    score = sum(1 for response, (_, options, answer, _) in zip(responses, st.session_state.practice_questions) if options.index(response) == answer)
+                    st.session_state.practice_round_score = score
+                    st.session_state.practice_rounds += 1
+                    st.session_state.practice_correct += score
+                    st.session_state.practice_total += 10
+                    st.session_state.xp += 15
+                    st.session_state.practice_submitted = True
+                    refresh_achievements()
+                    st.rerun()
 
 elif page == "Achievements":
-    page_header("YOUR MILESTONES", "Achievements", "Celebrate learning milestones. No hearts or lives.")
-    milestones = [
-        ("🌱", "First steps", "Complete your first lesson", len(st.session_state.completed) >= 1),
-        ("📚", "Getting consistent", "Complete 5 lessons", len(st.session_state.completed) >= 5),
-        ("🏅", "A1 explorer", "Complete 15 lessons", len(st.session_state.completed) >= 15),
-        ("🌍", "Language adventurer", "Complete 30 lessons", len(st.session_state.completed) >= 30),
-        ("🎓", "French mastery journey", "Complete all 90 lessons", len(st.session_state.completed) >= 90),
-    ]
-    for icon, title, description, earned in milestones:
+    page_header("YOUR MILESTONES", "Achievements", "Earn milestones through lessons and practice. Newly unlocked achievements appear as notifications.")
+    for achievement_id, icon, title, description, condition in ACHIEVEMENTS:
+        earned = achievement_id in st.session_state.earned_achievements
         with st.container(border=True):
-            st.markdown(f"{'✅' if earned else icon} **{title}**")
-            st.caption(description + (" · Unlocked" if earned else " · Not yet unlocked"))
+            if earned:
+                st.markdown(f"### 🟩 {icon} {title} · UNLOCKED")
+                st.markdown(f":green[{description}]")
+            else:
+                st.markdown(f"🔒 **{title}**")
+                st.caption(description + " · Not yet unlocked")
 
 elif page == "Settings":
-    page_header("YOUR ACCOUNT", "Settings", "Your learner account is managed through Streamlit Secrets.")
+    page_header("YOUR ACCOUNT", "Settings", "Manage your learning preferences. Progress is separated by username during this development phase.")
     st.text_input("Username", value=st.session_state.active_user, disabled=True)
     st.text_input("Native language", value="English", disabled=True)
-    st.text_input("Learning language", value="Canadian French", disabled=True)
-    st.caption("To add another learner, add their username and password under the [users] section in Streamlit Secrets.")
+    language_choices = [name for name, details in LANGUAGES.items() if details["status"] == "available"]
+    current_language = st.session_state.selected_language if st.session_state.selected_language in language_choices else language_choices[0]
+    new_language = st.selectbox("Learning language", language_choices, index=language_choices.index(current_language), key="settings_learning_language")
+    if st.button("Save language preference", type="primary"):
+        st.session_state.selected_language = new_language
+        st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = new_language
+        st.success(f"Learning language set to {new_language}.")
+        st.rerun()
+    st.caption("More languages will appear here when their courses are ready.")
+    if st.session_state.active_user.strip().lower() == "parth sharma":
+        st.divider()
+        st.subheader("Development test account")
+        st.warning("Resetting this account affects only the Parth Sharma test account.")
+        if st.button("Reset Parth Sharma test progress", type="secondary"):
+            for key in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements"):
+                st.session_state[key] = [] if key in ("completed", "earned_achievements") else (1 if key == "active_lesson" else 0)
+            st.session_state.pop("practice_questions", None)
+            st.session_state.pop("practice_submitted", None)
+            st.success("Test account progress reset for this session.")
+            st.rerun()
 
 # Persist this learner's progress within the current Streamlit session.
 if st.session_state.get("active_user"):
