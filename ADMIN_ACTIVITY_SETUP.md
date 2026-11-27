@@ -13,7 +13,7 @@ Admin = "SET_THE_ADMIN_PASSWORD_IN_STREAMLIT_SECRETS"
 "Learner 2" = "SET_LEARNER_PASSWORD"
 ```
 
-Use your chosen passwords directly in Streamlit Community Cloud → App settings → Secrets. Do not put real passwords in GitHub, source files, screenshots, or messages. The username **Admin** (case-insensitive) is the only account with administrator access. The username **Parth Sharma** is a normal learner.
+Use your chosen passwords directly in Streamlit Community Cloud → App settings → Secrets. Do not put real passwords in GitHub, source files, screenshots, or messages. The exact login username **Admin** is the only account with administrator access. Enter the username with this exact capitalization. The username **Parth Sharma** is a normal learner.
 
 There is no public registration.
 
