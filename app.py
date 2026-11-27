@@ -712,9 +712,9 @@ def render_authored_a1_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_a1_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_a1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next course lesson is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next course lesson is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_a1_lesson_{lesson_id}"):
@@ -1426,7 +1426,7 @@ def render_extension_lesson(lesson_id):
 
 def render_lesson_one():
     lesson = ALL_LESSONS[0]
-    st.markdown('<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown("**Goal:** Recognise the French alphabet, understand essential sound patterns, and read simple French words.")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 35–45 minutes")
@@ -1605,7 +1605,7 @@ if page == "Home":
             st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
             if get_lesson_content(next_lesson["id"]) is not None:
                 st.success("This lesson is ready. Continue your learning journey!")
-                if st.button(f"Open Lesson {next_lesson['id']}", type="primary", key="home_open_next_lesson"):
+                if st.button(f"Open Lesson {course_number(next_lesson['id'])}", type="primary", key="home_open_next_lesson"):
                     st.session_state.active_lesson = next_lesson["id"]
                     st.session_state.page = "Lesson"
                     st.rerun()
@@ -2187,7 +2187,7 @@ elif page == "Vocabulary":
 elif page == "Practice":
     page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
     available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and get_lesson_content(item["id"]) is not None]
-    practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
+    practice_labels = [f"Lesson {course_number(item['id'])} · {item['title']}" for item in available_practice]
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
     lesson_bank = get_lesson_content(selected_id)
