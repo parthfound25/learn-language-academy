@@ -18,6 +18,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Compile application and curriculum modules
-        run: python -m compileall -q app.py a1_lessons.py a2_lessons.py b1_lessons.py b2_lessons.py c1_lessons.py c2_lessons.py curriculum_extensions.py angolan_portuguese_lessons.py angolan_portuguese_a1_quality.py angolan_portuguese_a1_lessons_6_17.py
+        run: python -m compileall -q app.py a1_lessons.py a2_lessons.py b1_lessons.py b2_lessons.py c1_lessons.py c2_lessons.py curriculum_extensions.py angolan_portuguese_lessons.py angolan_portuguese_a1_quality.py angolan_portuguese_a1_lessons_6_17.py angolan_portuguese_a2_c2_editorial.py
       - name: Validate lesson coverage and content structure
         run: python -m unittest discover -s tests -v
