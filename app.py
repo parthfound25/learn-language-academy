@@ -1513,21 +1513,23 @@ if page == "Home":
             st.success("You have completed all 90 lessons!")
 
 elif page == "Learning Path":
-    page_header("YOUR COURSE", f"{st.session_state.selected_language} · A1 to C2", "All 90 lessons are listed in the exact course order. Detailed lesson content is being built progressively.")
-    for level_name, titles in LEVELS.items():
-        first_id = sum(len(v) for k, v in LEVELS.items() if list(LEVELS).index(k) < list(LEVELS).index(level_name)) + 1
-        done_in_level = sum(1 for lesson_id in range(first_id, first_id + len(titles)) if lesson_id in st.session_state.completed)
-        with st.expander(f"{level_name} · {done_in_level}/{len(titles)} complete", expanded=level_name.startswith("A1")):
-            for offset, title in enumerate(titles):
-                lesson_id = first_id + offset
+    page_header("YOUR COURSE", f"{st.session_state.selected_language} · A1 to C2", f"A complete {COURSE_TOTAL}-lesson learning path, expanded with additional foundations, skills and mastery practice.")
+    for level_name in LEVELS:
+        level_items = [item for item in ALL_LESSONS if item["level"] == level_name]
+        done_in_level = sum(1 for item in level_items if item["id"] in st.session_state.completed)
+        with st.expander(f"{level_name} · {done_in_level}/{len(level_items)} complete", expanded=level_name.startswith("A1")):
+            for item in level_items:
+                lesson_id = item["id"]
+                display_number = course_number(lesson_id)
+                title = item["title"]
                 completed = lesson_id in st.session_state.completed
                 unlocked = lesson_is_unlocked(lesson_id)
                 col1, col2 = st.columns([5, 1])
                 with col1:
                     icon = "✅" if completed else ("🌱" if unlocked else "🔒")
-                    st.markdown(f"**{icon} Lesson {lesson_id}: {title}**")
-                    has_content = lesson_id == 1 or lesson_id in A1_LESSONS or lesson_id in A2_LESSONS or lesson_id in B1_LESSONS or lesson_id in B2_LESSONS or lesson_id in C1_LESSONS or lesson_id in C2_LESSONS
-                    st.caption(("Complete lesson available now" if lesson_id == 1 else "Full lesson available · Unlocks in sequence") if has_content else "On the course roadmap · Content coming later")
+                    st.markdown(f"**{icon} Lesson {display_number}: {title}**")
+                    has_content = get_lesson_content(lesson_id) is not None
+                    st.caption("Complete lesson available · Unlocks in sequence" if has_content else "On the course roadmap · Content coming later")
                 with col2:
                     if not unlocked:
                         st.button("Locked", key=f"path_locked_{lesson_id}", disabled=True)
