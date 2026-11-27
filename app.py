@@ -13,7 +13,8 @@ from angolan_portuguese_lessons import PORTUGUESE_LESSONS
 from activity_tracking import (
     end_session, get_admin_activity_data, heartbeat_session,
     latest_language_for_user, load_progress_snapshot, log_activity_event,
-    save_progress_snapshot, start_session, tracking_available,
+    reset_learner_data, save_progress_snapshot, session_is_active,
+    start_session, tracking_available,
 )
 
 st.set_page_config(
@@ -983,6 +984,17 @@ if page == "Admin Dashboard":
             st.dataframe(learner_summaries, use_container_width=True, hide_index=True)
             if learner_names:
                 selected_learner = st.selectbox("View individual learner", learner_names)
+                st.caption("This action clears every course's progress and all recorded learning time for the selected learner. Their account and login history remain.")
+                if st.button(
+                    f"Reset {selected_learner}'s progress and time spent",
+                    type="secondary",
+                    key=f"admin_reset_learner_{selected_learner}",
+                ):
+                    if reset_learner_data(selected_learner, invalidate_active_sessions=True):
+                        st.success(f"Progress and recorded learning time reset for {selected_learner}.")
+                        st.rerun()
+                    else:
+                        st.error("Could not reset this learner. Check the Supabase connection and try again.")
                 selected_progress = [row for row in progress_rows if row.get("username") == selected_learner]
                 selected_sessions = [row for row in session_rows if row.get("username") == selected_learner]
                 selected_events = [row for row in event_rows if row.get("username") == selected_learner]
@@ -1761,6 +1773,8 @@ elif page == "Settings":
                 }
                 for key, value in reset_values.items():
                     st.session_state[key] = value
+                reset_learner_data(username, invalidate_active_sessions=False)
+                st.session_state.activity_session_started_at = datetime.now(timezone.utc).isoformat()
                 clear_transient_learning_state()
                 for key in ("practice_lesson_select", "progress_reset_confirmation_open"):
                     st.session_state.pop(key, None)
@@ -1786,7 +1800,10 @@ if st.session_state.get("active_user") and st.session_state.active_user.casefold
     save_language_progress(current_username)
     current_language = st.session_state.get("selected_language", "")
     st.session_state[f"learner_{current_username}_selected_language"] = current_language
-    if current_language:
+    if current_language and (
+        not st.session_state.get("activity_session_id")
+        or session_is_active(st.session_state.activity_session_id)
+    ):
         save_progress_snapshot(current_username, current_language, {
             "xp": st.session_state.get("xp", 0),
             "completed": st.session_state.get("completed", []),
