@@ -17,6 +17,11 @@ class AngolanPortugueseCurriculumTests(unittest.TestCase):
         self.assertEqual(set(TOPICS), set(range(1, 108)))
         self.assertEqual(set(PORTUGUESE_LESSONS), set(range(1, 108)))
 
+    def test_portuguese_chapter_titles_do_not_retain_french_specific_topics(self):
+        for lesson_id, lesson in PORTUGUESE_LESSONS.items():
+            with self.subTest(lesson_id=lesson_id):
+                self.assertNotIn("french", lesson["title"].casefold())
+
     def test_cefr_level_distribution_matches_shared_course_path(self):
         expected = {
             "A1 – Absolute Beginner": 17,
