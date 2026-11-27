@@ -12,7 +12,7 @@ from angolan_portuguese_lessons import PORTUGUESE_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
-    page_icon="🇫🇷",
+    page_icon="🌍",
     layout="wide",
     initial_sidebar_state="expanded",
 )
