@@ -70,10 +70,8 @@ def _make_lesson(item):
             ("Which relative pronoun is the subject of its clause?",["qui","que","dont","où"],0,"Qui is followed by the verb and acts as the subject."),
             ("Which expression introduces an opinion?",["À mon avis","Tout à coup","La semaine dernière","Depuis hier"],0,"À mon avis means in my opinion.")
         ]
-        questions.extend(extra)
-        return questions
-    exercises = make_questions()
-    assessment = exercises[:]
+        return questions, extra
+    exercises, assessment = make_questions()
     speaking = [
         "Read all twelve vocabulary items aloud twice. Focus on nasal vowels, French r and linking between words.",
         "Conjugate the key verbs aloud with je, tu, il/elle, nous, vous and ils/elles.",
