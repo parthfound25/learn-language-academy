@@ -518,11 +518,11 @@ LANGUAGES = {
 ACHIEVEMENTS = [
     ("first_lesson", "🌱", "First steps", "Complete your first lesson", lambda: len(st.session_state.completed) >= 1),
     ("five_lessons", "📚", "Building a habit", "Complete 5 lessons", lambda: len(st.session_state.completed) >= 5),
-    ("a1_complete", "🏅", "A1 explorer", "Complete 15 lessons", lambda: len(st.session_state.completed) >= 15),
+    ("a1_complete", "🏅", "A1 explorer", "Complete every A1 lesson", lambda: sum(1 for item in ALL_LESSONS if item["level"].startswith("A1") and item["id"] in st.session_state.completed) >= sum(1 for item in ALL_LESSONS if item["level"].startswith("A1"))),
     ("practice_one", "🎯", "Practice makes progress", "Complete your first practice round", lambda: st.session_state.practice_rounds >= 1),
     ("practice_ten", "🔥", "Practice regular", "Complete 10 practice rounds", lambda: st.session_state.practice_rounds >= 10),
     ("thirty_lessons", "🌍", "Language adventurer", "Complete 30 lessons", lambda: len(st.session_state.completed) >= 30),
-    ("all_lessons", "🎓", "Mastery journey", "Complete all {COURSE_TOTAL} lessons", lambda: len(st.session_state.completed) >= 90),
+    ("all_lessons", "🎓", "Mastery journey", f"Complete all {COURSE_TOTAL} course lessons", lambda: len(set(st.session_state.completed).intersection(COURSE_INDEX)) >= COURSE_TOTAL),
 ]
 def refresh_achievements():
     earned = set(st.session_state.earned_achievements)
