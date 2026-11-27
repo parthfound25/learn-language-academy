@@ -976,7 +976,7 @@ if page == "Home":
         if next_lesson:
             st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
             if next_lesson["id"] == 1 or next_lesson["id"] in A1_LESSONS or next_lesson["id"] in A2_LESSONS:
-                st.success("This lesson is ready. Continue your A1 journey!")
+                st.success("This lesson is ready. Continue your learning journey!")
                 if st.button(f"Open Lesson {next_lesson['id']}", type="primary", key="home_open_next_lesson"):
                     st.session_state.active_lesson = next_lesson["id"]
                     st.session_state.page = "Lesson"
