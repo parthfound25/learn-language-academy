@@ -267,6 +267,8 @@ def display_lesson_title(course_item):
             "Subjunctive Present": "Present Subjunctive", "Canadian French": "Angolan Portuguese",
             "Quebec French": "Angolan Portuguese", "Regional Canadian French": "Regional Angolan Portuguese",
             "Native-Level Pronunciation": "Advanced Pronunciation", "Native-Level Conversation": "Advanced Communication",
+            "French Spelling": "Portuguese Spelling", "Y and EN Pronouns": "Object Pronouns and Prepositional Complements",
+            "Plus-Que-Parfait": "Pretérito Mais-que-perfeito", "French-Canadian Society": "Angolan Society",
         }
         for old, new in replacements.items():
             title = title.replace(old, new)
@@ -711,7 +713,10 @@ def render_unified_lesson(lesson_id):
                 with left:
                     st.markdown(f"### {french}")
                     st.caption(f"Say it: {pronunciation_hint}")
-                    st.caption(f"IPA: {ipa}")
+                    if ipa and ipa != "—":
+                        st.caption(f"IPA: {ipa}")
+                    else:
+                        st.caption("Pronunciation varies by speaker; see the guidance below.")
                 with right:
                     st.write(meaning)
                     st.markdown(f"*{example}*")
@@ -863,7 +868,7 @@ if page == "Home":
     else:
         next_lesson = next((x for x in ALL_LESSONS if x["id"] not in st.session_state.completed), None)
         if next_lesson:
-            st.markdown(f"**Lesson {course_number(next_lesson['id'])} · {next_lesson['title']}**")
+            st.markdown(f"**Lesson {course_number(next_lesson['id'])} · {display_lesson_title(next_lesson)}**")
             if get_lesson_content(next_lesson["id"]) is not None:
                 st.success("This lesson is ready. Continue your learning journey!")
                 if st.button(f"Open Lesson {course_number(next_lesson['id'])}", type="primary", key="home_open_next_lesson"):
@@ -884,7 +889,7 @@ elif page == "Learning Path":
             for item in level_items:
                 lesson_id = item["id"]
                 display_number = course_number(lesson_id)
-                title = item["title"]
+                title = display_lesson_title(item)
                 completed = lesson_id in st.session_state.completed
                 unlocked = lesson_is_unlocked(lesson_id)
                 col1, col2 = st.columns([5, 1])
