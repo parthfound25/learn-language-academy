@@ -68,6 +68,34 @@ class AngolanPortugueseA2C2EditorialTests(unittest.TestCase):
                     self.assertTrue(any("Angolan" in item[3] for item in lesson["vocabulary"]))
                     self.assertTrue(any("Angolan" in item[1] or "Portuguese" in item[1] for item in lesson["grammar"]))
 
+    def test_revision_chapters_and_extension_ids_stay_on_their_roadmap_positions(self):
+        expected = {
+            30: "A2 Comprehensive Revision and Assessment",
+            45: "B1 Comprehensive Revision and Assessment",
+            60: "B2 Comprehensive Revision and Assessment",
+            75: "C1 Comprehensive Revision and Assessment",
+            90: "C2 Final Comprehensive Assessment",
+            93: "Partitive Articles, Quantity and Food Expressions",
+            94: "Imperatives, Adverbs and Everyday Connectors",
+            95: "Past Participles and Auxiliary Choices",
+            96: "Integrated Reading, Listening and Writing Strategies",
+            97: "Past Subjunctive and Advanced Mood Selection",
+            98: "Word Formation, Collocations and Register",
+            99: "Critical Listening, Note-taking and Media Analysis",
+            100: "Academic Reading, Synthesis and Referencing",
+            101: "Mediation, Paraphrasing and Precision Across Registers",
+            102: "Integrated C2 Capstone and Independent Language Portfolio",
+            103: "Contracted Articles, Prepositions and Verb Complements",
+            104: "Portuguese Spelling, Punctuation and Written Conventions",
+            105: "Verb and Preposition Patterns with Infinitives",
+            106: "Gerund and Non-finite Clauses in Portuguese",
+            107: "Angolan Portuguese Sociolinguistics, Identity and Register",
+        }
+        for lesson_id, title in expected.items():
+            with self.subTest(lesson_id=lesson_id):
+                self.assertEqual(PORTUGUESE_LESSONS[lesson_id]["title"], title)
+                self.assertEqual(TOPICS[lesson_id]["title"], title)
+
     def test_level_specific_grammar_is_not_replaced_by_french_terminology(self):
         expected = {
             "A2": "pretérito perfeito",
@@ -77,7 +105,7 @@ class AngolanPortugueseA2C2EditorialTests(unittest.TestCase):
             "C2": "precision",
         }
         for level, ids in LEVEL_IDS.items():
-            grammar = " ".join(text for lesson_id in ids for _, text in PORTUGUESE_LESSONS[lesson_id]["grammar"]).casefold()
+            grammar = " ".join(part for lesson_id in ids for pair in PORTUGUESE_LESSONS[lesson_id]["grammar"] for part in pair).casefold()
             self.assertIn(expected[level], grammar)
 
 
