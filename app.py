@@ -2156,6 +2156,12 @@ elif page == "Vocabulary":
             lesson_data["vocab"],
         )
 
+    for lesson_id, lesson_data in EXTENSION_LESSONS.items():
+        lesson_topic_collections[lesson_id] = (
+            f"Course extension · Lesson {course_number(lesson_id)} · {lesson_data['title']}",
+            lesson_data["vocabulary"],
+        )
+
     for lesson_id, (collection_name, entries) in lesson_topic_collections.items():
         if lesson_is_unlocked(lesson_id):
             vocabulary_groups[collection_name] = entries
