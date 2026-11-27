@@ -729,7 +729,7 @@ def render_authored_a2_lesson(lesson_id):
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
@@ -845,11 +845,11 @@ def render_authored_a2_lesson(lesson_id):
 
 def render_authored_b1_lesson(lesson_id):
     lesson = B1_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">B1 · INTERMEDIATE · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">B1 · INTERMEDIATE · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
@@ -965,11 +965,11 @@ def render_authored_b1_lesson(lesson_id):
 
 def render_authored_b2_lesson(lesson_id):
     lesson = B2_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">B2 · UPPER INTERMEDIATE · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">B2 · UPPER INTERMEDIATE · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
@@ -1084,11 +1084,11 @@ def render_authored_b2_lesson(lesson_id):
 
 def render_authored_c1_lesson(lesson_id):
     lesson = C1_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">C1 · ADVANCED · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">C1 · ADVANCED · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
@@ -1204,11 +1204,11 @@ def render_authored_c1_lesson(lesson_id):
 
 def render_authored_c2_lesson(lesson_id):
     lesson = C2_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">C2 · MASTERY · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">C2 · MASTERY · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
