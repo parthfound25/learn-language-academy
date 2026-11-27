@@ -152,7 +152,7 @@ def apply_editorial(lessons, topics, vocab_pools, pool_for):
             grammar = list(LEVEL_GRAMMAR[level])
             grammar.append((
                 f"Applying the target to {title.lower()}",
-                f"In {scenario}, select forms by considering who is speaking, the relationship between participants, the time frame and the intended emphasis. Build complete clauses, check agreement and prepositions, then reread the whole exchange for naturalness. The target vocabulary in this chapter is presented in context rather than as isolated translations."
+                f"In {scenario}, select forms by considering who is speaking, the relationship between participants, the time frame and the intended emphasis. Build complete clauses, check agreement and prepositions, then reread the whole exchange for naturalness. The target vocabulary in this chapter is presented in context within Angolan Portuguese rather than as isolated translations."
             ))
             lesson["grammar"] = grammar
             lesson["expressions"] = [
