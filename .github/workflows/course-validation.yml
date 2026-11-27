@@ -1,0 +1,23 @@
+name: Course curriculum validation
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  validate-course:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile application and curriculum modules
+        run: python -m compileall -q app.py a1_lessons.py a2_lessons.py b1_lessons.py b2_lessons.py c1_lessons.py c2_lessons.py curriculum_extensions.py
+      - name: Validate lesson coverage and content structure
+        run: python -m unittest discover -s tests -v
