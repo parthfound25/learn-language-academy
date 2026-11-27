@@ -120,6 +120,24 @@ class CourseCurriculumTests(unittest.TestCase):
             with self.subTest(lesson_id=lesson_id):
                 self.assertEqual(len(prompts), len(set(prompts)))
 
+    def test_a1_gendered_adjective_ipa_shows_both_forms(self):
+        required = {
+            "grand / grande", "petit / petite", "vieux / vieille",
+            "beau / belle", "gentil / gentille", "intelligent / intelligente",
+            "sérieux / sérieuse", "vert / verte", "blanc / blanche",
+            "gris / grise", "violet / violette",
+        }
+        vocabulary = A1_LESSONS[10]["vocabulary"] + A1_LESSONS[12]["vocabulary"]
+        entries = {entry[0]: entry for entry in vocabulary}
+        for headword in required:
+            with self.subTest(headword=headword):
+                self.assertIn("masc.", entries[headword][3])
+                self.assertIn("fém.", entries[headword][3])
+
+    def test_cedille_ipa_is_correct(self):
+        vocabulary = {entry[0]: entry for entry in EXTENSION_LESSONS[104]["vocabulary"]}
+        self.assertEqual(vocabulary["une cédille"][3], "/yn se.dij/")
+
     def test_extensions_include_objectives_pronunciation_and_homework(self):
         for lesson_id, lesson in EXTENSION_LESSONS.items():
             with self.subTest(lesson_id=lesson_id):
