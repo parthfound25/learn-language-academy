@@ -397,7 +397,8 @@ LESSON_1["vocabulary"] += [
     ("consonne", "consonant", "kohn-sohn", "/kɔ̃.sɔn/", "B est une consonne. — B is a consonant."),
     ("prononciation", "pronunciation", "proh-nohn-see-ah-see-ohn", "/pʁɔ.nɔ̃.sja.sjɔ̃/", "La prononciation est importante. — Pronunciation is important."),
     ("son", "sound", "sohn", "/sɔ̃/", "Écoutez le son. — Listen to the sound."),
-    ("bouche", "mouth", "boosh", "/buʃ/", "Ouvrez la bouche. — Open your mouth."),    ("langue", "tongue; language", "lahng", "/lɑ̃ɡ/", "La langue française. — The French language."),
+    ("bouche", "mouth", "boosh", "/buʃ/", "Ouvrez la bouche. — Open your mouth."),
+    ("langue", "tongue; language", "lahng", "/lɑ̃ɡ/", "La langue française. — The French language."),
     ("nez", "nose", "nay", "/ne/", "Le son passe par le nez. — The sound passes through the nose."),
     ("pain", "bread", "pan (nasal)", "/pɛ̃/", "Je mange du pain. — I am eating bread."),
     ("bon", "good", "bohn (nasal)", "/bɔ̃/", "C'est bon. — It's good."),
@@ -855,7 +856,8 @@ def render_unified_lesson(lesson_id):
         st.subheader("Lesson assessment")
         st.write(f"{len(assessment)} questions · Review the feedback after submitting. You can retry at any time.")
         assessment_key = f"unified_l{lesson_id}_assessment"
-        attempt_key = f"{assessment_key}_attempt"        attempt = st.session_state.get(attempt_key, 0)
+        attempt_key = f"{assessment_key}_attempt"
+        attempt = st.session_state.get(attempt_key, 0)
         prepared_assessment = [shuffled_question(item, f"lesson-{lesson_id}-assessment-{index}") for index, item in enumerate(assessment)]
         with st.form(f"{assessment_key}_form_{attempt}"):
             for index, (question, options, answer, explanation) in enumerate(prepared_assessment):
@@ -1254,7 +1256,8 @@ elif page == "Vocabulary":
                 ("surpris / surprise","surprised"),("calme","calm"),("en colère","angry"),
                 ("être d'accord","to agree"),("ne pas être d'accord","to disagree"),
                 ("à mon avis","in my opinion"),("je pense que","I think that"),("je trouve que","I find that"),
-                ("selon moi","according to me"),("ça dépend","it depends")            ])),
+                ("selon moi","according to me"),("ça dépend","it depends")
+            ])),
             55: ("Banking, finance & administration", vocab_entries([
                 ("la banque","bank"),("un compte bancaire","bank account"),("un compte courant","current account"),
                 ("un compte épargne","savings account"),("un virement","bank transfer"),("un retrait","withdrawal"),
