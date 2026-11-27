@@ -255,5 +255,278 @@ LESSON_DATA = {
 ("What is the key difference between savoir and connaître?", ["They are always interchangeable.","Savoir is for facts/skills; connaître is for familiarity.","Connaître is only used for future actions.","Savoir is only used with places."], 1, "Choose based on whether you mean information/ability or familiarity.")
 ]
 },
+18: {
+"title": "Reflexive Verbs and Daily Routines",
+"goal": "Describe daily routines using reflexive verbs, match reflexive pronouns to subjects and place negation and time expressions correctly.",
+"vocab": [
+("se réveiller","to wake up","suh ray-vay-yay","/sə ʁe.ve.je/","Je me réveille à sept heures."),
+("se lever","to get up","suh luh-vay","/sə lə.ve/","Elle se lève tôt."),
+("se laver","to wash oneself","suh lah-vay","/sə la.ve/","Nous nous lavons les mains."),
+("se doucher","to shower","suh doo-shay","/sə du.ʃe/","Je me douche le matin."),
+("s'habiller","to get dressed","sah-bee-yay","/sa.bi.je/","Il s'habille rapidement."),
+("se brosser les dents","to brush one's teeth","suh broh-say lay dahn","/sə bʁɔ.se le dɑ̃/","Tu te brosses les dents."),
+("se peigner","to comb one's hair","suh pay-nyay","/sə pɛ.ɲe/","Elle se peigne."),
+("se préparer","to get ready","suh pray-pah-ray","/sə pʁe.pa.ʁe/","Je me prépare pour le travail."),
+("se coucher","to go to bed","suh koo-shay","/sə ku.ʃe/","Ils se couchent tard."),
+("s'endormir","to fall asleep","sahn-dor-meer","/sɑ̃.dɔʁ.miʁ/","Je m'endors vite."),
+("se dépêcher","to hurry","suh day-pay-shay","/sə de.pe.ʃe/","Nous nous dépêchons."),
+("se reposer","to rest","suh ruh-poh-zay","/sə ʁə.po.ze/","Tu te reposes après le dîner."),
+("se promener","to take a walk","suh prohm-nay","/sə pʁɔm.ne/","On se promène au parc."),
+("se sentir","to feel","suh sahn-teer","/sə sɑ̃.tiʁ/","Je me sens bien."),
+("une routine","routine","ün roo-teen","/yn ʁu.tin/","Ma routine commence tôt.")
+],
+"grammar": [
+("What is a reflexive verb?","A reflexive verb describes an action that the subject does to or for itself, or an action commonly expressed with a reflexive construction. Its infinitive includes se: se laver, se réveiller. In a sentence, the se changes to match the subject: je me, tu te, il/elle/on se, nous nous, vous vous, ils/elles se."),
+("The reflexive pronoun chart","The full pattern is: je me réveille; tu te réveilles; il/elle se réveille; nous nous réveillons; vous vous réveillez; ils/elles se réveillent. The pronoun is not optional in the ordinary reflexive construction. It appears immediately before the conjugated verb."),
+("Conjugating the verb","Conjugate the verb itself according to its verb family, just as you learned in earlier lessons. Se réveiller is a regular -ER verb: je me réveille, nous nous réveillons. The reflexive pronoun changes with the subject, while the verb ending also agrees with the subject."),
+("Vowel sounds and elision","Me, te and se become m', t' and s' before a vowel sound or silent h: je m'habille, tu t'endors, elle s'habille. The same principle applies to ne in a negative sentence: je ne m'habille pas becomes je ne m'habille pas; the reflexive pronoun still sits directly before the verb."),
+("Negatives and questions","Put ne before the reflexive pronoun and pas after the conjugated verb: Je ne me couche pas tard. For a question, use rising intonation or est-ce que: Est-ce que tu te lèves tôt ? In inversion, the reflexive pronoun stays beside the verb: Te lèves-tu tôt ?"),
+("Body parts with reflexive routines","French often uses a definite article with body parts where English uses 'my' or 'your': Je me lave les mains; elle se brosse les dents. The reflexive pronoun already identifies whose body is involved, so the article is usually le, la or les rather than mon, ma or mes."),
+("Time expressions and sequence","Use le matin, l'après-midi, le soir, d'abord (first), ensuite (then), puis (then) and enfin (finally) to organise a routine. Example: D'abord, je me réveille; ensuite, je me douche; enfin, je m'habille. Put a time phrase at the beginning or end for emphasis."),
+("Not every se verb is literally reflexive","Some verbs are conventionally pronominal and their meaning is not simply an action done to oneself: se souvenir (to remember), s'entendre bien (to get along), se dépêcher (to hurry). Learn these as vocabulary with their pronouns rather than translating each word separately."),
+("Canadian French note","These reflexive structures are standard in Canadian French. In relaxed conversation, speakers may link or reduce sounds, but the written pronoun sequence remains essential. Practise the complete forms clearly before focusing on faster everyday rhythm.")
+],
+"expressions": [
+("Je me lève vers six heures.","I get up around six.","Vers means around/approximately."),
+("Je suis prêt(e).","I'm ready.","Use prêt for masculine and prête for feminine agreement."),
+("Je me dépêche !","I'm hurrying!","Useful when you are running late."),
+("Prends ton temps.","Take your time.","Imperative expression; informal singular."),
+("Je vais me coucher.","I'm going to bed.","Near future + reflexive infinitive."),
+("Je me sens fatigué(e).","I feel tired.","Sentir is used reflexively for how you feel."),
+("Comme d'habitude.","As usual.","Useful for describing routines."),
+("Je n'ai pas le temps.","I don't have time.","Common everyday phrase.")
+],
+"examples": [
+("Je me réveille à six heures et demie.","I wake up at half past six.","Me comes before the conjugated verb."),
+("Tu te laves le visage le matin.","You wash your face in the morning.","French uses the definite article le with the body part."),
+("Elle ne se maquille pas tous les jours.","She does not put on makeup every day.","Ne precedes se; pas follows the verb."),
+("Nous nous préparons avant le déjeuner.","We get ready before lunch.","Nous is both the subject and reflexive pronoun."),
+("Vous vous couchez à quelle heure ?","What time do you go to bed?","Question word plus subject and reflexive verb."),
+("Ils se promènent après le souper.","They take a walk after supper.","Souper is widely used for the evening meal in Quebec and parts of Canada."),
+("Je vais me reposer pendant une heure.","I'm going to rest for an hour.","The reflexive pronoun stays attached to the infinitive after aller."),
+("D'abord, je me douche; ensuite, je m'habille.","First I shower; then I get dressed.","Sequence words make the routine easy to follow.")
+],
+"conversations": [
+("Comparing morning routines", [("A","À quelle heure est-ce que tu te réveilles ?"),("B","Je me réveille à six heures et demie."),("A","Est-ce que tu te douches le matin ?"),("B","Oui, puis je m'habille et je prends mon déjeuner."),("A","Tu te dépêches souvent ?"),("B","Oui, quand je suis en retard !")], "A: What time do you wake up? B: I wake up at half past six. A: Do you shower in the morning? B: Yes, then I get dressed and have breakfast. A: Do you often hurry? B: Yes, when I'm late!"),
+("Planning a relaxing evening", [("A","Qu'est-ce que tu fais après le travail ?"),("B","Je rentre, je me repose et je prépare le souper."),("A","Tu te couches tôt ?"),("B","En général, oui. Je me couche vers dix heures."),("A","Moi, je me promène un peu avant de me coucher."),("B","Bonne idée !")], "A: What do you do after work? B: I go home, rest and prepare supper. A: Do you go to bed early? B: Generally, yes. I go to bed around ten. A: I take a short walk before going to bed. B: Good idea!")
+],
+"exercises": [
+("Choose the correct pronoun: Je ___ réveille à sept heures.", ["me","te","se","nous"], 0, "Je takes the reflexive pronoun me."),
+("Complete: Tu ___ couches tard.", ["me","te","se","vous"], 1, "Tu takes te: tu te couches."),
+("Choose the correct nous form.", ["Nous se préparons","Nous nous préparons","Nous vous préparons","Nous me préparons"], 1, "Nous uses nous as its reflexive pronoun."),
+("Complete: Elle ___ habille rapidement.", ["m'","t'","s'","nous"], 2, "Se becomes s' before a vowel sound: elle s'habille."),
+("Choose the correct negative sentence.", ["Je ne me lève pas tôt.","Je me ne lève pas tôt.","Je ne lève me pas tôt.","Je me lève ne pas tôt."], 0, "Ne comes before the reflexive pronoun; pas follows the verb."),
+("How do you say 'I brush my teeth'?", ["Je brosse mes dents.","Je me brosse les dents.","Je te brosses les dents.","Je me brossent les dents."], 1, "Use a reflexive pronoun and the definite article with body parts."),
+("Complete: Vous ___ reposez après le travail.", ["vous","nous","se","te"], 0, "Vous takes vous: vous vous reposez."),
+("Choose the correct infinitive construction: I'm going to get ready.", ["Je vais me préparer.","Je me vais préparer.","Je vais prépare me.","Je vais me prépare."], 0, "With a conjugated verb plus infinitive, the reflexive pronoun goes before the infinitive."),
+("Which word means 'first'?", ["ensuite","enfin","d'abord","demain"], 2, "D'abord means first/to begin with."),
+("Complete: Ils ___ promènent au parc.", ["se","te","me","nous"], 0, "Ils/elles use se before a consonant: ils se promènent."),
+("Choose the correct question.", ["Est-ce que tu te lèves tôt ?","Est-ce que tu lèves te tôt ?","Est-ce tu te lèves que tôt ?","Est-ce que te tu lèves tôt ?"], 0, "Keep the reflexive pronoun directly before the verb."),
+("Which phrase means 'I feel well'?", ["Je me sens bien.","Je sens me bien.","Je se sens bien.","Je me sentir bien."], 0, "The present form is je me sens.")
+],
+"speaking": [
+"Describe your morning in six steps. Use d'abord, ensuite, puis and enfin.",
+"Conjugate se lever aloud with all six subject pronouns.",
+"Say five sentences about body-care routines, using les mains, les dents, le visage and les cheveux.",
+"Turn five positive routine sentences into negative sentences with ne…pas.",
+"Ask a partner or answer yourself: À quelle heure te réveilles-tu ? À quelle heure te couches-tu ?",
+"Read both conversations aloud and practise the linking in je m'habille and je me repose."
+],
+"summary": ["A reflexive infinitive includes se, which changes to me, te, se, nous, vous or se.","The reflexive pronoun normally appears immediately before the conjugated verb.","Me, te and se become m', t' and s' before a vowel sound or silent h.","Negation surrounds the pronoun and verb: ne + reflexive pronoun + verb + pas.","French commonly uses a definite article with body parts: se laver les mains.","After aller, place the reflexive pronoun before the infinitive: je vais me coucher."],
+"assessment": [
+("Choose the correct form: Elle ___ réveille tôt.", ["me","te","se","nous"], 2, "Elle uses se: elle se réveille."),
+("What is the reflexive pronoun for nous?", ["me","te","nous","se"], 2, "The reflexive pronoun agrees with the subject: nous nous."),
+("Complete: Je ___ habille.", ["m'","t'","s'","vous"], 0, "Me elides to m' before a vowel sound."),
+("Choose the correct negative form.", ["Il ne se couche pas tard.","Il se ne couche pas tard.","Il ne couche se pas tard.","Il ne pas se couche tard."], 0, "Ne precedes se and pas follows the conjugated verb."),
+("How do you say 'She brushes her teeth'?", ["Elle brosse ses dents.","Elle se brosse les dents.","Elle se brossent les dents.","Elle te brosse les dents."], 1, "Use se and the definite article les with body parts."),
+("Choose the correct phrase for 'We get ready'.", ["Nous nous préparons.","Nous se préparons.","Nous vous préparons.","Nous me préparons."], 0, "Nous uses nous as the reflexive pronoun."),
+("Which means 'to go to bed'?", ["se lever","se coucher","se laver","se promener"], 1, "Se coucher means to go to bed."),
+("Complete: Tu ___ sens bien ?", ["me","te","se","vous"], 1, "The expression is tu te sens bien."),
+("Choose the correct near-future sentence.", ["Je vais me coucher.","Je me vais coucher.","Je vais me couche.","Je vais coucher me."], 0, "Place the reflexive pronoun before the infinitive."),
+("Which sequence word means 'then/next'?", ["d'abord","ensuite","enfin","hier"], 1, "Ensuite means next/after that."),
+("Which sentence is correct?", ["Ils se promène.","Ils se promènent.","Ils nous promènent.","Ils me promène."], 1, "Ils takes the plural verb form promènent."),
+("Where does ne go in a negative reflexive sentence?", ["After the verb","Before the reflexive pronoun","After pas","At the end"], 1, "The order is ne + reflexive pronoun + verb + pas.")
+]
+},
+19: {
+"title": "Negation: NE...PAS and Other Forms",
+"goal": "Make clear negative statements and questions using common French negative structures, including ne...plus, ne...jamais, ne...rien and ne...personne.",
+"vocab": [
+("ne...pas","not","nuh pah","/nə pa/","Je ne comprends pas."),
+("ne...plus","no longer; not anymore","nuh plü","/nə ply/","Il ne travaille plus ici."),
+("ne...jamais","never","nuh zhah-may","/nə ʒa.mɛ/","Nous ne sortons jamais le lundi."),
+("ne...rien","nothing; not anything","nuh ree-ehn","/nə ʁjɛ̃/","Je ne vois rien."),
+("ne...personne","nobody; no one","nuh pair-sohn","/nə pɛʁ.sɔn/","Elle ne connaît personne ici."),
+("ne...que","only","nuh kuh","/nə kə/","Je n'ai que dix dollars."),
+("aucun / aucune","no; not any","oh-kuhn / oh-kün","/o.kœ̃/","Je n'ai aucune question."),
+("ni...ni","neither...nor","nee nee","/ni ni/","Je ne bois ni thé ni café."),
+("sans","without","sahn","/sɑ̃/","Il part sans son sac."),
+("une négation","negation","ün nay-gah-syohn","/yn ne.ɡa.sjɔ̃/","La négation change le sens.")
+],
+"grammar": [
+("The basic pattern ne...pas","In a standard negative sentence, place ne before the conjugated verb and pas after it: Je parle → Je ne parle pas. Before a vowel or silent h, ne becomes n': J'aime → Je n'aime pas. With a compound verb, ne and pas normally surround the auxiliary: Je n'ai pas mangé."),
+("NE...PLUS: no longer","Ne...plus means that something has stopped or is no longer true: Je ne travaille plus ici (I no longer work here). It surrounds the conjugated verb: Elle ne vient plus. In a compound tense, it surrounds the auxiliary: Je n'ai plus travaillé ici depuis juin."),
+("NE...JAMAIS: never","Ne...jamais means never: Nous ne sortons jamais le lundi. It occupies the same position as pas. In a compound tense: Je n'ai jamais visité Québec. Do not add pas as well in a standard sentence; jamais already provides the negative meaning."),
+("NE...RIEN: nothing","Ne...rien means nothing/not anything: Je ne comprends rien (I don't understand anything). It normally follows the conjugated verb: Je ne vois rien. With an infinitive, it can appear before the infinitive: Je préfère ne rien dire (I prefer to say nothing)."),
+("NE...PERSONNE: nobody","Ne...personne means nobody/no one: Je ne connais personne ici. Personne usually follows the conjugated verb. With a compound tense, it commonly follows the past participle: Je n'ai vu personne. In a sentence with an infinitive, placement can vary with the construction; learn common examples as whole phrases."),
+("NE...QUE: only, not a full negative","Ne...que limits or restricts something and means only: Je n'ai que cinq minutes (I have only five minutes). It is not a true negative in meaning. Place que immediately before the limited element: Je ne bois que de l'eau (I drink only water)."),
+("AUCUN, AUCUNE and NI...NI","Aucun/aucune means no or not any and agrees with the noun: aucune idée, aucun problème. It is commonly used with ne: Je n'ai aucun billet. Ni...ni links two excluded items: Je ne prends ni sucre ni lait. The article is often omitted after ni in this pattern."),
+("Sans: without","Sans expresses absence or lack and does not need ne: Je bois mon café sans sucre. It can be followed by a noun or an infinitive: Il est parti sans dire au revoir. Do not combine sans with pas unless the sentence has a separate reason for it."),
+("Negative words with infinitives and modal verbs","When a negative expression applies to an infinitive after a modal verb, it may be placed before that infinitive: Je veux ne rien oublier; je préfère ne pas sortir. If the negative applies to the conjugated modal, use the usual pattern: Je ne peux pas venir."),
+("Everyday spoken French and Canadian French","In informal speech across French-speaking regions, ne is often dropped: Je sais pas, J'ai jamais vu ça. This is common in conversation but not the standard written form. In this course, learn the complete ne form first; recognise reduced speech without copying it into formal writing.")
+],
+"expressions": [
+("Pas du tout.","Not at all.","Strong, clear negative response."),
+("Plus maintenant.","Not anymore.","Short conversational response."),
+("Jamais de la vie !","Never in my life!","Strong informal refusal."),
+("Je n'en sais rien.","I have no idea.","Common phrase; en is part of the expression."),
+("Personne n'est là.","Nobody is here.","Personne is the subject in this sentence."),
+("Rien de spécial.","Nothing special.","A common short answer to 'What's new?'."),
+("Ni l'un ni l'autre.","Neither one nor the other.","Useful when choosing between two options."),
+("Sans problème.","No problem.","Positive phrase using sans.")
+],
+"examples": [
+("Je ne comprends pas cette question.","I don't understand this question.","Basic ne...pas surrounds comprends."),
+("Elle ne travaille plus le dimanche.","She no longer works on Sundays.","Plus expresses a change from a previous situation."),
+("Nous ne prenons jamais le métro le soir.","We never take the metro in the evening.","Jamais replaces pas."),
+("Je ne vois rien dans le noir.","I can't see anything in the dark.","Rien follows the conjugated verb."),
+("Il ne connaît personne dans cette ville.","He doesn't know anyone in this city.","Personne follows connaît."),
+("Je n'ai que deux billets.","I have only two tickets.","Ne...que limits the quantity."),
+("Je ne veux ni thé ni café.","I want neither tea nor coffee.","Ni...ni excludes both choices."),
+("Elle sort sans son téléphone.","She goes out without her phone.","Sans does not require ne.")
+],
+"conversations": [
+("Explaining a change", [("A","Tu travailles encore au restaurant ?"),("B","Non, je n'y travaille plus."),("A","Tu travailles où maintenant ?"),("B","Je travaille dans un bureau. Je ne travaille jamais le dimanche."),("A","Tu aimes ton nouvel horaire ?"),("B","Oui, pas du tout stressant !")], "A: Do you still work at the restaurant? B: No, I don't work there anymore. A: Where do you work now? B: I work in an office. I never work on Sundays. A: Do you like your new schedule? B: Yes, it's not stressful at all!"),
+("Choosing a drink", [("A","Tu veux du café ?"),("B","Non merci. Je ne bois ni café ni thé le soir."),("A","Tu veux de l'eau ?"),("B","Oui, s'il te plaît. Sans glace."),("A","Tu ne veux rien d'autre ?"),("B","Non, c'est tout.")], "A: Do you want coffee? B: No thanks. I drink neither coffee nor tea in the evening. A: Do you want water? B: Yes, please. Without ice. A: You don't want anything else? B: No, that's all.")
+],
+"exercises": [
+("Complete: Je ___ comprends pas.", ["ne","pas","jamais","rien"], 0, "Ne comes before the conjugated verb."),
+("Choose the meaning of ne...plus.", ["never","no longer","nothing","only"], 1, "Ne...plus means no longer/not anymore."),
+("Complete: Elle ne vient ___.", ["rien","personne","jamais","aucun"], 2, "Ne...jamais means never."),
+("Choose the correct sentence for 'I see nothing.'", ["Je ne vois rien.","Je rien ne vois.","Je ne rien vois pas.","Je vois ne rien."], 0, "Rien normally follows the conjugated verb."),
+("Complete: Je ne connais ___ ici.", ["rien","personne","jamais","plus"], 1, "Personne means nobody/no one."),
+("What does Je n'ai que trois euros mean?", ["I have no euros.","I have only three euros.","I never have euros.","I have three more euros."], 1, "Ne...que means only."),
+("Choose the correct form.", ["aucun problème","aucune problème","aucuns problème","aucunes problème"], 0, "Problème is masculine singular, so use aucun."),
+("Complete: Je ne prends ___ lait ___ sucre.", ["ni / ni","pas / pas","rien / personne","plus / jamais"], 0, "Use ni...ni to exclude two items."),
+("Which sentence uses sans correctly?", ["Je ne sans sucre bois.","Je bois mon thé sans sucre.","Je bois pas sans sucre ne.","Sans je bois sucre."], 1, "Sans is placed before the noun and does not require ne."),
+("Choose the standard written form.", ["Je sais pas.","Je ne sais pas.","Je pas sais ne.","Je sais ne pas."], 1, "The complete standard negative includes ne and pas."),
+("Complete: Je préfère ___ sortir ce soir.", ["ne pas","pas ne","ne jamais pas","rien ne"], 0, "Before an infinitive, ne pas can appear together before it."),
+("Which means 'not at all'?", ["Pas du tout.","Plus tard.","Rien de spécial.","Sans doute."], 0, "Pas du tout means not at all.")
+],
+"speaking": [
+"Say one positive sentence, then make it negative with ne...pas.",
+"Describe three things you no longer do using ne...plus.",
+"Make three statements about things you never do using ne...jamais.",
+"Describe a room using ne...rien and ne...personne in separate sentences.",
+"Say what you have only a little of using ne...que.",
+"Read both conversations and practise the difference between complete written negation and casual reduced speech."
+],
+"summary": ["Ne...pas is the basic negative and surrounds the conjugated verb.","Ne...plus means no longer; ne...jamais means never.","Ne...rien means nothing; ne...personne means nobody.","Ne...que means only and limits one part of the sentence.","Aucun/aucune agrees with the noun; ni...ni excludes two things.","Sans means without and does not need ne.","Informal speech may omit ne, but standard writing keeps it."],
+"assessment": [
+("Choose the correct negative: Il ___ parle ___.", ["ne / pas","pas / ne","ne / rien","jamais / ne"], 0, "The standard pattern is ne + verb + pas."),
+("Which means 'I no longer live here'?", ["Je ne vis plus ici.","Je ne vis jamais ici.","Je ne vis rien ici.","Je ne vis personne ici."], 0, "Ne...plus means no longer."),
+("Complete: Elle ne mange ___ de viande.", ["rien","jamais","personne","aucun"], 1, "Ne...jamais means never."),
+("Choose the correct sentence.", ["Je ne vois personne.","Je ne personne vois.","Je personne ne vois pas.","Je vois ne personne."], 0, "Personne follows the conjugated verb."),
+("What does ne...que mean?", ["nothing","never","only","no longer"], 2, "Ne...que expresses restriction: only."),
+("Choose the correct agreement.", ["aucun idée","aucune idée","aucunes idée","aucune idées"], 1, "Idée is feminine singular: aucune idée."),
+("Complete: Je ne veux ___ thé ___ café.", ["ni / ni","pas / pas","rien / personne","plus / jamais"], 0, "Ni...ni links two excluded choices."),
+("Which phrase means 'without sugar'?", ["avec sucre","sans sucre","ne sucre pas","plus sucre"], 1, "Sans means without."),
+("Choose the standard written sentence.", ["Nous sortons jamais.","Nous ne sortons jamais.","Nous ne jamais sortons.","Nous sortons ne jamais."], 1, "Ne precedes the verb and jamais follows it."),
+("Complete: Je n'ai ___ deux minutes.", ["que","personne","rien","jamais"], 0, "Ne...que means only two minutes."),
+("Which sentence means 'I don't understand anything'?", ["Je ne comprends rien.","Je ne comprends personne.","Je ne comprends plus.","Je ne comprends que."], 0, "Rien means nothing/not anything."),
+("Which statement about casual speech is accurate?", ["Ne is always required in every spoken sentence.","Speakers may omit ne informally, but standard writing keeps it.","Pas is always omitted.","Negation is never used in Canada."], 1, "Ne omission is common informally but not standard written French.")
+]
+},
+20: {
+"title": "Asking Questions and Question Words",
+"goal": "Ask clear yes/no and information questions using intonation, est-ce que, inversion and the main French question words.",
+"vocab": [
+("qui","who","kee","/ki/","Qui est là ?"),
+("que / qu'est-ce que","what","kuh / kes-kuh","/kə/","Qu'est-ce que tu fais ?"),
+("quoi","what","kwah","/kwa/","Tu fais quoi ?"),
+("où","where","oo","/u/","Où habites-tu ?"),
+("quand","when","kahn","/kɑ̃/","Quand arrive le train ?"),
+("pourquoi","why","poor-kwah","/puʁ.kwa/","Pourquoi tu étudies ?"),
+("comment","how","koh-mahn","/kɔ.mɑ̃/","Comment ça marche ?"),
+("combien","how much; how many","kohn-byen","/kɔ̃.bjɛ̃/","Combien ça coûte ?"),
+("quel / quelle","which; what","kehl","/kɛl/","Quelle heure est-il ?"),
+("lequel / laquelle","which one","luh-kehl / lah-kehl","/lə.kɛl/","Lequel préfères-tu ?"),
+("est-ce que","question marker","ess-kuh","/ɛs.kə/","Est-ce que vous venez ?"),
+("une question","question","ün kes-tyohn","/yn kɛs.tjɔ̃/","J'ai une question.")
+],
+"grammar": [
+("Yes/no questions with intonation","The simplest spoken question keeps normal word order and raises the voice at the end: Tu habites ici ? This is common in conversation. The context and intonation show that you are asking rather than making a statement. It is natural, but in writing use a question mark."),
+("Questions with est-ce que","Place est-ce que before a normal statement: Tu travailles demain → Est-ce que tu travailles demain ? The subject and verb stay in their usual order. Before a vowel sound, que becomes qu': Est-ce qu'il arrive ? This construction is clear and widely useful in both speech and writing."),
+("Inversion: verb before subject","Inversion places the subject pronoun after the verb with a hyphen: Parlez-vous français ? / Avez-vous le temps ? It is more formal or careful than simple intonation. With il/elle/on and a vowel-ending verb form, add -t- for pronunciation: Parle-t-elle français ?"),
+("QUI: asking who","Qui can ask about a person: Qui vient ? (Who is coming?) or Qui est-ce que tu connais ? (Who do you know?). When qui is the subject, the verb follows directly. When qui is the object, use qui est-ce que or an appropriate inversion: Qui vois-tu ?"),
+("QUE, QU'EST-CE QUE and QUOI","Qu'est-ce que asks what as the object: Qu'est-ce que tu fais ? Que can be used in formal inversion: Que faites-vous ? Quoi often appears at the end of an informal question: Tu fais quoi ? After a preposition, use quoi: Avec quoi écris-tu ?"),
+("WHERE, WHEN, WHY and HOW","Où asks where; quand asks when; pourquoi asks why; comment asks how. Examples: Où travailles-tu ? Quand est-ce qu'il part ? Pourquoi tu ris ? Comment allez-vous ? The question word normally appears at the beginning, though informal speech may put it at the end."),
+("COMBIEN and COMBIEN DE","Combien asks how much/how many. Use combien de + noun for a quantity: Combien de frères as-tu ? For price, say Combien ça coûte ? or Ça coûte combien ? The de does not change before a plural noun in this construction."),
+("QUEL and its agreement","Quel means which/what before a noun and agrees with that noun: quel livre (masculine singular), quelle heure (feminine singular), quels livres (masculine plural), quelles couleurs (feminine plural). It is different from qu'est-ce que, which stands independently before a clause."),
+("Question-word order and punctuation","Put the question word first in careful standard forms: Où est-ce que tu habites ? / Quand partez-vous ? In informal conversation, you may hear Tu habites où ? Both are understandable; practise the standard pattern first and learn informal order for listening."),
+("Canadian French note","Canadian French uses the same core question words and est-ce que structure. In Quebec conversation, questions with rising intonation and question words at the end are common. You may also hear familiar regional rhythms; the grammar taught here remains useful across Canada.")
+],
+"expressions": [
+("Comment ça va ?","How are you?","A common question used as a greeting."),
+("Qu'est-ce qui se passe ?","What's happening?","Qu'est-ce qui asks about the subject of an event."),
+("Ça coûte combien ?","How much does it cost?","Natural spoken price question."),
+("Tu viens d'où ?","Where are you from?","Informal spoken question."),
+("À quelle heure ?","At what time?","Useful when arranging a meeting."),
+("Pour quelle raison ?","For what reason?","A slightly more formal way to ask why."),
+("C'est quoi, ça ?","What's that?","Informal; quoi at the end."),
+("Lequel tu préfères ?","Which one do you prefer?","Informal question using lequel.")
+],
+"examples": [
+("Est-ce que tu comprends la consigne ?","Do you understand the instruction?","Est-ce que keeps normal subject-verb order."),
+("Où est-ce que vous travaillez ?","Where do you work?","Où introduces the information question."),
+("Quand arrive le prochain autobus ?","When does the next bus arrive?","The noun subject follows the verb in this question."),
+("Pourquoi est-elle en retard ?","Why is she late?","Inversion with a vowel-ending verb adds -t-."),
+("Qu'est-ce que vous cherchez ?","What are you looking for?","Qu'est-ce que asks about the object."),
+("Qui téléphone ce matin ?","Who is calling this morning?","Qui is the subject, so it comes directly before the verb."),
+("Combien de personnes viennent ?","How many people are coming?","Combien de + noun asks about quantity."),
+("Quelle couleur préfères-tu ?","Which colour do you prefer?","Quelle agrees with the feminine noun couleur.")
+],
+"conversations": [
+("At a reception desk", [("A","Bonjour. Comment puis-je vous aider ?"),("B","Où est la salle de réunion ?"),("A","Au deuxième étage. Vous avez une réservation ?"),("B","Oui. À quelle heure commence la réunion ?"),("A","Elle commence à neuf heures."),("B","Merci beaucoup.")], "A: Hello. How can I help you? B: Where is the meeting room? A: On the second floor. Do you have a reservation? B: Yes. What time does the meeting start? A: It starts at nine. B: Thank you very much."),
+("Getting to know a classmate", [("A","Pourquoi est-ce que tu apprends le français ?"),("B","Parce que je veux travailler au Canada."),("A","Tu étudies où ?"),("B","J'étudie en ligne. Et toi, qu'est-ce que tu fais ?"),("A","Je travaille et j'étudie le soir."),("B","Ah, c'est intéressant !")], "A: Why are you learning French? B: Because I want to work in Canada. A: Where do you study? B: I study online. And you, what do you do? A: I work and study in the evening. B: Oh, that's interesting!")
+],
+"exercises": [
+("Choose the question word for 'where'.", ["quand","où","pourquoi","comment"], 1, "Où means where."),
+("Complete: ___ est-ce que tu fais ?", ["Qui","Qu'est-ce","Où","Combien"], 1, "Qu'est-ce que asks what as the object."),
+("Choose the correct est-ce que question.", ["Est-ce que tu viens demain ?","Est-ce tu que viens demain ?","Est-ce que viens tu demain ?","Que est-ce tu viens demain ?"], 0, "Est-ce que comes before the normal subject-verb order."),
+("Which is a formal inversion question?", ["Tu parles français ?","Est-ce que tu parles français ?","Parlez-vous français ?","Tu français parles ?"], 2, "Inversion places the subject pronoun after the verb."),
+("Complete: ___ coûte ce billet ?", ["Combien","Qui","Où","Quel"], 0, "Combien asks how much."),
+("Choose the correct agreement: ___ heure est-il ?", ["Quel","Quelle","Quels","Quelles"], 1, "Heure is feminine singular, so use quelle."),
+("Which asks 'Who is coming?'", ["Qui vient ?","Quoi vient ?","Où vient ?","Combien vient ?"], 0, "Qui is the question word for a person."),
+("Complete: Tu écris avec ___ ?", ["qui","quoi","où","quand"], 1, "After a preposition such as avec, use quoi."),
+("Choose the correct form before a masculine plural noun.", ["quel","quelle","quels","quelles"], 2, "Quel agrees with the noun: masculine plural quels."),
+("Which means 'How many books do you have?'", ["Combien de livres as-tu ?","Quel livres as-tu ?","Où de livres as-tu ?","Quand livres as-tu ?"], 0, "Use combien de + noun for quantity."),
+("Choose the correct inversion spelling.", ["Parle-t-elle français ?","Parle-elle français ?","Parles-t-elle français ?","Parle-t-elle français est ?"], 0, "Add -t- between a vowel-ending verb and il/elle/on for sound."),
+("Which question is informal spoken word order?", ["Où habites-tu ?","Où est-ce que tu habites ?","Tu habites où ?","Habitez-vous où ?"], 2, "Question words at the end are common in informal conversation.")
+],
+"speaking": [
+"Ask six yes/no questions using rising intonation, then repeat them with est-ce que.",
+"Ask a partner or answer aloud using qui, où, quand, pourquoi, comment and combien.",
+"Practise four quel forms: quel, quelle, quels and quelles with a noun after each.",
+"Turn five statements into inversion questions, paying attention to the written hyphen and -t-.",
+"Role-play asking for information at a train station, school or reception desk.",
+"Read both conversations aloud, then retell them using different question words."
+],
+"summary": ["Use rising intonation for simple spoken yes/no questions.","Est-ce que creates a clear question while keeping normal subject-verb order.","Inversion places the subject pronoun after the verb with a hyphen.","Qui asks who; que/qu'est-ce que/quoi ask what in different structures.","Où, quand, pourquoi and comment ask where, when, why and how.","Combien de asks about quantity; quel agrees with the noun.","Informal speech may put a question word at the end."],
+"assessment": [
+("Which word means 'when'?", ["où","quand","qui","comment"], 1, "Quand means when."),
+("Choose the correct question.", ["Est-ce que vous travaillez ici ?","Est-ce vous que travaillez ici ?","Est-ce que travaillez vous ici ?","Que est-ce vous travaillez ici ?"], 0, "Est-ce que precedes the normal subject-verb order."),
+("Which is correct inversion?", ["Avez-vous un billet ?","Vous avez un billet ?","Est-ce vous avez un billet ?","Avez un billet vous ?"], 0, "Inversion places vous after the verb with a hyphen."),
+("Complete: ___ est-ce que tu habites ?", ["Quand","Où","Qui","Combien"], 1, "Où asks where."),
+("Choose the correct question for 'What are you doing?'", ["Qu'est-ce que tu fais ?","Qui tu fais ?","Où tu fais ?","Combien tu fais ?"], 0, "Qu'est-ce que asks what as the object."),
+("Which asks about a person as the subject?", ["Qui arrive ?","Quoi arrive ?","Où arrive ?","Quand arrive ?"], 0, "Qui is the subject of the question."),
+("Complete: Avec ___ est-ce que tu viens ?", ["qui","où","quand","quel"], 0, "Use qui after a preposition when asking about a person."),
+("Choose the correct form: ___ livres veux-tu ?", ["Quel","Quelle","Quels","Quelles"], 2, "Livres is masculine plural: quels livres."),
+("How do you ask 'How many students?'?", ["Combien d'étudiants ?","Quel étudiants ?","Où étudiants ?","Comment étudiants ?"], 0, "Combien de becomes d' before a vowel sound."),
+("Choose the correct inversion with elle.", ["Travaille-t-elle ici ?","Travaille-elle ici ?","Travailles-t-elle ici ?","Travaillez-t-elle ici ?"], 0, "Add -t- for pronunciation between travaille and elle."),
+("Which is a natural informal question?", ["Tu viens d'où ?","D'où tu viens est-ce ?","Tu d'où viens ?","Où viens tu est-ce ?"], 0, "Question words at the end are common in informal speech."),
+("What does pourquoi ask?", ["where","when","why","how many"], 2, "Pourquoi means why.")
+]
+},
 }
 A2_LESSONS = {lesson_id: data for lesson_id, data in LESSON_DATA.items()}
