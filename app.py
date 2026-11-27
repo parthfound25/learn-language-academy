@@ -882,525 +882,546 @@ elif page == "Lesson":
             st.rerun()
 
 elif page == "Vocabulary":
-    page_header("YOUR WORD BANK", "Portuguese foundations & vocabulary" if st.session_state.selected_language == "Angolan Portuguese" else "French foundations & vocabulary", "A growing Angolan Portuguese reference library." if st.session_state.selected_language == "Angolan Portuguese" else "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
+    if st.session_state.selected_language == "Angolan Portuguese":
+        page_header("YOUR WORD BANK", "Angolan Portuguese vocabulary", "Review vocabulary from lessons you have unlocked. Entries include learner-friendly pronunciation hints and English meanings.")
+        search_word = st.text_input("Search this collection", placeholder="Search a Portuguese word or English meaning")
+        portuguese_entries = []
+        for lesson_id, lesson in PORTUGUESE_LESSONS.items():
+            if lesson_is_unlocked(lesson_id) or lesson_id in st.session_state.completed:
+                for word, meaning, hint, ipa, example in lesson["vocabulary"]:
+                    portuguese_entries.append((word, meaning, hint, example, lesson["title"]))
+        filtered_entries = [entry for entry in portuguese_entries if not search_word or search_word.casefold() in " ".join(entry).casefold()]
+        st.caption(f"{len(filtered_entries)} vocabulary entries available from your unlocked chapters.")
+        for word, meaning, hint, example, source_lesson in filtered_entries:
+            with st.container(border=True):
+                left, right = st.columns([1, 2])
+                with left:
+                    st.markdown(f"### {word}")
+                    st.caption(f"Pronunciation: {hint}")
+                with right:
+                    st.write(meaning)
+                    st.markdown(f"*{example}*")
+                    st.caption(source_lesson)
+    else:
+        page_header("YOUR WORD BANK", "Portuguese foundations & vocabulary" if st.session_state.selected_language == "Angolan Portuguese" else "French foundations & vocabulary", "A growing Angolan Portuguese reference library." if st.session_state.selected_language == "Angolan Portuguese" else "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
 
-    def french_number_under_100(number):
-        units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
-                 "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"]
-        if number <= 16:
-            return units[number]
-        if number < 20:
-            return "dix-" + units[number - 10]
-        tens = {20: "vingt", 30: "trente", 40: "quarante", 50: "cinquante", 60: "soixante"}
-        if number in tens:
-            return tens[number]
-        if number < 70:
-            base, remainder = divmod(number, 10)
-            return tens[base * 10] + (" et un" if remainder == 1 else ("-" + units[remainder] if remainder else ""))
-        if number < 80:
-            remainder = number - 60
-            return "soixante et onze" if number == 71 else "soixante-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
-        if number == 80:
-            return "quatre-vingts"
-        remainder = number - 80
-        return "quatre-vingt-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
+        def french_number_under_100(number):
+            units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
+                     "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"]
+            if number <= 16:
+                return units[number]
+            if number < 20:
+                return "dix-" + units[number - 10]
+            tens = {20: "vingt", 30: "trente", 40: "quarante", 50: "cinquante", 60: "soixante"}
+            if number in tens:
+                return tens[number]
+            if number < 70:
+                base, remainder = divmod(number, 10)
+                return tens[base * 10] + (" et un" if remainder == 1 else ("-" + units[remainder] if remainder else ""))
+            if number < 80:
+                remainder = number - 60
+                return "soixante et onze" if number == 71 else "soixante-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
+            if number == 80:
+                return "quatre-vingts"
+            remainder = number - 80
+            return "quatre-vingt-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
 
-    def vocab_entries(pairs, note=""):
-        return [(fr, en, "", "", note or f"{fr} = {en}") for fr, en in pairs]
+        def vocab_entries(pairs, note=""):
+            return [(fr, en, "", "", note or f"{fr} = {en}") for fr, en in pairs]
 
-    number_entries = [
-        (french_number_under_100(n), str(n), "", "", f"{n} = {french_number_under_100(n)}")
-        for n in range(0, 101)
-    ]
-    larger_number_values = [
-        (100, "cent"), (200, "deux cents"), (300, "trois cents"), (400, "quatre cents"),
-        (500, "cinq cents"), (600, "six cents"), (700, "sept cents"), (800, "huit cents"),
-        (900, "neuf cents"), (1000, "mille"), (2000, "deux mille"), (3000, "trois mille"),
-        (4000, "quatre mille"), (5000, "cinq mille"), (6000, "six mille"),
-        (7000, "sept mille"), (8000, "huit mille"), (9000, "neuf mille"),
-        (10000, "dix mille"), (100000, "cent mille"), (1000000, "un million"),
-    ]
-    larger_number_entries = [
-        (word, f"{value:,}".replace(",", " "), "", "", f"{value:,} = {word}")
-        for value, word in larger_number_values
-    ]
+        number_entries = [
+            (french_number_under_100(n), str(n), "", "", f"{n} = {french_number_under_100(n)}")
+            for n in range(0, 101)
+        ]
+        larger_number_values = [
+            (100, "cent"), (200, "deux cents"), (300, "trois cents"), (400, "quatre cents"),
+            (500, "cinq cents"), (600, "six cents"), (700, "sept cents"), (800, "huit cents"),
+            (900, "neuf cents"), (1000, "mille"), (2000, "deux mille"), (3000, "trois mille"),
+            (4000, "quatre mille"), (5000, "cinq mille"), (6000, "six mille"),
+            (7000, "sept mille"), (8000, "huit mille"), (9000, "neuf mille"),
+            (10000, "dix mille"), (100000, "cent mille"), (1000000, "un million"),
+        ]
+        larger_number_entries = [
+            (word, f"{value:,}".replace(",", " "), "", "", f"{value:,} = {word}")
+            for value, word in larger_number_values
+        ]
 
-    vocabulary_groups = {
-        "Alphabet & letter names": [(a, b, "", "", f"Letter {a} is pronounced approximately {b}.") for a, b in [
-            ("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),
-            ("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),
-            ("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),
-            ("X","eeks"),("Y","ee-grek"),("Z","zed")]],
-    }
+        vocabulary_groups = {
+            "Alphabet & letter names": [(a, b, "", "", f"Letter {a} is pronounced approximately {b}.") for a, b in [
+                ("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),
+                ("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),
+                ("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),
+                ("X","eeks"),("Y","ee-grek"),("Z","zed")]],
+        }
 
-    # Topic collections are released with their matching lesson, not all at once.
-    # Keep adding entries here as each lesson is written; unlocked topics appear automatically.
-    lesson_topic_collections = {
-        1: ("Lesson 1 · Alphabet & pronunciation", LESSON_1["vocabulary"]),
-        2: ("Greetings & polite expressions", vocab_entries([
-            ("Bonjour","Hello / Good morning"),("Bonsoir","Good evening"),("Salut","Hi / Bye"),
-            ("Au revoir","Goodbye"),("À bientôt","See you soon"),("À demain","See you tomorrow"),
-            ("Merci","Thank you"),("Merci beaucoup","Thank you very much"),("S'il vous plaît","Please"),
-            ("De rien","You're welcome"),("Excusez-moi","Excuse me"),("Pardon","Sorry / Pardon"),
-            ("Comment ça va ?","How are you?"),("Ça va bien","I'm doing well"),("Et vous ?","And you?"),
-            ("Enchanté(e)","Nice to meet you")
-        ])),
-        3: ("Personal information & introductions", vocab_entries([
-            ("Je m'appelle…","My name is…"),("Comment vous appelez-vous ?","What is your name?"),
-            ("Quel âge avez-vous ?","How old are you?"),("J'ai … ans","I am … years old"),
-            ("Je viens de…","I come from…"),("J'habite à…","I live in…"),("Je parle anglais","I speak English"),
-            ("la langue","language"),("le pays","country"),("la ville","city"),("l'adresse","address"),
-            ("le numéro de téléphone","phone number"),("l'étudiant / l'étudiante","student")
-        ])),
-        4: ("Numbers & counting · 0–100 and beyond", number_entries + larger_number_entries),
-        5: ("Days, months, seasons & dates", vocab_entries([
-            ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
-            ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday"),
-            ("janvier","January"),("février","February"),("mars","March"),("avril","April"),
-            ("mai","May"),("juin","June"),("juillet","July"),("août","August"),("septembre","September"),
-            ("octobre","October"),("novembre","November"),("décembre","December"),
-            ("le printemps","spring"),("l'été","summer"),("l'automne","autumn / fall"),("l'hiver","winter"),
-            ("aujourd'hui","today"),("demain","tomorrow"),("hier","yesterday"),("la date","date")
-        ])),
-        6: ("Time, clock & daily time expressions", vocab_entries([
-            ("Quelle heure est-il ?","What time is it?"),("Il est une heure","It is one o'clock"),
-            ("Il est deux heures","It is two o'clock"),("midi","noon"),("minuit","midnight"),
-            ("et quart","quarter past"),("et demie","half past"),("moins le quart","quarter to"),
-            ("le matin","morning"),("l'après-midi","afternoon"),("le soir","evening"),
-            ("la nuit","night"),("tôt","early"),("tard","late"),("maintenant","now"),
-            ("plus tard","later"),("à quelle heure ?","at what time?"),("l'horloge","clock"),
-            ("la montre","watch")
-        ])),
-        7: ("Nouns, gender & articles", vocab_entries([
-            ("le livre","the book · masculine"),("la table","the table · feminine"),
-            ("un garçon","a boy · masculine"),("une fille","a girl · feminine"),
-            ("l'école","the school · vowel-starting noun"),("les amis","the friends · plural"),
-            ("un / une","a, an"),("le / la / l'","the · singular"),("les","the · plural"),
-            ("des","some · plural"),("masculin","masculine"),("féminin","feminine"),
-            ("singulier","singular"),("pluriel","plural"),("un nom","a noun")
-        ])),
-        8: ("Subject pronouns & être", vocab_entries([
-            ("je","I"),("tu","you · informal singular"),("il","he / it"),("elle","she / it"),
-            ("on","we / one / people"),("nous","we"),("vous","you · formal or plural"),
-            ("ils","they · masculine or mixed"),("elles","they · feminine"),
-            ("être","to be"),("je suis","I am"),("tu es","you are"),("il est","he is"),
-            ("elle est","she is"),("nous sommes","we are"),("vous êtes","you are"),
-            ("ils sont","they are")
-        ])),
-        9: ("Avoir & possession", vocab_entries([
-            ("avoir","to have"),("j'ai","I have"),("tu as","you have"),("il a","he has"),
-            ("elle a","she has"),("nous avons","we have"),("vous avez","you have"),
-            ("ils ont","they have"),("mon / ma / mes","my"),("ton / ta / tes","your · informal"),
-            ("son / sa / ses","his / her / its"),("notre / nos","our"),
-            ("votre / vos","your · formal or plural"),("leur / leurs","their")
-        ])),
-        10: ("Adjectives & describing people", vocab_entries([
-            ("grand / grande","tall / big"),("petit / petite","short / small"),
-            ("jeune","young"),("vieux / vieille","old"),("gentil / gentille","kind"),
-            ("intelligent / intelligente","intelligent"),("drôle","funny"),("sympathique","friendly"),
-            ("beau / belle","handsome / beautiful"),("content / contente","happy"),
-            ("fatigué / fatiguée","tired"),("sérieux / sérieuse","serious")
-        ])),
-        11: ("Family members & relationships", vocab_entries([
-            ("la famille","family"),("la mère","mother"),("le père","father"),
-            ("les parents","parents"),("la sœur","sister"),("le frère","brother"),
-            ("la fille","daughter / girl"),("le fils","son"),("la grand-mère","grandmother"),
-            ("le grand-père","grandfather"),("les grands-parents","grandparents"),
-            ("la tante","aunt"),("l'oncle","uncle"),("la cousine","female cousin"),
-            ("le cousin","male cousin"),("la femme","wife / woman"),("le mari","husband"),
-            ("l'enfant","child"),("les enfants","children"),("un ami / une amie","a friend"),
-            ("un collègue / une collègue","a colleague"),("un voisin / une voisine","a neighbour")
-        ])),
-        12: ("Colours, objects & describing things", vocab_entries([
-            ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
-            ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),
-            ("rose","pink"),("orange","orange"),("violet / violette","purple"),
-            ("un objet","an object"),("une chose","a thing"),("la couleur","colour"),
-            ("clair / claire","light"),("foncé / foncée","dark")
-        ])),
-        13: ("Food, drinks & restaurant vocabulary", vocab_entries([
-            ("le pain","bread"),("le fromage","cheese"),("le lait","milk"),("l'eau","water"),
-            ("le café","coffee"),("le thé","tea"),("le jus","juice"),("la pomme","apple"),
-            ("la banane","banana"),("le poulet","chicken"),("le poisson","fish"),
-            ("le riz","rice"),("les légumes","vegetables"),("les fruits","fruit"),
-            ("le menu","menu"),("l'addition","the bill"),("Je voudrais…","I would like…")
-        ])),
-        14: ("Everyday activities & present-tense verbs", vocab_entries([
-            ("parler","to speak"),("manger","to eat"),("aimer","to like / love"),("habiter","to live"),
-            ("travailler","to work"),("étudier","to study"),("écouter","to listen"),
-            ("regarder","to watch"),("marcher","to walk"),("jouer","to play"),
-            ("tous les jours","every day"),("souvent","often"),("parfois","sometimes"),
-            ("toujours","always"),("jamais","never")
-        ])),
-        18: ("Daily routines & reflexive actions", vocab_entries([
-            ("se réveiller","to wake up"),("se lever","to get up"),("se doucher","to shower"),
-            ("se laver","to wash oneself"),("s'habiller","to get dressed"),("se brosser les dents","to brush one's teeth"),
-            ("se préparer","to get ready"),("se dépêcher","to hurry"),("se reposer","to rest"),
-            ("se coucher","to go to bed"),("se promener","to go for a walk"),("la routine","routine")
-        ])),
-        22: ("House, rooms & household objects", vocab_entries([
-            ("la maison","house"),("l'appartement","apartment"),("la chambre","bedroom"),
-            ("le salon","living room"),("la cuisine","kitchen"),("la salle de bains","bathroom"),
-            ("les toilettes","toilet / restroom"),("la salle à manger","dining room"),
-            ("la porte","door"),("la fenêtre","window"),("la table","table"),("la chaise","chair"),
-            ("le lit","bed"),("le canapé","sofa"),("le réfrigérateur","refrigerator"),
-            ("la clé","key"),("l'escalier","stairs"),("le jardin","garden")
-        ])),
-        23: ("Shopping, clothes & accessories", vocab_entries([
-            ("le magasin","shop / store"),("le centre commercial","shopping centre"),
-            ("les vêtements","clothes"),("une chemise","shirt"),("un pantalon","trousers"),
-            ("une robe","dress"),("une jupe","skirt"),("un manteau","coat"),("une veste","jacket"),
-            ("des chaussures","shoes"),("des chaussettes","socks"),("un chapeau","hat"),
-            ("la taille","size"),("la cabine d'essayage","fitting room"),("essayer","to try on"),
-            ("acheter","to buy"),("vendre","to sell"),("C'est combien ?","How much is it?")
-        ])),
-        24: ("Money, prices & everyday payments", vocab_entries([
-            ("l'argent","money"),("le prix","price"),("combien","how much / how many"),
-            ("l'euro","euro"),("le dollar","dollar"),("les pièces","coins"),("les billets","banknotes"),
-            ("la carte bancaire","bank card"),("payer","to pay"),("en espèces","in cash"),
-            ("cher / chère","expensive"),(" bon marché","inexpensive"),("la monnaie","change"),
-            ("le reçu","receipt"),("la réduction","discount"),("le budget","budget")
-        ])),
-        25: ("Restaurants, cafés & ordering food", vocab_entries([
-            ("le restaurant","restaurant"),("le café","café / coffee"),("la réservation","reservation"),
-            ("une table pour deux","a table for two"),("le serveur / la serveuse","waiter / waitress"),
-            ("le plat","dish"),("l'entrée","starter"),("le dessert","dessert"),("la boisson","drink"),
-            ("la carte","menu"),("la cuisson","cooking level"),("végétarien / végétarienne","vegetarian"),
-            ("sans gluten","gluten-free"),("l'addition, s'il vous plaît","the bill, please"),
-            ("Je prends…","I'll have…"),("C'était délicieux","It was delicious")
-        ])),
-        26: ("Transportation & asking for directions", vocab_entries([
-            ("la voiture","car"),("l'autobus / le bus","bus"),("le métro","metro / subway"),
-            ("le train","train"),("le taxi","taxi"),("le vélo","bicycle"),("l'avion","airplane"),
-            ("la gare","train station"),("l'aéroport","airport"),("l'arrêt","stop"),
-            ("un billet","ticket"),("un aller simple","one-way ticket"),("un aller-retour","return ticket"),
-            ("à gauche","to the left"),("à droite","to the right"),("tout droit","straight ahead"),
-            ("près de","near"),("loin de","far from"),("Où se trouve… ?","Where is…?")
-        ])),
-        27: ("Weather, nature & seasons", vocab_entries([
-            ("Quel temps fait-il ?","What's the weather like?"),("il fait beau","the weather is nice"),
-            ("il fait chaud","it is hot"),("il fait froid","it is cold"),("il pleut","it is raining"),
-            ("il neige","it is snowing"),("le soleil","sun"),("la pluie","rain"),("la neige","snow"),
-            ("le vent","wind"),("un nuage","cloud"),("un orage","thunderstorm"),
-            ("la température","temperature"),("la forêt","forest"),("la rivière","river"),
-            ("le lac","lake"),("la montagne","mountain"),("la plage","beach")
-        ])),
-        28: ("Health, body parts & medical expressions", vocab_entries([
-            ("la tête","head"),("les yeux","eyes"),("les oreilles","ears"),("le nez","nose"),
-            ("la bouche","mouth"),("la gorge","throat"),("le dos","back"),("le bras","arm"),
-            ("la main","hand"),("la jambe","leg"),("le pied","foot"),("le ventre","stomach"),
-            ("la santé","health"),("un médecin","doctor"),("une pharmacie","pharmacy"),
-            ("un rendez-vous","appointment"),("J'ai mal à…","I have pain in…"),
-            ("Je ne me sens pas bien","I don't feel well"),("une ordonnance","prescription")
-        ])),
-        40: ("Hobbies, interests & leisure", vocab_entries([
-            ("les loisirs","leisure activities"),("la lecture","reading"),("la musique","music"),
-            ("le cinéma","cinema"),("la photographie","photography"),("la cuisine","cooking"),
-            ("la danse","dance"),("le sport","sport"),("la natation","swimming"),
-            ("la randonnée","hiking"),("les jeux vidéo","video games"),("jouer d'un instrument","to play an instrument"),
-            ("sortir avec des amis","to go out with friends"),("passer du temps","to spend time"),
-            ("J'adore…","I love…"),("Je préfère…","I prefer…")
-        ])),
-        41: ("Travel, hotels & accommodation", vocab_entries([
-            ("le voyage","trip / journey"),("les vacances","holidays / vacation"),("la destination","destination"),
-            ("l'hôtel","hotel"),("la chambre","room"),("la réception","reception desk"),
-            ("la réservation","reservation"),("la chambre simple","single room"),("la chambre double","double room"),
-            ("les bagages","luggage"),("la valise","suitcase"),("le passeport","passport"),
-            ("la carte d'embarquement","boarding pass"),("la douane","customs"),("le séjour","stay"),
-            ("réserver","to book"),("annuler","to cancel"),("complet","fully booked")
-        ])),
-        42: ("Education, studies & professions", vocab_entries([
-            ("l'école","school"),("le collège","middle school"),("le lycée","high school"),
-            ("l'université","university"),("un cours","class / course"),("un devoir","homework"),
-            ("un examen","exam"),("une note","grade / mark"),("un diplôme","degree / diploma"),
-            ("un professeur","teacher / professor"),("un étudiant / une étudiante","student"),
-            ("un ingénieur / une ingénieure","engineer"),("un médecin","doctor"),
-            ("un avocat / une avocate","lawyer"),("un infirmier / une infirmière","nurse"),
-            ("un métier","occupation / profession"),("étudier","to study"),("réussir","to succeed / pass")
-        ])),
-        43: ("Work, meetings & workplace communication", vocab_entries([
-            ("le travail","work"),("le bureau","office"),("un collègue","colleague"),
-            ("un responsable","manager"),("une réunion","meeting"),("un rendez-vous","appointment"),
-            ("un projet","project"),("une tâche","task"),("une équipe","team"),
-            ("un emploi","job"),("un salaire","salary"),("un horaire","schedule"),
-            ("une pause","break"),("une échéance","deadline"),("travailler à distance","to work remotely"),
-            ("envoyer un courriel","to send an email"),("prendre des notes","to take notes")
-        ])),
-        44: ("Feelings, opinions & social interactions", vocab_entries([
-            ("heureux / heureuse","happy"),("triste","sad"),("inquiet / inquiète","worried"),
-            ("nerveux / nerveuse","nervous"),("fier / fière","proud"),("déçu / déçue","disappointed"),
-            ("surpris / surprise","surprised"),("calme","calm"),("en colère","angry"),
-            ("être d'accord","to agree"),("ne pas être d'accord","to disagree"),
-            ("à mon avis","in my opinion"),("je pense que","I think that"),("je trouve que","I find that"),
-            ("selon moi","according to me"),("ça dépend","it depends")
-        ])),
-        55: ("Banking, finance & administration", vocab_entries([
-            ("la banque","bank"),("un compte bancaire","bank account"),("un compte courant","current account"),
-            ("un compte épargne","savings account"),("un virement","bank transfer"),("un retrait","withdrawal"),
-            ("un dépôt","deposit"),("un distributeur automatique","ATM"),("une facture","bill / invoice"),
-            ("un formulaire","form"),("un document","document"),("une pièce d'identité","ID document"),
-            ("une signature","signature"),("un contrat","contract"),("les impôts","taxes"),
-            ("les frais","fees"),("un prêt","loan"),("un relevé bancaire","bank statement")
-        ])),
-        56: ("Technology, internet & digital communication", vocab_entries([
-            ("un ordinateur","computer"),("un portable","laptop / mobile phone"),("un téléphone intelligent","smartphone"),
-            ("un écran","screen"),("un clavier","keyboard"),("une souris","mouse"),
-            ("un fichier","file"),("un dossier","folder"),("un mot de passe","password"),
-            ("un compte","account"),("un site web","website"),("une application","app"),
-            ("un réseau social","social network"),("une connexion","connection"),("le Wi-Fi","Wi-Fi"),
-            ("télécharger","to download"),("mettre à jour","to update"),("envoyer une pièce jointe","to send an attachment")
-        ])),
-        57: ("News, media & current affairs", vocab_entries([
-            ("les nouvelles","news"),("l'actualité","current affairs"),("un journal","newspaper"),
-            ("un article","article"),("un reportage","news report"),("un journaliste","journalist"),
-            ("une chaîne","channel"),("une émission","programme / show"),("la radio","radio"),
-            ("les médias","the media"),("un titre","headline"),("une source","source"),
-            ("une information","piece of information"),("une entrevue","interview"),
-            ("un événement","event"),("selon le reportage","according to the report")
-        ])),
-        58: ("Debates, arguments & persuasion", vocab_entries([
-            ("un débat","debate"),("un argument","argument / point"),("un point de vue","point of view"),
-            ("un avantage","advantage"),("un inconvénient","disadvantage"),("une preuve","evidence"),
-            ("un exemple","example"),("un désaccord","disagreement"),("un accord","agreement"),
-            ("convaincre","to convince"),("soutenir une idée","to support an idea"),
-            ("remettre en question","to question / challenge"),("d'une part","on one hand"),
-            ("d'autre part","on the other hand"),("cependant","however"),("en revanche","on the other hand")
-        ])),
-        59: ("Canadian French idioms & informal speech", vocab_entries([
-            ("pantoute","not at all · informal Quebec French"),("c'est le fun","that's fun · Quebec French"),
-            ("magasiner","to go shopping · Quebec French"),("un dépanneur","corner convenience store · Quebec usage"),
-            ("une blonde","girlfriend · Quebec usage"),("un chum","boyfriend / buddy · Quebec usage"),
-            ("bienvenue","you're welcome · common Quebec response"),("à tantôt","see you later · Quebec usage"),
-            ("ça marche","that works / okay"),("c'est correct","it's okay / that's fine"),
-            ("avoir de la misère","to have difficulty · Quebec expression"),
-            ("être tanné","to be fed up · Quebec expression")
-        ])),
-        65: ("Regional Canadian French expressions", vocab_entries([
-            ("un char","car · informal Quebec usage"),("une tuque","knit winter hat · Canadian usage"),
-            ("des mitaines","mittens · Canadian usage"),("une fin de semaine","weekend · common Canadian French"),
-            ("le dîner","lunch · common Quebec usage"),("le souper","supper / dinner · common Quebec usage"),
-            ("faire frette","to be very cold · informal Quebec expression"),
-            ("c'est plate","that's boring / unfortunate · Quebec usage"),
-            ("une blonde","girlfriend · Quebec usage"),("un gars","guy · informal"),
-            ("une fille","girl · informal"),("une gang","group / crew · informal Quebec usage")
-        ])),
-        66: ("Colloquial Quebec French & spoken forms", vocab_entries([
-            ("chu","spoken contraction of je suis · informal"),("ch't'un","spoken contraction of je suis un · informal"),
-            ("y a","spoken form of il y a · informal"),(" t'sais","spoken contraction of tu sais · informal"),
-            ("ben","informal spoken form of bien"),("faque","informal spoken form meaning so / therefore"),
-            ("asteur","informal Quebec form of maintenant"),("icitte","regional spoken form of ici"),
-            ("pantoute","not at all · informal"),("j'sais pas","spoken contraction of je ne sais pas")
-        ])),
-        68: ("Professional emails, reports & formal writing", vocab_entries([
-            ("Objet","Subject"),("Madame, Monsieur","Dear Sir or Madam"),("Bonjour Madame","Dear Madam"),
-            ("Je vous écris au sujet de…","I am writing to you about…"),
-            ("Veuillez trouver ci-joint…","Please find attached…"),("Je vous remercie de…","Thank you for…"),
-            ("Je reste à votre disposition","I remain at your disposal"),
-            ("Cordialement","Kind regards"),("Veuillez agréer…","Yours sincerely…"),
-            ("un rapport","report"),("une pièce jointe","attachment"),("un délai","time limit"),
-            ("une demande","request"),("une réponse","response"),("un suivi","follow-up")
-        ])),
-        69: ("Meetings, negotiations & presentations", vocab_entries([
-            ("l'ordre du jour","agenda"),("un participant","participant"),("un compte rendu","meeting minutes"),
-            ("un objectif","objective"),("une proposition","proposal"),("une négociation","negotiation"),
-            ("un compromis","compromise"),("un accord","agreement"),("un désaccord","disagreement"),
-            ("prendre la parole","to speak / take the floor"),("faire une présentation","to give a presentation"),
-            ("passer au point suivant","to move to the next item"),("conclure","to conclude"),
-            ("reporter une réunion","to postpone a meeting")
-        ])),
-        70: ("Complex opinions & abstract ideas", vocab_entries([
-            ("la liberté","freedom"),("l'égalité","equality"),("la responsabilité","responsibility"),
-            ("la société","society"),("la culture","culture"),("l'identité","identity"),
-            ("la justice","justice"),("la confiance","trust"),("la solidarité","solidarity"),
-            ("la possibilité","possibility"),("la conséquence","consequence"),("l'enjeu","issue / stake"),
-            ("une perspective","perspective"),("une contradiction","contradiction"),
-            ("remettre en cause","to call into question"),("prendre en considération","to take into consideration")
-        ])),
-        71: ("Literature, books & advanced reading", vocab_entries([
-            ("un roman","novel"),("un récit","narrative / story"),("un personnage","character"),
-            ("un narrateur","narrator"),("un auteur / une autrice","author"),
-            ("un chapitre","chapter"),("un passage","passage"),("une intrigue","plot"),
-            ("un thème","theme"),("un style","style"),("une métaphore","metaphor"),
-            ("un point de vue","point of view"),("une œuvre","work / literary work"),
-            ("un essai","essay"),("un recueil","collection")
-        ])),
-        72: ("French-Canadian society & cultural references", vocab_entries([
-            ("la société québécoise","Quebec society"),("le patrimoine","heritage"),
-            ("la culture francophone","Francophone culture"),("la langue officielle","official language"),
-            ("la fête nationale","national holiday"),("le patrimoine culturel","cultural heritage"),
-            ("une tradition","tradition"),("une coutume","custom"),("une région","region"),
-            ("une communauté","community"),("la diversité","diversity"),("l'identité collective","collective identity"),
-            ("le bilinguisme","bilingualism"),("la francophonie","the French-speaking world")
-        ])),
-        73: ("Humour, sarcasm, irony & nuance", vocab_entries([
-            ("l'humour","humour"),("une blague","joke"),("une plaisanterie","joke / prank"),
-            ("une taquinerie","teasing"),("le sarcasme","sarcasm"),("l'ironie","irony"),
-            ("au second degré","not meant literally / tongue-in-cheek"),
-            ("une expression figurée","figurative expression"),("une exagération","exaggeration"),
-            ("se moquer de","to make fun of"),("faire allusion à","to allude to"),
-            ("prendre au sérieux","to take seriously"),("c'est pour rire","it's just a joke")
-        ])),
-        74: ("Advanced listening & spontaneous conversation", vocab_entries([
-            ("tu veux dire que…","you mean that…"),("si j'ai bien compris","if I understood correctly"),
-            ("laisse-moi réfléchir","let me think"),("comment dire…","how can I put it…"),
-            ("en fait","actually / in fact"),("disons que…","let's say that…"),
-            ("ça dépend de…","it depends on…"),("je vois ce que tu veux dire","I see what you mean"),
-            ("je n'avais pas pensé à ça","I hadn't thought of that"),
-            ("pour revenir à…","to get back to…"),("bref","in short"),("quand même","all the same")
-        ])),
-        77: ("Regional Canadian French accents", vocab_entries([
-            ("un accent","accent"),("la prononciation","pronunciation"),("l'intonation","intonation"),
-            ("le débit","rate of speech"),("une voyelle","vowel"),("une consonne","consonant"),
-            ("une syllabe","syllable"),("un son","sound"),("un accent régional","regional accent"),
-            ("la langue parlée","spoken language"),("la langue familière","informal language")
-        ])),
-        78: ("Advanced idioms, proverbs & expressions", vocab_entries([
-            ("Après la pluie, le beau temps","Every cloud has a silver lining"),
-            ("Petit à petit, l'oiseau fait son nid","Little by little, the bird builds its nest"),
-            ("Mieux vaut tard que jamais","Better late than never"),
-            ("avoir le cœur sur la main","to be very generous"),
-            ("coûter les yeux de la tête","to cost an arm and a leg"),
-            ("donner sa langue au chat","to give up guessing"),
-            ("tomber dans les pommes","to faint"),
-            ("avoir d'autres chats à fouetter","to have other fish to fry")
-        ])),
-        79: ("Sophisticated vocabulary & synonyms", vocab_entries([
-            ("important","important"),("essentiel","essential"),("primordial","paramount"),
-            ("commencer","to begin"),("entamer","to commence"),("entreprendre","to undertake"),
-            ("dire","to say"),("affirmer","to state"),("soutenir","to maintain / argue"),
-            ("montrer","to show"),("démontrer","to demonstrate"),("souligner","to emphasise"),
-            ("aider","to help"),("appuyer","to support"),("favoriser","to encourage / promote"),
-            ("un problème","problem"),("une difficulté","difficulty"),("un enjeu","major issue")
-        ])),
-        81: ("Academic & literary communication", vocab_entries([
-            ("une hypothèse","hypothesis"),("une théorie","theory"),("une recherche","research"),
-            ("une étude","study"),("une analyse","analysis"),("une conclusion","conclusion"),
-            ("une référence","reference"),("une citation","quotation / citation"),
-            ("un argumentaire","argumentation"),("une bibliographie","bibliography"),
-            ("une méthodologie","methodology"),("un phénomène","phenomenon"),
-            ("une démarche","approach / process"),("une publication","publication")
-        ])),
-        82: ("Persuasive & rhetorical communication", vocab_entries([
-            ("convaincre","to convince"),("persuader","to persuade"),("défendre une thèse","to defend a thesis"),
-            ("mettre en évidence","to highlight"),("faire valoir","to put forward"),
-            ("il va de soi que","it goes without saying that"),("force est de constater que","it must be acknowledged that"),
-            ("en d'autres termes","in other words"),("à cet égard","in this regard"),
-            ("cela dit","that said"),("certes","admittedly"),("néanmoins","nevertheless")
-        ])),
-        83: ("Professional & business communication", vocab_entries([
-            ("une entreprise","company"),("un client","client"),("un fournisseur","supplier"),
-            ("un partenaire","partner"),("un chiffre d'affaires","revenue / turnover"),
-            ("un budget prévisionnel","projected budget"),("une stratégie","strategy"),
-            ("un objectif commercial","business objective"),("un devis","quotation / estimate"),
-            ("une commande","order"),("une livraison","delivery"),("une négociation","negotiation"),
-            ("la rentabilité","profitability"),("un bénéfice","profit"),("une perte","loss")
-        ])),
-        84: ("Cultural & historical references", vocab_entries([
-            ("l'histoire","history"),("un événement historique","historical event"),
-            ("une époque","era"),("un siècle","century"),("une génération","generation"),
-            ("un mouvement","movement"),("une révolution","revolution"),("une commémoration","commemoration"),
-            ("une personnalité historique","historical figure"),("un monument","monument"),
-            ("une mémoire collective","collective memory"),("un héritage","legacy")
-        ])),
-        85: ("Spontaneous debates & intellectual discussions", vocab_entries([
-            ("je nuancerais cette idée","I would qualify that idea"),
-            ("je partage en partie cet avis","I partly agree with that view"),
-            ("il faut distinguer… de…","we must distinguish… from…"),
-            ("cela soulève la question de…","this raises the question of…"),
-            ("dans quelle mesure… ?","to what extent…?"),
-            ("rien ne permet d'affirmer que…","nothing allows us to claim that…"),
-            ("il convient de rappeler que…","it is worth recalling that…"),
-            ("je souhaiterais revenir sur…","I would like to return to…")
-        ])),
-        86: ("Humour, wordplay & double meanings", vocab_entries([
-            ("un jeu de mots","pun / play on words"),("un double sens","double meaning"),
-            ("une expression à double sens","double entendre"),("une homonymie","homonymy"),
-            ("un calembour","pun"),("une ambiguïté","ambiguity"),("une chute","punchline"),
-            ("une répartie","witty retort"),("une allusion","allusion"),("un sous-entendu","implication / innuendo"),
-            ("littéralement","literally"),("au sens figuré","figuratively")
-        ])),
-        87: ("Podcasts, radio & television vocabulary", vocab_entries([
-            ("un balado","podcast · Canadian French"),("un épisode","episode"),("un animateur","host"),
-            ("une animatrice","host"),("une entrevue","interview"),("un invité","guest"),
-            ("un auditeur","listener"),("un téléspectateur","viewer"),("une station de radio","radio station"),
-            ("une chaîne de télévision","TV channel"),("en direct","live"),("en différé","recorded / delayed"),
-            ("un extrait","clip / excerpt"),("un sous-titre","subtitle")
-        ])),
-        88: ("Advanced creative & professional writing", vocab_entries([
-            ("un brouillon","draft"),("une version finale","final version"),("un paragraphe","paragraph"),
-            ("une introduction","introduction"),("une conclusion","conclusion"),("un argument","argument"),
-            ("une transition","transition"),("un ton","tone"),("un registre","register"),
-            ("une reformulation","rephrasing"),("une révision","revision"),("une correction","correction"),
-            ("la cohérence","coherence"),("la fluidité","fluency / flow")
-        ])),
-        89: ("Native-level conversation & communication", vocab_entries([
-            ("ça fait longtemps","it's been a long time"),("qu'est-ce que tu deviens ?","what have you been up to?"),
-            ("on se tient au courant","let's keep each other updated"),("ça me ferait plaisir","I'd be happy to"),
-            ("je te laisse","I'll let you go"),("on en reparle","we'll talk about it again"),
-            ("c'est une bonne question","that's a good question"),("je n'y avais jamais pensé","I'd never thought about that"),
-            ("pour être honnête","to be honest"),("si tu veux mon avis","if you want my opinion"),
-            ("ça ne m'étonnerait pas","that wouldn't surprise me")
-        ])),
-    }
+        # Topic collections are released with their matching lesson, not all at once.
+        # Keep adding entries here as each lesson is written; unlocked topics appear automatically.
+        lesson_topic_collections = {
+            1: ("Lesson 1 · Alphabet & pronunciation", LESSON_1["vocabulary"]),
+            2: ("Greetings & polite expressions", vocab_entries([
+                ("Bonjour","Hello / Good morning"),("Bonsoir","Good evening"),("Salut","Hi / Bye"),
+                ("Au revoir","Goodbye"),("À bientôt","See you soon"),("À demain","See you tomorrow"),
+                ("Merci","Thank you"),("Merci beaucoup","Thank you very much"),("S'il vous plaît","Please"),
+                ("De rien","You're welcome"),("Excusez-moi","Excuse me"),("Pardon","Sorry / Pardon"),
+                ("Comment ça va ?","How are you?"),("Ça va bien","I'm doing well"),("Et vous ?","And you?"),
+                ("Enchanté(e)","Nice to meet you")
+            ])),
+            3: ("Personal information & introductions", vocab_entries([
+                ("Je m'appelle…","My name is…"),("Comment vous appelez-vous ?","What is your name?"),
+                ("Quel âge avez-vous ?","How old are you?"),("J'ai … ans","I am … years old"),
+                ("Je viens de…","I come from…"),("J'habite à…","I live in…"),("Je parle anglais","I speak English"),
+                ("la langue","language"),("le pays","country"),("la ville","city"),("l'adresse","address"),
+                ("le numéro de téléphone","phone number"),("l'étudiant / l'étudiante","student")
+            ])),
+            4: ("Numbers & counting · 0–100 and beyond", number_entries + larger_number_entries),
+            5: ("Days, months, seasons & dates", vocab_entries([
+                ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
+                ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday"),
+                ("janvier","January"),("février","February"),("mars","March"),("avril","April"),
+                ("mai","May"),("juin","June"),("juillet","July"),("août","August"),("septembre","September"),
+                ("octobre","October"),("novembre","November"),("décembre","December"),
+                ("le printemps","spring"),("l'été","summer"),("l'automne","autumn / fall"),("l'hiver","winter"),
+                ("aujourd'hui","today"),("demain","tomorrow"),("hier","yesterday"),("la date","date")
+            ])),
+            6: ("Time, clock & daily time expressions", vocab_entries([
+                ("Quelle heure est-il ?","What time is it?"),("Il est une heure","It is one o'clock"),
+                ("Il est deux heures","It is two o'clock"),("midi","noon"),("minuit","midnight"),
+                ("et quart","quarter past"),("et demie","half past"),("moins le quart","quarter to"),
+                ("le matin","morning"),("l'après-midi","afternoon"),("le soir","evening"),
+                ("la nuit","night"),("tôt","early"),("tard","late"),("maintenant","now"),
+                ("plus tard","later"),("à quelle heure ?","at what time?"),("l'horloge","clock"),
+                ("la montre","watch")
+            ])),
+            7: ("Nouns, gender & articles", vocab_entries([
+                ("le livre","the book · masculine"),("la table","the table · feminine"),
+                ("un garçon","a boy · masculine"),("une fille","a girl · feminine"),
+                ("l'école","the school · vowel-starting noun"),("les amis","the friends · plural"),
+                ("un / une","a, an"),("le / la / l'","the · singular"),("les","the · plural"),
+                ("des","some · plural"),("masculin","masculine"),("féminin","feminine"),
+                ("singulier","singular"),("pluriel","plural"),("un nom","a noun")
+            ])),
+            8: ("Subject pronouns & être", vocab_entries([
+                ("je","I"),("tu","you · informal singular"),("il","he / it"),("elle","she / it"),
+                ("on","we / one / people"),("nous","we"),("vous","you · formal or plural"),
+                ("ils","they · masculine or mixed"),("elles","they · feminine"),
+                ("être","to be"),("je suis","I am"),("tu es","you are"),("il est","he is"),
+                ("elle est","she is"),("nous sommes","we are"),("vous êtes","you are"),
+                ("ils sont","they are")
+            ])),
+            9: ("Avoir & possession", vocab_entries([
+                ("avoir","to have"),("j'ai","I have"),("tu as","you have"),("il a","he has"),
+                ("elle a","she has"),("nous avons","we have"),("vous avez","you have"),
+                ("ils ont","they have"),("mon / ma / mes","my"),("ton / ta / tes","your · informal"),
+                ("son / sa / ses","his / her / its"),("notre / nos","our"),
+                ("votre / vos","your · formal or plural"),("leur / leurs","their")
+            ])),
+            10: ("Adjectives & describing people", vocab_entries([
+                ("grand / grande","tall / big"),("petit / petite","short / small"),
+                ("jeune","young"),("vieux / vieille","old"),("gentil / gentille","kind"),
+                ("intelligent / intelligente","intelligent"),("drôle","funny"),("sympathique","friendly"),
+                ("beau / belle","handsome / beautiful"),("content / contente","happy"),
+                ("fatigué / fatiguée","tired"),("sérieux / sérieuse","serious")
+            ])),
+            11: ("Family members & relationships", vocab_entries([
+                ("la famille","family"),("la mère","mother"),("le père","father"),
+                ("les parents","parents"),("la sœur","sister"),("le frère","brother"),
+                ("la fille","daughter / girl"),("le fils","son"),("la grand-mère","grandmother"),
+                ("le grand-père","grandfather"),("les grands-parents","grandparents"),
+                ("la tante","aunt"),("l'oncle","uncle"),("la cousine","female cousin"),
+                ("le cousin","male cousin"),("la femme","wife / woman"),("le mari","husband"),
+                ("l'enfant","child"),("les enfants","children"),("un ami / une amie","a friend"),
+                ("un collègue / une collègue","a colleague"),("un voisin / une voisine","a neighbour")
+            ])),
+            12: ("Colours, objects & describing things", vocab_entries([
+                ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
+                ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),
+                ("rose","pink"),("orange","orange"),("violet / violette","purple"),
+                ("un objet","an object"),("une chose","a thing"),("la couleur","colour"),
+                ("clair / claire","light"),("foncé / foncée","dark")
+            ])),
+            13: ("Food, drinks & restaurant vocabulary", vocab_entries([
+                ("le pain","bread"),("le fromage","cheese"),("le lait","milk"),("l'eau","water"),
+                ("le café","coffee"),("le thé","tea"),("le jus","juice"),("la pomme","apple"),
+                ("la banane","banana"),("le poulet","chicken"),("le poisson","fish"),
+                ("le riz","rice"),("les légumes","vegetables"),("les fruits","fruit"),
+                ("le menu","menu"),("l'addition","the bill"),("Je voudrais…","I would like…")
+            ])),
+            14: ("Everyday activities & present-tense verbs", vocab_entries([
+                ("parler","to speak"),("manger","to eat"),("aimer","to like / love"),("habiter","to live"),
+                ("travailler","to work"),("étudier","to study"),("écouter","to listen"),
+                ("regarder","to watch"),("marcher","to walk"),("jouer","to play"),
+                ("tous les jours","every day"),("souvent","often"),("parfois","sometimes"),
+                ("toujours","always"),("jamais","never")
+            ])),
+            18: ("Daily routines & reflexive actions", vocab_entries([
+                ("se réveiller","to wake up"),("se lever","to get up"),("se doucher","to shower"),
+                ("se laver","to wash oneself"),("s'habiller","to get dressed"),("se brosser les dents","to brush one's teeth"),
+                ("se préparer","to get ready"),("se dépêcher","to hurry"),("se reposer","to rest"),
+                ("se coucher","to go to bed"),("se promener","to go for a walk"),("la routine","routine")
+            ])),
+            22: ("House, rooms & household objects", vocab_entries([
+                ("la maison","house"),("l'appartement","apartment"),("la chambre","bedroom"),
+                ("le salon","living room"),("la cuisine","kitchen"),("la salle de bains","bathroom"),
+                ("les toilettes","toilet / restroom"),("la salle à manger","dining room"),
+                ("la porte","door"),("la fenêtre","window"),("la table","table"),("la chaise","chair"),
+                ("le lit","bed"),("le canapé","sofa"),("le réfrigérateur","refrigerator"),
+                ("la clé","key"),("l'escalier","stairs"),("le jardin","garden")
+            ])),
+            23: ("Shopping, clothes & accessories", vocab_entries([
+                ("le magasin","shop / store"),("le centre commercial","shopping centre"),
+                ("les vêtements","clothes"),("une chemise","shirt"),("un pantalon","trousers"),
+                ("une robe","dress"),("une jupe","skirt"),("un manteau","coat"),("une veste","jacket"),
+                ("des chaussures","shoes"),("des chaussettes","socks"),("un chapeau","hat"),
+                ("la taille","size"),("la cabine d'essayage","fitting room"),("essayer","to try on"),
+                ("acheter","to buy"),("vendre","to sell"),("C'est combien ?","How much is it?")
+            ])),
+            24: ("Money, prices & everyday payments", vocab_entries([
+                ("l'argent","money"),("le prix","price"),("combien","how much / how many"),
+                ("l'euro","euro"),("le dollar","dollar"),("les pièces","coins"),("les billets","banknotes"),
+                ("la carte bancaire","bank card"),("payer","to pay"),("en espèces","in cash"),
+                ("cher / chère","expensive"),(" bon marché","inexpensive"),("la monnaie","change"),
+                ("le reçu","receipt"),("la réduction","discount"),("le budget","budget")
+            ])),
+            25: ("Restaurants, cafés & ordering food", vocab_entries([
+                ("le restaurant","restaurant"),("le café","café / coffee"),("la réservation","reservation"),
+                ("une table pour deux","a table for two"),("le serveur / la serveuse","waiter / waitress"),
+                ("le plat","dish"),("l'entrée","starter"),("le dessert","dessert"),("la boisson","drink"),
+                ("la carte","menu"),("la cuisson","cooking level"),("végétarien / végétarienne","vegetarian"),
+                ("sans gluten","gluten-free"),("l'addition, s'il vous plaît","the bill, please"),
+                ("Je prends…","I'll have…"),("C'était délicieux","It was delicious")
+            ])),
+            26: ("Transportation & asking for directions", vocab_entries([
+                ("la voiture","car"),("l'autobus / le bus","bus"),("le métro","metro / subway"),
+                ("le train","train"),("le taxi","taxi"),("le vélo","bicycle"),("l'avion","airplane"),
+                ("la gare","train station"),("l'aéroport","airport"),("l'arrêt","stop"),
+                ("un billet","ticket"),("un aller simple","one-way ticket"),("un aller-retour","return ticket"),
+                ("à gauche","to the left"),("à droite","to the right"),("tout droit","straight ahead"),
+                ("près de","near"),("loin de","far from"),("Où se trouve… ?","Where is…?")
+            ])),
+            27: ("Weather, nature & seasons", vocab_entries([
+                ("Quel temps fait-il ?","What's the weather like?"),("il fait beau","the weather is nice"),
+                ("il fait chaud","it is hot"),("il fait froid","it is cold"),("il pleut","it is raining"),
+                ("il neige","it is snowing"),("le soleil","sun"),("la pluie","rain"),("la neige","snow"),
+                ("le vent","wind"),("un nuage","cloud"),("un orage","thunderstorm"),
+                ("la température","temperature"),("la forêt","forest"),("la rivière","river"),
+                ("le lac","lake"),("la montagne","mountain"),("la plage","beach")
+            ])),
+            28: ("Health, body parts & medical expressions", vocab_entries([
+                ("la tête","head"),("les yeux","eyes"),("les oreilles","ears"),("le nez","nose"),
+                ("la bouche","mouth"),("la gorge","throat"),("le dos","back"),("le bras","arm"),
+                ("la main","hand"),("la jambe","leg"),("le pied","foot"),("le ventre","stomach"),
+                ("la santé","health"),("un médecin","doctor"),("une pharmacie","pharmacy"),
+                ("un rendez-vous","appointment"),("J'ai mal à…","I have pain in…"),
+                ("Je ne me sens pas bien","I don't feel well"),("une ordonnance","prescription")
+            ])),
+            40: ("Hobbies, interests & leisure", vocab_entries([
+                ("les loisirs","leisure activities"),("la lecture","reading"),("la musique","music"),
+                ("le cinéma","cinema"),("la photographie","photography"),("la cuisine","cooking"),
+                ("la danse","dance"),("le sport","sport"),("la natation","swimming"),
+                ("la randonnée","hiking"),("les jeux vidéo","video games"),("jouer d'un instrument","to play an instrument"),
+                ("sortir avec des amis","to go out with friends"),("passer du temps","to spend time"),
+                ("J'adore…","I love…"),("Je préfère…","I prefer…")
+            ])),
+            41: ("Travel, hotels & accommodation", vocab_entries([
+                ("le voyage","trip / journey"),("les vacances","holidays / vacation"),("la destination","destination"),
+                ("l'hôtel","hotel"),("la chambre","room"),("la réception","reception desk"),
+                ("la réservation","reservation"),("la chambre simple","single room"),("la chambre double","double room"),
+                ("les bagages","luggage"),("la valise","suitcase"),("le passeport","passport"),
+                ("la carte d'embarquement","boarding pass"),("la douane","customs"),("le séjour","stay"),
+                ("réserver","to book"),("annuler","to cancel"),("complet","fully booked")
+            ])),
+            42: ("Education, studies & professions", vocab_entries([
+                ("l'école","school"),("le collège","middle school"),("le lycée","high school"),
+                ("l'université","university"),("un cours","class / course"),("un devoir","homework"),
+                ("un examen","exam"),("une note","grade / mark"),("un diplôme","degree / diploma"),
+                ("un professeur","teacher / professor"),("un étudiant / une étudiante","student"),
+                ("un ingénieur / une ingénieure","engineer"),("un médecin","doctor"),
+                ("un avocat / une avocate","lawyer"),("un infirmier / une infirmière","nurse"),
+                ("un métier","occupation / profession"),("étudier","to study"),("réussir","to succeed / pass")
+            ])),
+            43: ("Work, meetings & workplace communication", vocab_entries([
+                ("le travail","work"),("le bureau","office"),("un collègue","colleague"),
+                ("un responsable","manager"),("une réunion","meeting"),("un rendez-vous","appointment"),
+                ("un projet","project"),("une tâche","task"),("une équipe","team"),
+                ("un emploi","job"),("un salaire","salary"),("un horaire","schedule"),
+                ("une pause","break"),("une échéance","deadline"),("travailler à distance","to work remotely"),
+                ("envoyer un courriel","to send an email"),("prendre des notes","to take notes")
+            ])),
+            44: ("Feelings, opinions & social interactions", vocab_entries([
+                ("heureux / heureuse","happy"),("triste","sad"),("inquiet / inquiète","worried"),
+                ("nerveux / nerveuse","nervous"),("fier / fière","proud"),("déçu / déçue","disappointed"),
+                ("surpris / surprise","surprised"),("calme","calm"),("en colère","angry"),
+                ("être d'accord","to agree"),("ne pas être d'accord","to disagree"),
+                ("à mon avis","in my opinion"),("je pense que","I think that"),("je trouve que","I find that"),
+                ("selon moi","according to me"),("ça dépend","it depends")
+            ])),
+            55: ("Banking, finance & administration", vocab_entries([
+                ("la banque","bank"),("un compte bancaire","bank account"),("un compte courant","current account"),
+                ("un compte épargne","savings account"),("un virement","bank transfer"),("un retrait","withdrawal"),
+                ("un dépôt","deposit"),("un distributeur automatique","ATM"),("une facture","bill / invoice"),
+                ("un formulaire","form"),("un document","document"),("une pièce d'identité","ID document"),
+                ("une signature","signature"),("un contrat","contract"),("les impôts","taxes"),
+                ("les frais","fees"),("un prêt","loan"),("un relevé bancaire","bank statement")
+            ])),
+            56: ("Technology, internet & digital communication", vocab_entries([
+                ("un ordinateur","computer"),("un portable","laptop / mobile phone"),("un téléphone intelligent","smartphone"),
+                ("un écran","screen"),("un clavier","keyboard"),("une souris","mouse"),
+                ("un fichier","file"),("un dossier","folder"),("un mot de passe","password"),
+                ("un compte","account"),("un site web","website"),("une application","app"),
+                ("un réseau social","social network"),("une connexion","connection"),("le Wi-Fi","Wi-Fi"),
+                ("télécharger","to download"),("mettre à jour","to update"),("envoyer une pièce jointe","to send an attachment")
+            ])),
+            57: ("News, media & current affairs", vocab_entries([
+                ("les nouvelles","news"),("l'actualité","current affairs"),("un journal","newspaper"),
+                ("un article","article"),("un reportage","news report"),("un journaliste","journalist"),
+                ("une chaîne","channel"),("une émission","programme / show"),("la radio","radio"),
+                ("les médias","the media"),("un titre","headline"),("une source","source"),
+                ("une information","piece of information"),("une entrevue","interview"),
+                ("un événement","event"),("selon le reportage","according to the report")
+            ])),
+            58: ("Debates, arguments & persuasion", vocab_entries([
+                ("un débat","debate"),("un argument","argument / point"),("un point de vue","point of view"),
+                ("un avantage","advantage"),("un inconvénient","disadvantage"),("une preuve","evidence"),
+                ("un exemple","example"),("un désaccord","disagreement"),("un accord","agreement"),
+                ("convaincre","to convince"),("soutenir une idée","to support an idea"),
+                ("remettre en question","to question / challenge"),("d'une part","on one hand"),
+                ("d'autre part","on the other hand"),("cependant","however"),("en revanche","on the other hand")
+            ])),
+            59: ("Canadian French idioms & informal speech", vocab_entries([
+                ("pantoute","not at all · informal Quebec French"),("c'est le fun","that's fun · Quebec French"),
+                ("magasiner","to go shopping · Quebec French"),("un dépanneur","corner convenience store · Quebec usage"),
+                ("une blonde","girlfriend · Quebec usage"),("un chum","boyfriend / buddy · Quebec usage"),
+                ("bienvenue","you're welcome · common Quebec response"),("à tantôt","see you later · Quebec usage"),
+                ("ça marche","that works / okay"),("c'est correct","it's okay / that's fine"),
+                ("avoir de la misère","to have difficulty · Quebec expression"),
+                ("être tanné","to be fed up · Quebec expression")
+            ])),
+            65: ("Regional Canadian French expressions", vocab_entries([
+                ("un char","car · informal Quebec usage"),("une tuque","knit winter hat · Canadian usage"),
+                ("des mitaines","mittens · Canadian usage"),("une fin de semaine","weekend · common Canadian French"),
+                ("le dîner","lunch · common Quebec usage"),("le souper","supper / dinner · common Quebec usage"),
+                ("faire frette","to be very cold · informal Quebec expression"),
+                ("c'est plate","that's boring / unfortunate · Quebec usage"),
+                ("une blonde","girlfriend · Quebec usage"),("un gars","guy · informal"),
+                ("une fille","girl · informal"),("une gang","group / crew · informal Quebec usage")
+            ])),
+            66: ("Colloquial Quebec French & spoken forms", vocab_entries([
+                ("chu","spoken contraction of je suis · informal"),("ch't'un","spoken contraction of je suis un · informal"),
+                ("y a","spoken form of il y a · informal"),(" t'sais","spoken contraction of tu sais · informal"),
+                ("ben","informal spoken form of bien"),("faque","informal spoken form meaning so / therefore"),
+                ("asteur","informal Quebec form of maintenant"),("icitte","regional spoken form of ici"),
+                ("pantoute","not at all · informal"),("j'sais pas","spoken contraction of je ne sais pas")
+            ])),
+            68: ("Professional emails, reports & formal writing", vocab_entries([
+                ("Objet","Subject"),("Madame, Monsieur","Dear Sir or Madam"),("Bonjour Madame","Dear Madam"),
+                ("Je vous écris au sujet de…","I am writing to you about…"),
+                ("Veuillez trouver ci-joint…","Please find attached…"),("Je vous remercie de…","Thank you for…"),
+                ("Je reste à votre disposition","I remain at your disposal"),
+                ("Cordialement","Kind regards"),("Veuillez agréer…","Yours sincerely…"),
+                ("un rapport","report"),("une pièce jointe","attachment"),("un délai","time limit"),
+                ("une demande","request"),("une réponse","response"),("un suivi","follow-up")
+            ])),
+            69: ("Meetings, negotiations & presentations", vocab_entries([
+                ("l'ordre du jour","agenda"),("un participant","participant"),("un compte rendu","meeting minutes"),
+                ("un objectif","objective"),("une proposition","proposal"),("une négociation","negotiation"),
+                ("un compromis","compromise"),("un accord","agreement"),("un désaccord","disagreement"),
+                ("prendre la parole","to speak / take the floor"),("faire une présentation","to give a presentation"),
+                ("passer au point suivant","to move to the next item"),("conclure","to conclude"),
+                ("reporter une réunion","to postpone a meeting")
+            ])),
+            70: ("Complex opinions & abstract ideas", vocab_entries([
+                ("la liberté","freedom"),("l'égalité","equality"),("la responsabilité","responsibility"),
+                ("la société","society"),("la culture","culture"),("l'identité","identity"),
+                ("la justice","justice"),("la confiance","trust"),("la solidarité","solidarity"),
+                ("la possibilité","possibility"),("la conséquence","consequence"),("l'enjeu","issue / stake"),
+                ("une perspective","perspective"),("une contradiction","contradiction"),
+                ("remettre en cause","to call into question"),("prendre en considération","to take into consideration")
+            ])),
+            71: ("Literature, books & advanced reading", vocab_entries([
+                ("un roman","novel"),("un récit","narrative / story"),("un personnage","character"),
+                ("un narrateur","narrator"),("un auteur / une autrice","author"),
+                ("un chapitre","chapter"),("un passage","passage"),("une intrigue","plot"),
+                ("un thème","theme"),("un style","style"),("une métaphore","metaphor"),
+                ("un point de vue","point of view"),("une œuvre","work / literary work"),
+                ("un essai","essay"),("un recueil","collection")
+            ])),
+            72: ("French-Canadian society & cultural references", vocab_entries([
+                ("la société québécoise","Quebec society"),("le patrimoine","heritage"),
+                ("la culture francophone","Francophone culture"),("la langue officielle","official language"),
+                ("la fête nationale","national holiday"),("le patrimoine culturel","cultural heritage"),
+                ("une tradition","tradition"),("une coutume","custom"),("une région","region"),
+                ("une communauté","community"),("la diversité","diversity"),("l'identité collective","collective identity"),
+                ("le bilinguisme","bilingualism"),("la francophonie","the French-speaking world")
+            ])),
+            73: ("Humour, sarcasm, irony & nuance", vocab_entries([
+                ("l'humour","humour"),("une blague","joke"),("une plaisanterie","joke / prank"),
+                ("une taquinerie","teasing"),("le sarcasme","sarcasm"),("l'ironie","irony"),
+                ("au second degré","not meant literally / tongue-in-cheek"),
+                ("une expression figurée","figurative expression"),("une exagération","exaggeration"),
+                ("se moquer de","to make fun of"),("faire allusion à","to allude to"),
+                ("prendre au sérieux","to take seriously"),("c'est pour rire","it's just a joke")
+            ])),
+            74: ("Advanced listening & spontaneous conversation", vocab_entries([
+                ("tu veux dire que…","you mean that…"),("si j'ai bien compris","if I understood correctly"),
+                ("laisse-moi réfléchir","let me think"),("comment dire…","how can I put it…"),
+                ("en fait","actually / in fact"),("disons que…","let's say that…"),
+                ("ça dépend de…","it depends on…"),("je vois ce que tu veux dire","I see what you mean"),
+                ("je n'avais pas pensé à ça","I hadn't thought of that"),
+                ("pour revenir à…","to get back to…"),("bref","in short"),("quand même","all the same")
+            ])),
+            77: ("Regional Canadian French accents", vocab_entries([
+                ("un accent","accent"),("la prononciation","pronunciation"),("l'intonation","intonation"),
+                ("le débit","rate of speech"),("une voyelle","vowel"),("une consonne","consonant"),
+                ("une syllabe","syllable"),("un son","sound"),("un accent régional","regional accent"),
+                ("la langue parlée","spoken language"),("la langue familière","informal language")
+            ])),
+            78: ("Advanced idioms, proverbs & expressions", vocab_entries([
+                ("Après la pluie, le beau temps","Every cloud has a silver lining"),
+                ("Petit à petit, l'oiseau fait son nid","Little by little, the bird builds its nest"),
+                ("Mieux vaut tard que jamais","Better late than never"),
+                ("avoir le cœur sur la main","to be very generous"),
+                ("coûter les yeux de la tête","to cost an arm and a leg"),
+                ("donner sa langue au chat","to give up guessing"),
+                ("tomber dans les pommes","to faint"),
+                ("avoir d'autres chats à fouetter","to have other fish to fry")
+            ])),
+            79: ("Sophisticated vocabulary & synonyms", vocab_entries([
+                ("important","important"),("essentiel","essential"),("primordial","paramount"),
+                ("commencer","to begin"),("entamer","to commence"),("entreprendre","to undertake"),
+                ("dire","to say"),("affirmer","to state"),("soutenir","to maintain / argue"),
+                ("montrer","to show"),("démontrer","to demonstrate"),("souligner","to emphasise"),
+                ("aider","to help"),("appuyer","to support"),("favoriser","to encourage / promote"),
+                ("un problème","problem"),("une difficulté","difficulty"),("un enjeu","major issue")
+            ])),
+            81: ("Academic & literary communication", vocab_entries([
+                ("une hypothèse","hypothesis"),("une théorie","theory"),("une recherche","research"),
+                ("une étude","study"),("une analyse","analysis"),("une conclusion","conclusion"),
+                ("une référence","reference"),("une citation","quotation / citation"),
+                ("un argumentaire","argumentation"),("une bibliographie","bibliography"),
+                ("une méthodologie","methodology"),("un phénomène","phenomenon"),
+                ("une démarche","approach / process"),("une publication","publication")
+            ])),
+            82: ("Persuasive & rhetorical communication", vocab_entries([
+                ("convaincre","to convince"),("persuader","to persuade"),("défendre une thèse","to defend a thesis"),
+                ("mettre en évidence","to highlight"),("faire valoir","to put forward"),
+                ("il va de soi que","it goes without saying that"),("force est de constater que","it must be acknowledged that"),
+                ("en d'autres termes","in other words"),("à cet égard","in this regard"),
+                ("cela dit","that said"),("certes","admittedly"),("néanmoins","nevertheless")
+            ])),
+            83: ("Professional & business communication", vocab_entries([
+                ("une entreprise","company"),("un client","client"),("un fournisseur","supplier"),
+                ("un partenaire","partner"),("un chiffre d'affaires","revenue / turnover"),
+                ("un budget prévisionnel","projected budget"),("une stratégie","strategy"),
+                ("un objectif commercial","business objective"),("un devis","quotation / estimate"),
+                ("une commande","order"),("une livraison","delivery"),("une négociation","negotiation"),
+                ("la rentabilité","profitability"),("un bénéfice","profit"),("une perte","loss")
+            ])),
+            84: ("Cultural & historical references", vocab_entries([
+                ("l'histoire","history"),("un événement historique","historical event"),
+                ("une époque","era"),("un siècle","century"),("une génération","generation"),
+                ("un mouvement","movement"),("une révolution","revolution"),("une commémoration","commemoration"),
+                ("une personnalité historique","historical figure"),("un monument","monument"),
+                ("une mémoire collective","collective memory"),("un héritage","legacy")
+            ])),
+            85: ("Spontaneous debates & intellectual discussions", vocab_entries([
+                ("je nuancerais cette idée","I would qualify that idea"),
+                ("je partage en partie cet avis","I partly agree with that view"),
+                ("il faut distinguer… de…","we must distinguish… from…"),
+                ("cela soulève la question de…","this raises the question of…"),
+                ("dans quelle mesure… ?","to what extent…?"),
+                ("rien ne permet d'affirmer que…","nothing allows us to claim that…"),
+                ("il convient de rappeler que…","it is worth recalling that…"),
+                ("je souhaiterais revenir sur…","I would like to return to…")
+            ])),
+            86: ("Humour, wordplay & double meanings", vocab_entries([
+                ("un jeu de mots","pun / play on words"),("un double sens","double meaning"),
+                ("une expression à double sens","double entendre"),("une homonymie","homonymy"),
+                ("un calembour","pun"),("une ambiguïté","ambiguity"),("une chute","punchline"),
+                ("une répartie","witty retort"),("une allusion","allusion"),("un sous-entendu","implication / innuendo"),
+                ("littéralement","literally"),("au sens figuré","figuratively")
+            ])),
+            87: ("Podcasts, radio & television vocabulary", vocab_entries([
+                ("un balado","podcast · Canadian French"),("un épisode","episode"),("un animateur","host"),
+                ("une animatrice","host"),("une entrevue","interview"),("un invité","guest"),
+                ("un auditeur","listener"),("un téléspectateur","viewer"),("une station de radio","radio station"),
+                ("une chaîne de télévision","TV channel"),("en direct","live"),("en différé","recorded / delayed"),
+                ("un extrait","clip / excerpt"),("un sous-titre","subtitle")
+            ])),
+            88: ("Advanced creative & professional writing", vocab_entries([
+                ("un brouillon","draft"),("une version finale","final version"),("un paragraphe","paragraph"),
+                ("une introduction","introduction"),("une conclusion","conclusion"),("un argument","argument"),
+                ("une transition","transition"),("un ton","tone"),("un registre","register"),
+                ("une reformulation","rephrasing"),("une révision","revision"),("une correction","correction"),
+                ("la cohérence","coherence"),("la fluidité","fluency / flow")
+            ])),
+            89: ("Native-level conversation & communication", vocab_entries([
+                ("ça fait longtemps","it's been a long time"),("qu'est-ce que tu deviens ?","what have you been up to?"),
+                ("on se tient au courant","let's keep each other updated"),("ça me ferait plaisir","I'd be happy to"),
+                ("je te laisse","I'll let you go"),("on en reparle","we'll talk about it again"),
+                ("c'est une bonne question","that's a good question"),("je n'y avais jamais pensé","I'd never thought about that"),
+                ("pour être honnête","to be honest"),("si tu veux mon avis","if you want my opinion"),
+                ("ça ne m'étonnerait pas","that wouldn't surprise me")
+            ])),
+        }
 
-    # A2 vocabulary is sourced directly from each authored chapter so the reference library grows automatically.
-    for lesson_id, lesson_data in A2_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"A2 · Lesson {lesson_id} · {lesson_data['title']}",
-            lesson_data["vocab"],
-        )
+        # A2 vocabulary is sourced directly from each authored chapter so the reference library grows automatically.
+        for lesson_id, lesson_data in A2_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"A2 · Lesson {lesson_id} · {lesson_data['title']}",
+                lesson_data["vocab"],
+            )
 
-    for lesson_id, lesson_data in B1_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"B1 · Lesson {lesson_id} · {lesson_data['title']}",
-            lesson_data["vocab"],
-        )
+        for lesson_id, lesson_data in B1_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"B1 · Lesson {lesson_id} · {lesson_data['title']}",
+                lesson_data["vocab"],
+            )
 
-    for lesson_id, lesson_data in B2_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"B2 · Lesson {lesson_id} · {lesson_data['title']}",
-            lesson_data["vocab"],
-        )
+        for lesson_id, lesson_data in B2_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"B2 · Lesson {lesson_id} · {lesson_data['title']}",
+                lesson_data["vocab"],
+            )
 
-    for lesson_id, lesson_data in C1_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"C1 · Lesson {lesson_id} · {lesson_data['title']}",
-            lesson_data["vocab"],
-        )
+        for lesson_id, lesson_data in C1_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"C1 · Lesson {lesson_id} · {lesson_data['title']}",
+                lesson_data["vocab"],
+            )
 
-    for lesson_id, lesson_data in C2_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"C2 · Lesson {lesson_id} · {lesson_data['title']}",
-            lesson_data["vocab"],
-        )
+        for lesson_id, lesson_data in C2_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"C2 · Lesson {lesson_id} · {lesson_data['title']}",
+                lesson_data["vocab"],
+            )
 
-    for lesson_id, lesson_data in EXTENSION_LESSONS.items():
-        lesson_topic_collections[lesson_id] = (
-            f"Course extension · Lesson {course_number(lesson_id)} · {lesson_data['title']}",
-            lesson_data["vocabulary"],
-        )
+        for lesson_id, lesson_data in EXTENSION_LESSONS.items():
+            lesson_topic_collections[lesson_id] = (
+                f"Course extension · Lesson {course_number(lesson_id)} · {lesson_data['title']}",
+                lesson_data["vocabulary"],
+            )
 
-    for lesson_id, (collection_name, entries) in lesson_topic_collections.items():
-        if lesson_is_unlocked(lesson_id):
-            vocabulary_groups[collection_name] = entries
+        for lesson_id, (collection_name, entries) in lesson_topic_collections.items():
+            if lesson_is_unlocked(lesson_id):
+                vocabulary_groups[collection_name] = entries
 
-    chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
-    search_word = st.text_input("Search this collection", placeholder="Search a Portuguese word or English meaning" if st.session_state.selected_language == "Angolan Portuguese" else "Search a French word or English meaning")
-    entries = vocabulary_groups[chosen_group]
-    if search_word.strip():
-        needle = search_word.strip().lower()
-        entries = [entry for entry in entries if needle in " ".join(str(x) for x in entry).lower()]
-    st.caption(f"{len(entries)} entries · New topics appear as you unlock their lessons")
-    for fr, meaning, pron, ipa, example in entries:
-        with st.container(border=True):
-            left, right = st.columns([1, 2])
-            with left:
-                st.markdown(f"**{fr}**")
-                if pron or ipa:
-                    st.caption(f"{pron} · {ipa}")
-            with right:
-                st.write(meaning)
-                st.caption(example)
+        chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
+        search_word = st.text_input("Search this collection", placeholder="Search a Portuguese word or English meaning" if st.session_state.selected_language == "Angolan Portuguese" else "Search a French word or English meaning")
+        entries = vocabulary_groups[chosen_group]
+        if search_word.strip():
+            needle = search_word.strip().lower()
+            entries = [entry for entry in entries if needle in " ".join(str(x) for x in entry).lower()]
+        st.caption(f"{len(entries)} entries · New topics appear as you unlock their lessons")
+        for fr, meaning, pron, ipa, example in entries:
+            with st.container(border=True):
+                left, right = st.columns([1, 2])
+                with left:
+                    st.markdown(f"**{fr}**")
+                    if pron or ipa:
+                        st.caption(f"{pron} · {ipa}")
+                with right:
+                    st.write(meaning)
+                    st.caption(example)
 
 elif page == "Practice":
     page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
