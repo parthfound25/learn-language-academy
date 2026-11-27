@@ -1342,7 +1342,8 @@ def render_unified_lesson(lesson_id):
     homework = lesson.get("homework") or (["Write the French alphabet from memory and spell your name aloud.", "Create ten short word cards with spelling, meaning and IPA or a sound hint.", "Read five example sentences aloud, then write their English meanings.", "Practise one dialogue and prepare two original responses."] if lesson_id == 1 else ["Write eight original sentences using the lesson vocabulary and grammar.", "Adapt one dialogue to your own life and read both roles aloud.", "Write a short paragraph or message using at least five target expressions.", "Review the summary and create a personal list of five items to revisit."])
     st.markdown(f'<div class="eyebrow">{level_label} · LESSON {number} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
-    st.markdown(f"**Learning goal:** {lesson.get('goal', 'Develop accurate and practical French communication.')}")
+    lesson_goal = lesson.get("goal", "Recognise the French alphabet, understand essential sound patterns and read simple French words." if lesson_id == 1 else "Develop accurate and practical French communication.")
+    st.markdown(f"**Learning goal:** {lesson_goal}")
     st.caption("Canadian French focus · English explanations · Suggested study time: 35–55 minutes")
     st.progress(number / COURSE_TOTAL, text=f"Course progress · Lesson {number} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
@@ -1363,6 +1364,14 @@ def render_unified_lesson(lesson_id):
                 with right:
                     st.write(meaning)
                     st.markdown(f"*{example}*")
+        if lesson_id == 1:
+            st.subheader("The 26 French letter names")
+            alphabet = [("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),("X","eeks"),("Y","ee-grek"),("Z","zed")]
+            cols = st.columns(4)
+            for index, (letter, sound) in enumerate(alphabet):
+                with cols[index % 4]:
+                    st.markdown(f"**{letter}**")
+                    st.caption(sound)
     with tabs[2]:
         st.subheader("Grammar and usage")
         for title, explanation in grammar:
