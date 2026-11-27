@@ -16,6 +16,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+def clear_transient_learning_state():
+    """Clear per-browser lesson and practice widget state between learners."""
+    for key in list(st.session_state.keys()):
+        if key.startswith(("unified_l", "practice_round_")) or key in (
+            "practice_questions", "practice_submitted", "practice_round_score",
+            "practice_lesson_active",
+        ):
+            st.session_state.pop(key, None)
+
+
 # ---------------------------------------------------------------------
 # Authentication: usernames and passwords are managed in Streamlit Secrets.
 # No email, registration, or create-account flow.
@@ -52,8 +62,7 @@ if not st.session_state.get("active_user"):
             st.session_state.practice_total = st.session_state.get(f"learner_{username}_practice_total", 0)
             st.session_state.earned_achievements = st.session_state.get(f"learner_{username}_earned_achievements", [])
             st.session_state.selected_language = st.session_state.get(f"learner_{username}_selected_language", "")
-            for transient_key in ("practice_questions", "practice_submitted", "practice_round_score", "practice_lesson_active"):
-                st.session_state.pop(transient_key, None)
+            clear_transient_learning_state()
             st.session_state.page = "Home"
             st.rerun()
         else:
@@ -587,6 +596,7 @@ with st.sidebar:
         username = st.session_state.active_user
         for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
+        clear_transient_learning_state()
         st.session_state.pop("active_user", None)
         for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state.pop(key, None)
@@ -1462,13 +1472,9 @@ elif page == "Settings":
                 }
                 for key, value in reset_values.items():
                     st.session_state[key] = value
-                for key in list(st.session_state.keys()):
-                    if key.startswith(("l1_", "a1_l", "practice_round_")) or key in (
-                        "practice_questions", "practice_submitted",
-                        "practice_round_score", "practice_lesson_active",
-                        "practice_lesson_select", "progress_reset_confirmation_open",
-                    ):
-                        st.session_state.pop(key, None)
+                clear_transient_learning_state()
+                for key in ("practice_lesson_select", "progress_reset_confirmation_open"):
+                    st.session_state.pop(key, None)
                 st.session_state.selected_language = language_preference
                 st.session_state[f"learner_{username}_selected_language"] = language_preference
                 st.session_state[f"learner_{username}_xp"] = 0
