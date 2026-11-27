@@ -440,12 +440,17 @@ def _make_questions(vocabulary, count=20):
         word, meaning = entry[0], entry[1]
         distractors = [meanings[(index + step) % len(meanings)] for step in range(1, min(4, len(meanings)))]
         options = [meaning] + distractors[:3]
+        correct_position = index % len(options)
+        options = options[correct_position:] + options[:correct_position]
         questions.append((f"What does “{word}” mean?", options, 0, f"{word} means {meaning}."))
     # Add reverse recognition items so the assessment tests both directions.
     for index, entry in enumerate(vocabulary):
         word, meaning = entry[0], entry[1]
         distractors = [vocabulary[(index + step) % len(vocabulary)][0] for step in range(1, 4)]
-        questions.append((f"Which French expression means “{meaning}”?", [word] + distractors, 0, f"The correct French expression is {word}."))
+        options = [word] + distractors
+        correct_position = (index + 1) % len(options)
+        options = options[correct_position:] + options[:correct_position]
+        questions.append((f"Which French expression means “{meaning}”?", options, 0, f"The correct French expression is {word}."))
     return questions[:count]
 
 def build_lesson(lesson_id):
