@@ -272,3 +272,8 @@ def _build_lesson(lesson_id, topic):
     }
 
 PORTUGUESE_LESSONS = {lesson_id: _build_lesson(lesson_id, topic) for lesson_id, topic in TOPICS.items()}
+
+# Replace the first five A1 chapters with individually authored, editorially reviewed content.
+from angolan_portuguese_a1_quality import A1_QUALITY_LESSONS
+PORTUGUESE_LESSONS.update(A1_QUALITY_LESSONS)
+
