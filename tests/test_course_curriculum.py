@@ -71,7 +71,11 @@ class CourseCurriculumTests(unittest.TestCase):
                         self.assertTrue(explanation.strip())
 
     def test_extension_assessments_do_not_repeat_questions(self):
-        for lesson_id, lesson in EXTENSION_LESSONS.items():
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
             prompts = [question[0] for question in lesson["assessment"]]
             with self.subTest(lesson_id=lesson_id):
                 self.assertEqual(len(prompts), len(set(prompts)))
