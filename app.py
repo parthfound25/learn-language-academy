@@ -678,65 +678,6 @@ with st.sidebar:
     st.caption(f"{len(set(st.session_state.completed).intersection(COURSE_INDEX))} of {COURSE_TOTAL} lessons completed")
     st.markdown(f"**⭐ {st.session_state.xp} XP**")
 
-# Top-right device layout switch. The app remains responsive automatically;
-# this control lets learners preview a compact phone layout or a wide laptop layout.
-if "device_view" not in st.session_state:
-    st.session_state.device_view = "laptop"
-
-toolbar_space, toolbar_action = st.columns([12, 1])
-with toolbar_action:
-    switch_label = "📱" if st.session_state.device_view == "laptop" else "💻"
-    switch_help = "Switch to mobile layout" if st.session_state.device_view == "laptop" else "Switch to laptop layout"
-    if st.button(switch_label, key="device_view_toggle", help=switch_help, use_container_width=True):
-        st.session_state.device_view = "mobile" if st.session_state.device_view == "laptop" else "laptop"
-        st.rerun()
-
-device_marker = (
-    '<div class="device-mobile-marker" aria-hidden="true"></div>'
-    if st.session_state.device_view == "mobile"
-    else '<div class="device-laptop-marker" aria-hidden="true"></div>'
-)
-st.markdown(device_marker, unsafe_allow_html=True)
-st.markdown("""
-<style>
-/* Optional phone-sized preview when using a larger screen. */
-.stApp:has(.device-mobile-marker) .block-container {
-    max-width: 460px !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-}
-.stApp:has(.device-mobile-marker) [data-testid="stHorizontalBlock"] {
-    flex-wrap: wrap !important;
-}
-.stApp:has(.device-mobile-marker) [data-testid="column"] {
-    min-width: 100% !important;
-    flex: 1 1 100% !important;
-}
-/* Keep the wide layout available on laptops and desktop monitors. */
-.stApp:has(.device-laptop-marker) .block-container {
-    max-width: 1180px !important;
-}
-/* Actual phones and narrow browser windows adapt automatically in either mode. */
-@media (max-width: 768px) {
-    .block-container {
-        padding-top: 1rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-    .hero {
-        padding: 20px !important;
-        border-radius: 18px !important;
-    }
-    .hero-title {
-        font-size: 1.55rem !important;
-    }
-    [data-testid="stHorizontalBlock"] {
-        flex-wrap: wrap;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
 def page_header(kicker, title, subtitle=None):
     st.markdown(f'<div class="eyebrow">{kicker}</div>', unsafe_allow_html=True)
     st.title(title)
