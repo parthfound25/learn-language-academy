@@ -1,4 +1,5 @@
 import hmac
+import random
 import streamlit as st
 
 st.set_page_config(
@@ -39,6 +40,12 @@ if not st.session_state.get("active_user"):
             st.session_state.xp = st.session_state.get(f"learner_{username}_xp", 0)
             st.session_state.completed = st.session_state.get(f"learner_{username}_completed", [])
             st.session_state.active_lesson = st.session_state.get(f"learner_{username}_active_lesson", 1)
+            st.session_state.practice_rounds = st.session_state.get(f"learner_{username}_practice_rounds", 0)
+            st.session_state.practice_correct = st.session_state.get(f"learner_{username}_practice_correct", 0)
+            st.session_state.practice_total = st.session_state.get(f"learner_{username}_practice_total", 0)
+            st.session_state.earned_achievements = st.session_state.get(f"learner_{username}_earned_achievements", [])
+            st.session_state.selected_language = st.session_state.get(f"learner_{username}_selected_language", "")
+            st.session_state.page = "Home"
             st.rerun()
         else:
             st.error("Incorrect username or password.")
@@ -449,6 +456,38 @@ if "active_lesson" not in st.session_state:
     st.session_state.active_lesson = 1
 if "page" not in st.session_state:
     st.session_state.page = "Home"
+for key, default in (("practice_rounds", 0), ("practice_correct", 0), ("practice_total", 0),
+                     ("earned_achievements", []), ("selected_language", "")):
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+LANGUAGES = {
+    "Canadian French": {"flag": "🇨🇦", "status": "available"},
+    "European French": {"flag": "🇫🇷", "status": "coming soon"},
+    "Spanish": {"flag": "🇪🇸", "status": "coming soon"},
+    "German": {"flag": "🇩🇪", "status": "coming soon"},
+    "Italian": {"flag": "🇮🇹", "status": "coming soon"},
+    "Japanese": {"flag": "🇯🇵", "status": "coming soon"},
+}
+ACHIEVEMENTS = [
+    ("first_lesson", "🌱", "First steps", "Complete your first lesson", lambda: len(st.session_state.completed) >= 1),
+    ("five_lessons", "📚", "Building a habit", "Complete 5 lessons", lambda: len(st.session_state.completed) >= 5),
+    ("a1_complete", "🏅", "A1 explorer", "Complete 15 lessons", lambda: len(st.session_state.completed) >= 15),
+    ("practice_one", "🎯", "Practice makes progress", "Complete your first practice round", lambda: st.session_state.practice_rounds >= 1),
+    ("practice_ten", "🔥", "Practice regular", "Complete 10 practice rounds", lambda: st.session_state.practice_rounds >= 10),
+    ("thirty_lessons", "🌍", "Language adventurer", "Complete 30 lessons", lambda: len(st.session_state.completed) >= 30),
+    ("all_lessons", "🎓", "Mastery journey", "Complete all 90 lessons", lambda: len(st.session_state.completed) >= 90),
+]
+def refresh_achievements():
+    earned = set(st.session_state.earned_achievements)
+    new_titles = []
+    for aid, icon, title, description, condition in ACHIEVEMENTS:
+        if condition() and aid not in earned:
+            earned.add(aid)
+            new_titles.append(title)
+    st.session_state.earned_achievements = sorted(earned)
+    for title in new_titles:
+        st.toast(f"Achievement unlocked: {title}", icon="🏆")
 
 def lesson_is_unlocked(lesson_id):
     return lesson_id == 1 or (lesson_id - 1) in st.session_state.completed
@@ -461,18 +500,37 @@ def mark_lesson_complete(lesson_id):
     if lesson_id not in st.session_state.completed:
         st.session_state.completed.append(lesson_id)
         st.session_state.xp += 25
+        refresh_achievements()
 
 # Sidebar
+# Language choice is the first screen after sign-in.
+if not st.session_state.selected_language:
+    st.title("🌍 Choose your learning language")
+    st.write("Choose an available course. More languages will appear as they are developed.")
+    for language, details in LANGUAGES.items():
+        left, right = st.columns([4, 1])
+        with left:
+            st.markdown(f"### {details['flag']} {language}")
+            st.caption("Available now" if details["status"] == "available" else "Coming soon")
+        with right:
+            if details["status"] == "available":
+                if st.button("Start learning", key=f"choose_{language}", type="primary"):
+                    st.session_state.selected_language = language
+                    st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = language
+                    st.rerun()
+            else:
+                st.button("Coming soon", key=f"soon_{language}", disabled=True)
+    st.stop()
+
 with st.sidebar:
-    st.markdown("## 🍀 Learn Language")
+    st.markdown("## 🍀 Learn Language Academy")
     st.caption(f"Signed in: {st.session_state.active_user}")
     if st.button("Sign out", use_container_width=True):
         username = st.session_state.active_user
-        st.session_state[f"learner_{username}_xp"] = st.session_state.get("xp", 0)
-        st.session_state[f"learner_{username}_completed"] = st.session_state.get("completed", [])
-        st.session_state[f"learner_{username}_active_lesson"] = st.session_state.get("active_lesson", 1)
+        for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
+            st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
         st.session_state.pop("active_user", None)
-        for key in ("xp", "completed", "active_lesson", "page"):
+        for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state.pop(key, None)
         st.rerun()
     st.markdown("---")
@@ -482,7 +540,7 @@ with st.sidebar:
         st.session_state.page = selected_page
         st.rerun()
     st.markdown("---")
-    st.markdown("**🇨🇦 Canadian French · English explanations**")
+    st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
     st.progress(len(st.session_state.completed) / 90)
     st.caption(f"{len(st.session_state.completed)} of 90 lessons completed")
     st.markdown(f"**⭐ {st.session_state.xp} XP**")
