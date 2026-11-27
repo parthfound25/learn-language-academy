@@ -36,7 +36,7 @@ class ActivityTrackingTests(unittest.TestCase):
         self.assertIn('if is_admin_user:', app)
         self.assertIn('st.radio("ADMINISTRATION", ["Admin Dashboard"]', app)
         self.assertIn('st.session_state.selected_language = ""', app)
-        self.assertIn('preferred_language not in available_languages', app)
+        self.assertIn('preferred_language not in AVAILABLE_LEARNING_LANGUAGES', app)
         self.assertIn('Choose your learning language', app)
         self.assertIn('load_language_progress(st.session_state.active_user, chosen_language)', app)
         self.assertIn('if not is_admin_user:', app)
