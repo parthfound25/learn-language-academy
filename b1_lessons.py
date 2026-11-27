@@ -54,7 +54,13 @@ def _make_lesson(item):
     def make_questions():
         questions = []
         for i, v in enumerate(vocabulary[:12]):
-            options = [v[1], vocabulary[(i+1)%12][1], vocabulary[(i+2)%12][1], vocabulary[(i+3)%12][1]]
+            options = [v[1]]
+            for step in range(1, len(vocabulary)):
+                candidate = vocabulary[(i + step) % len(vocabulary)][1]
+                if candidate not in options:
+                    options.append(candidate)
+                if len(options) == 4:
+                    break
             questions.append((f"What does « {v[0]} » mean?", options, 0, f"« {v[0]} » means {v[1]}."))
         extra = [
             ("Which tense normally describes a completed past event?",["Passé composé","Imparfait","Present","Conditional"],0,"Passé composé presents a completed or bounded past event."),
