@@ -80,6 +80,7 @@ except Exception:
     configured_users = {}
 
 ADMIN_USERNAME = "Admin"
+AVAILABLE_LEARNING_LANGUAGES = ("Canadian French", "Angolan Portuguese")
 
 if not configured_users:
     st.title("🍀 Learn Language Academy by Parth")
@@ -107,6 +108,8 @@ if not st.session_state.get("active_user"):
                 st.session_state.page = "Admin Dashboard"
             else:
                 preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
+                if preferred_language not in AVAILABLE_LEARNING_LANGUAGES:
+                    preferred_language = ""
                 st.session_state.selected_language = preferred_language
                 if preferred_language:
                     load_language_progress(username, preferred_language)
@@ -684,6 +687,24 @@ refresh_achievements()
 
 # Sidebar
 is_admin_user = st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold()
+
+# A learner may have no saved language yet (or a legacy/invalid preference).
+# Ask them to choose an available course before rendering language-dependent UI.
+if not is_admin_user and st.session_state.get("selected_language") not in {
+    name for name, details in LANGUAGES.items() if details["status"] == "available"
+}:
+    st.title("🍀 Learn Language Academy")
+    st.subheader("Choose your learning language")
+    available_languages = [name for name, details in LANGUAGES.items() if details["status"] == "available"]
+    chosen_language = st.radio("Available courses", available_languages, horizontal=True)
+    st.caption("Your progress is kept separately for each learning language.")
+    if st.button("Continue", type="primary", use_container_width=True):
+        load_language_progress(st.session_state.active_user, chosen_language)
+        st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = chosen_language
+        st.session_state.page = "Home"
+        st.rerun()
+    st.stop()
+
 with st.sidebar:
     st.markdown("## 🍀 Learn Language Academy")
     st.caption(f"Signed in: {st.session_state.active_user}")
