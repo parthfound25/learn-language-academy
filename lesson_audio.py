@@ -171,19 +171,55 @@ def _public_url(url: str, path: str) -> str:
     return f"{url}/storage/v1/object/public/{BUCKET}/{quote(path, safe='/')}"
 
 
+def _storage_error_text(response) -> str:
+    try:
+        payload = response.json()
+        if isinstance(payload, dict):
+            return " ".join(str(payload.get(key, "")) for key in ("error", "message", "statusCode"))
+    except (ValueError, AttributeError):
+        pass
+    return str(getattr(response, "text", ""))
+
+
+def _is_missing_object(response) -> bool:
+    if response.status_code == 404:
+        return True
+    if response.status_code != 400:
+        return False
+    message = _storage_error_text(response).lower()
+    # Some Supabase Storage deployments return HTTP 400 for an absent object.
+    return "object not found" in message or "resource not found" in message
+
+
+def _raise_storage_error(response, path: str):
+    message = _storage_error_text(response)
+    lowered = message.lower()
+    if "bucket not found" in lowered or "bucket does not exist" in lowered:
+        raise AudioConfigurationError(
+            "The Supabase 'lesson-audio' bucket does not exist. Run supabase/lesson_audio_storage.sql in your Supabase SQL Editor, then reload the lesson."
+        )
+    if response.status_code == 400:
+        raise AudioConfigurationError(
+            "Supabase rejected the lesson-audio storage request. Check that the lesson-audio bucket exists and that [supabase].service_role_key is correct. Storage response: " + message
+        )
+    response.raise_for_status()
+
+
 def _download_object(url: str, key: str, path: str):
     response = requests.get(_object_url(url, path), headers=_headers(key), timeout=30)
-    if response.status_code == 404:
+    if _is_missing_object(response):
         return None
-    response.raise_for_status()
+    if not response.ok:
+        _raise_storage_error(response, path)
     return response.content
 
 
 def _object_exists(url: str, key: str, path: str) -> bool:
     response = requests.head(_object_url(url, path), headers=_headers(key), timeout=30)
-    if response.status_code == 404:
+    if _is_missing_object(response):
         return False
-    response.raise_for_status()
+    if not response.ok:
+        _raise_storage_error(response, path)
     return True
 
 
