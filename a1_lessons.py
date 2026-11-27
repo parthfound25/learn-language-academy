@@ -464,11 +464,14 @@ def _make_questions(vocabulary, count=20):
         options = options[correct_position:] + options[:correct_position]
         reverse.append((f"Which French expression means “{meaning}”?", options, (len(options) - correct_position) % len(options), f"The correct French expression is {word}."))
     questions = []
+    seen_prompts = set()
     for index in range(max(len(forward), len(reverse))):
-        if index < len(forward):
-            questions.append(forward[index])
-        if index < len(reverse):
-            questions.append(reverse[index])
+        for bank, position in ((forward, index), (reverse, index)):
+            if position < len(bank):
+                question = bank[position]
+                if question[0] not in seen_prompts:
+                    questions.append(question)
+                    seen_prompts.add(question[0])
     return questions[:count]
 
 
@@ -1298,7 +1301,7 @@ LESSON_EXPANSIONS = {
 ("A complete beginner introduction",[("A","Bonjour ! Comment vous appelez-vous ?"),("B","Je m'appelle Amélie. Et vous ?"),("A","Je m'appelle David. Vous venez d'où ?"),("B","Je viens du Canada, mais j'habite à Luanda."),("A","Vous parlez quelles langues ?"),("B","Je parle anglais et j'apprends le français."),("A","Enchanté !"),("B","Enchantée !")],"A: Hello! What is your name? B: My name is Amélie. And you? A: My name is David. Where are you from? B: I'm from Canada, but I live in Luanda. A: What languages do you speak? B: I speak English and I'm learning French. A: Nice to meet you! B: Nice to meet you!"),
 ("A practical day in Quebec",[("A","Bonjour. Une table pour deux, s'il vous plaît."),("B","Bien sûr. Vous désirez quelque chose à boire ?"),("A","De l'eau et deux cafés, merci."),("B","Et pour manger ?"),("A","Je voudrais une soupe et un sandwich."),("B","Parfait. Je vous apporte ça tout de suite."),("A","Merci beaucoup !")],"A: Hello. A table for two, please. B: Of course. Would you like something to drink? A: Water and two coffees, thank you. B: And to eat? A: I would like a soup and a sandwich. B: Perfect. I'll bring that right away. A: Thank you very much!")
 ],
-"exercises":[("Choose the correct sentence for age and identity.", ["Je suis vingt ans et j'ai étudiant", "J'ai vingt ans et je suis étudiant", "Je suis vingt ans et je suis étudiant", "J'ai vingt ans et j'ai étudiant"], 1, "Use avoir for age and être for identity."),("Choose the correct noun phrase.", ["une grand maison blanche", "une grande maison blanc", "une grande maison blanche", "un grande maison blanche"], 2, "Maison is feminine; grande and blanche both agree."),("Choose the correct routine sentence.", ["Le lundi", "je travaille", "Le lundi", "je travailles", "À lundi", "je travaille", "En lundi", "je travaille"], 0, "Le + weekday expresses a repeated routine, and je travaille is the correct verb form."),("Which is the polite request in a café?", ["Je veux un café", "Je voudrais un café", "Je suis un café", "J'ai un café"], 1, "Je voudrais is a polite way to order.")],
+"exercises":[("Choose the correct sentence for age and identity.", ["Je suis vingt ans et j'ai étudiant", "J'ai vingt ans et je suis étudiant", "Je suis vingt ans et je suis étudiant", "J'ai vingt ans et j'ai étudiant"], 1, "Use avoir for age and être for identity."),("Choose the correct noun phrase.", ["une grand maison blanche", "une grande maison blanc", "une grande maison blanche", "un grande maison blanche"], 2, "Maison is feminine; grande and blanche both agree."),("Choose the correct routine sentence.", ["Le lundi, je travaille.", "Le lundi, je travailles.", "À lundi, je travaille.", "En lundi, je travaille."], 0, "Le + weekday expresses a repeated routine. The subject je takes travaille, not travailles."),("Which is the polite request in a café?", ["Je veux un café", "Je voudrais un café", "Je suis un café", "J'ai un café"], 1, "Je voudrais is a polite way to order.")],
 "speaking":[
 "Give a one-minute introduction using name, age, origin, residence, languages and one personal detail.",
 "Describe your family and two people using possessives and adjective agreement.",
@@ -1320,15 +1323,21 @@ LESSON_EXPANSIONS = {
 def build_lesson(lesson_id):
     source = LESSON_DATA[lesson_id]
     expansion = LESSON_EXPANSIONS.get(lesson_id, {})
-    vocab = source["vocab"] + expansion.get("vocabulary", [])
+    # Expansion content can intentionally refine an original entry; keep the
+    # latest version of each French headword so generated quizzes do not repeat it.
+    vocabulary_by_term = {}
+    for entry in source["vocab"] + expansion.get("vocabulary", []):
+        vocabulary_by_term[entry[0].strip().casefold()] = entry
+    vocab = list(vocabulary_by_term.values())
     grammar = source["grammar"] + expansion.get("grammar", [])
     expressions = source["expressions"] + expansion.get("expressions", [])
     examples = source["examples"] + expansion.get("examples", [])
     conversations = source["conversations"] + expansion.get("conversations", [])
     speaking = source["speaking"] + expansion.get("speaking", [])
     summary = source["summary"] + expansion.get("summary", [])
-    exercises = _make_questions(vocab, 12) + expansion.get("exercises", [])
-    assessment = _make_questions(vocab, 20)
+    question_bank = _make_questions(vocab, len(vocab) * 2)
+    exercises = question_bank[:12] + expansion.get("exercises", [])
+    assessment = question_bank[12:]
     return {
         "id": lesson_id,
         "title": source["title"],

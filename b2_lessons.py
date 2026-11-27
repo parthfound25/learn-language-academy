@@ -43,7 +43,8 @@ def _build(item):
       ("In Quebec French, « un dépanneur » commonly means…",["a convenience store","a mechanic","a pharmacy only","a bus stop"],0,"Un dépanneur is a convenience store in Quebec usage."),
       ("Which phrase qualifies a statement formally?",["Dans une certaine mesure","Pantoute","Ça roule","À tantôt"],0,"Dans une certaine mesure means to a certain extent.")
     ])
-    assessment=(questions*2)[:20]
+    assessment=questions[-5:]
+    exercises=questions[:-5]
     speaking=[
       "Read all twelve vocabulary entries aloud, focusing on liaison, nasal vowels and the French R.",
       "Explain the central grammar pattern in your own words and create three original examples.",
@@ -65,5 +66,5 @@ def _build(item):
     examples=topic_examples+examples
     topic_conversation=(f"Clarifying {title.lower()}",[("A",f"Comment interprétez-vous « {vocabulary[0][0]} » ?"),("B","Il faut tenir compte du contexte, du sens et du registre."),("A","La situation change-t-elle l'interprétation ?"),("B","Oui, le contexte permet de préciser le sens.")],f"A: How do you interpret « {vocabulary[0][0]} »? B: We must take context, meaning and register into account. A: Does the situation change the interpretation? B: Yes, context helps clarify the meaning.")
     conversations=[topic_conversation]+conversations
-    return {"title":title,"goal":goal,"vocab":vocabulary,"vocabulary":vocabulary,"grammar":list(zip(["Core pattern","Form and structure","Meaning and use","Accuracy and common pitfalls","Questions and negative forms","Advanced usage","Choosing the right construction","Canadian French focus"],_GRAMMAR[lesson_id-46])),"expressions":expressions,"examples":examples,"conversations":conversations,"exercises":questions,"speaking":speaking,"summary":summary,"assessment":assessment}
+    return {"title":title,"goal":goal,"vocab":vocabulary,"vocabulary":vocabulary,"grammar":list(zip(["Core pattern","Form and structure","Meaning and use","Accuracy and common pitfalls","Questions and negative forms","Advanced usage","Choosing the right construction","Canadian French focus"],_GRAMMAR[lesson_id-46])),"expressions":expressions,"examples":examples,"conversations":conversations,"exercises":exercises,"speaking":speaking,"summary":summary,"assessment":assessment}
 B2_LESSONS={item[0]:_build(item) for item in _RAW}

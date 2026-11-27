@@ -28,7 +28,7 @@ class CourseCurriculumTests(unittest.TestCase):
     def test_extension_ids_are_complete(self):
         self.assertEqual(set(EXTENSION_LESSONS), set(range(91, 108)))
 
-    def test_total_course_count_is_102(self):
+    def test_total_course_count_is_107(self):
         # Lesson 1 is authored in app.py; 2-90 are the six original content banks.
         self.assertEqual(1 + sum(len(bank) for bank in BANKS) + len(EXTENSION_LESSONS), 107)
 
@@ -56,6 +56,18 @@ class CourseCurriculumTests(unittest.TestCase):
                 self.assertGreaterEqual(len(lesson["speaking"]), 2)
                 self.assertGreaterEqual(len(lesson["summary"]), 2)
 
+    def test_multiple_choice_options_are_four_distinct_choices(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            for section in ("exercises", "assessment"):
+                for question, options, answer, explanation in lesson[section]:
+                    with self.subTest(lesson_id=lesson_id, section=section, question=question):
+                        self.assertEqual(len(options), 4)
+                        self.assertEqual(len(options), len(set(options)))
+
     def test_all_question_answer_indexes_are_valid(self):
         all_lessons = {}
         for bank in BANKS:
@@ -70,6 +82,44 @@ class CourseCurriculumTests(unittest.TestCase):
                         self.assertLess(answer, len(options))
                         self.assertTrue(explanation.strip())
 
+    def test_all_lessons_have_unique_vocabulary_headwords(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            vocabulary = lesson.get("vocabulary", lesson.get("vocab", []))
+            headwords = [entry[0].strip().casefold() for entry in vocabulary]
+            with self.subTest(lesson_id=lesson_id):
+                self.assertEqual(len(headwords), len(set(headwords)))
+
+    def test_assessments_are_distinct_from_guided_exercises(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            exercise_items = {
+                (question, tuple(options), answer)
+                for question, options, answer, _ in lesson["exercises"]
+            }
+            assessment_items = {
+                (question, tuple(options), answer)
+                for question, options, answer, _ in lesson["assessment"]
+            }
+            with self.subTest(lesson_id=lesson_id):
+                self.assertFalse(exercise_items.intersection(assessment_items))
+
+    def test_all_assessments_do_not_repeat_questions(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            prompts = [question[0] for question in lesson["assessment"]]
+            with self.subTest(lesson_id=lesson_id):
+                self.assertEqual(len(prompts), len(set(prompts)))
+
     def test_extensions_include_objectives_pronunciation_and_homework(self):
         for lesson_id, lesson in EXTENSION_LESSONS.items():
             with self.subTest(lesson_id=lesson_id):
@@ -82,6 +132,24 @@ class CourseCurriculumTests(unittest.TestCase):
             conversation_titles = [lesson["conversations"][0][0] for lesson in bank.values()]
             self.assertEqual(len(example_openers), len(set(example_openers)))
             self.assertEqual(len(conversation_titles), len(set(conversation_titles)))
+
+    def test_every_lesson_has_enough_unique_questions_for_practice(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            prompts = {
+                question[0]
+                for question in lesson["exercises"] + lesson["assessment"]
+            }
+            with self.subTest(lesson_id=lesson_id):
+                self.assertGreaterEqual(len(prompts), 10)
+
+    def test_app_clears_shared_widget_state_between_learners(self):
+        app_source = (pathlib.Path(__file__).resolve().parents[1] / "app.py").read_text()
+        self.assertIn('key.startswith(("unified_l", "practice_round_"))', app_source)
+        self.assertGreaterEqual(app_source.count("clear_transient_learning_state()"), 4)
 
     def test_app_is_valid_python_and_contains_the_sequence_integration(self):
         app_path = pathlib.Path(__file__).resolve().parents[1] / "app.py"

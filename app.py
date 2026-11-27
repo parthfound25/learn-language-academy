@@ -8,7 +8,6 @@ from b2_lessons import B2_LESSONS
 from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
-from curriculum_extensions import EXTENSION_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -16,6 +15,16 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+def clear_transient_learning_state():
+    """Clear per-browser lesson and practice widget state between learners."""
+    for key in list(st.session_state.keys()):
+        if key.startswith(("unified_l", "practice_round_")) or key in (
+            "practice_questions", "practice_submitted", "practice_round_score",
+            "practice_lesson_active", "practice_round_responses",
+        ):
+            st.session_state.pop(key, None)
+
 
 # ---------------------------------------------------------------------
 # Authentication: usernames and passwords are managed in Streamlit Secrets.
@@ -53,8 +62,7 @@ if not st.session_state.get("active_user"):
             st.session_state.practice_total = st.session_state.get(f"learner_{username}_practice_total", 0)
             st.session_state.earned_achievements = st.session_state.get(f"learner_{username}_earned_achievements", [])
             st.session_state.selected_language = st.session_state.get(f"learner_{username}_selected_language", "")
-            for transient_key in ("practice_questions", "practice_submitted", "practice_round_score", "practice_lesson_active"):
-                st.session_state.pop(transient_key, None)
+            clear_transient_learning_state()
             st.session_state.page = "Home"
             st.rerun()
         else:
@@ -62,8 +70,7 @@ if not st.session_state.get("active_user"):
     st.stop()
 
 # ---------------------------------------------------------------------
-# Course roadmap: preserve the exact 90 lesson titles and numbering.
-# Lesson content is added progressively, one complete lesson at a time.
+# Course roadmap: preserve original lesson IDs while presenting the integrated 107-lesson sequence.
 # ---------------------------------------------------------------------
 LEVELS = {
     "A1 – Absolute Beginner": [
@@ -466,6 +473,12 @@ LESSON_1["assessment"] += [
     ("Which expression means “I don't understand”?", ["Je comprends.", "Je ne comprends pas.", "Je parle français.", "Au revoir."], 1, "Je ne comprends pas means I don't understand."),
     ("Which is the best description of Canadian French?", ["There is only one Canadian accent", "It is identical in every region", "It includes regional varieties with pronunciation differences", "It never uses standard French"], 2, "Canadian French includes multiple regional varieties and speaker styles."),
 ]
+# Keep the final check distinct from the guided Lesson 1 exercises.
+lesson_1_exercise_prompts = {question[0] for question in LESSON_1["exercises"]}
+LESSON_1["assessment"] = [
+    question for question in LESSON_1["assessment"]
+    if question[0] not in lesson_1_exercise_prompts
+]
 LESSON_1["summary"] += [
     "IPA can show sounds more accurately than English-style pronunciation hints.",
     "French R is usually /ʁ/; nasal vowels are produced with nasal resonance.",
@@ -589,6 +602,7 @@ with st.sidebar:
         username = st.session_state.active_user
         for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
+        clear_transient_learning_state()
         st.session_state.pop("active_user", None)
         for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
             st.session_state.pop(key, None)
@@ -740,9 +754,11 @@ def render_unified_lesson(lesson_id):
             st.metric("Assessment score", f"{score}/{len(prepared_assessment)}", f"{score / len(prepared_assessment) * 100:.0f}%")
             for index, (question, options, answer, explanation) in enumerate(prepared_assessment):
                 response = st.session_state.get(f"{assessment_key}_{attempt}_{index}")
-                if response != options[answer]:
-                    st.markdown(f"**{index + 1}. {question}**")
-                    st.caption(f"Correct answer: {options[answer]}. {explanation}")
+                st.markdown(f"**{index + 1}. {question}**")
+                if response == options[answer]:
+                    st.success("Correct. " + explanation)
+                else:
+                    st.error(f"Not quite. Correct answer: {options[answer]}. {explanation}")
             if st.button("Retake assessment", key=f"{assessment_key}_retake"):
                 st.session_state[attempt_key] = attempt + 1
                 st.session_state.pop(f"{assessment_key}_score", None)
@@ -1377,9 +1393,14 @@ elif page == "Practice":
         unique_questions.setdefault(question_data[0], question_data)
     question_bank = [shuffled_question(item, f"practice-{selected_id}-{index}") for index, item in enumerate(unique_questions.values())]
     if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
+        # A lesson switch must not reuse the previous lesson's selected radio answers.
+        for key in list(st.session_state.keys()):
+            if key.startswith("practice_round_"):
+                st.session_state.pop(key, None)
         st.session_state.practice_questions = random.sample(question_bank, 10)
         st.session_state.practice_lesson_active = selected_id
         st.session_state.practice_submitted = False
+        st.session_state.pop("practice_round_responses", None)
     if "practice_submitted" not in st.session_state:
         st.session_state.practice_submitted = False
     if st.session_state.practice_submitted:
@@ -1390,9 +1411,17 @@ elif page == "Practice":
         st.progress(score / 10)
         st.success("Practice round completed · +15 XP earned")
         st.caption("Your next attempt will use a different shuffled set of questions.")
+        for index, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
+            response = st.session_state.practice_round_responses[index]
+            st.markdown(f"**{index + 1}. {question}**")
+            if response == options[answer]:
+                st.success("Correct. " + explanation)
+            else:
+                st.error(f"Not quite. Correct answer: {options[answer]}. {explanation}")
         if st.button("Try again · New 10 questions", type="primary", key="new_practice_round"):
             st.session_state.practice_questions = random.sample(question_bank, 10)
             st.session_state.practice_submitted = False
+            st.session_state.pop("practice_round_responses", None)
             st.rerun()
     else:
         for i, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
@@ -1404,6 +1433,7 @@ elif page == "Practice":
             else:
                 score = sum(1 for response, (_, options, answer, _) in zip(responses, st.session_state.practice_questions) if options.index(response) == answer)
                 st.session_state.practice_round_score = score
+                st.session_state.practice_round_responses = responses
                 st.session_state.practice_rounds += 1
                 st.session_state.practice_correct += score
                 st.session_state.practice_total += 10
@@ -1464,13 +1494,9 @@ elif page == "Settings":
                 }
                 for key, value in reset_values.items():
                     st.session_state[key] = value
-                for key in list(st.session_state.keys()):
-                    if key.startswith(("l1_", "a1_l", "practice_round_")) or key in (
-                        "practice_questions", "practice_submitted",
-                        "practice_round_score", "practice_lesson_active",
-                        "practice_lesson_select", "progress_reset_confirmation_open",
-                    ):
-                        st.session_state.pop(key, None)
+                clear_transient_learning_state()
+                for key in ("practice_lesson_select", "progress_reset_confirmation_open"):
+                    st.session_state.pop(key, None)
                 st.session_state.selected_language = language_preference
                 st.session_state[f"learner_{username}_selected_language"] = language_preference
                 st.session_state[f"learner_{username}_xp"] = 0

@@ -195,7 +195,13 @@ def _build(lesson_id):
     grammar = GRAMMAR[lesson_id]
     exercises = []
     for i, item in enumerate(vocab[:5]):
-        options = [item[1], vocab[(i+1)%10][1], vocab[(i+2)%10][1], vocab[(i+3)%10][1]]
+        options = [item[1]]
+        for step in range(1, len(vocab)):
+            candidate = vocab[(i + step) % len(vocab)][1]
+            if candidate not in options:
+                options.append(candidate)
+            if len(options) == 4:
+                break
         exercises.append((f"What does « {item[0]} » mean?", options, 0, f"« {item[0]} » means {item[1]}."))
     for i, item in enumerate(grammar[:5]):
         exercises.append((f"Which statement best describes: {item[0]}?", [item[1], grammar[(i+1)%6][1], grammar[(i+2)%6][1], grammar[(i+3)%6][1]], 0, item[1]))
@@ -223,7 +229,7 @@ def _build(lesson_id):
         "Review your speech for clarity, accuracy, cohesion and register. Repeat the weakest passage with a more precise structure."
     ]
     summary = [f"Understand and use the central concepts in « {TITLES[lesson_id]} ».","Apply the grammar patterns deliberately, paying attention to meaning, chronology and register.","Choose precise vocabulary and connectors to make complex ideas coherent.","Recognise Canadian French variation while adapting your language to the audience and situation.","Use listening, reading, speaking and writing practice to build flexible advanced communication."]
-    assessment = exercises + APPLICATION
+    assessment = APPLICATION[:]
     topic_examples = [(f"Dans le cadre de « {TITLES[lesson_id]} », le terme « {vocab[0][0]} » doit être interprété avec précision.", f"In the context of {TITLES[lesson_id]}, the term « {vocab[0][0]} » must be interpreted precisely.", "This lesson-specific example applies the chapter vocabulary in a precise sentence.")]
     examples = topic_examples + examples
     topic_conversation = (f"Clarifying {TITLES[lesson_id].lower()}", [("A", f"Comment interprétez-vous « {vocab[0][0]} » ?"), ("B", "Il faut tenir compte du contexte, du sens et du registre."), ("A", "La situation change-t-elle l'interprétation ?"), ("B", "Oui, le contexte permet de préciser le sens.")], f"A: How do you interpret « {vocab[0][0]} »? B: We must take context, meaning and register into account. A: Does the situation change the interpretation? B: Yes, context helps clarify the meaning.")
