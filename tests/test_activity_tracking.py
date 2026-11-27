@@ -34,8 +34,16 @@ class ActivityTrackingTests(unittest.TestCase):
         self.assertIn("reset_learner_data(selected_learner, invalidate_active_sessions=True)", app)
         self.assertIn('"duration_seconds": 0', module)
         self.assertIn('"completed_lessons": []', module)
+        self.assertIn('for language in ("Canadian French", "Angolan Portuguese")', module)
+        self.assertIn('on_conflict="username,language"', module)
         self.assertIn('"status": "logged_out", "logout_at": now', module)
         self.assertIn("session_is_active(st.session_state.activity_session_id)", app)
+
+    def test_invalidated_learner_session_is_forced_to_login(self):
+        app = (ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn("not session_is_active(st.session_state.activity_session_id)", app)
+        self.assertIn('st.session_state.pop("active_user", None)', app)
+        self.assertIn("Your session was reset by the administrator", app)
 
     def test_admin_dashboard_uses_dedicated_admin_username_and_shows_learner_metrics(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
