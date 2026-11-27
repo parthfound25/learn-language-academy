@@ -546,7 +546,7 @@ def lesson_is_unlocked(lesson_id):
     index = COURSE_INDEX.get(lesson_id)
     if index is None:
         return False
-    return index == 0 or ALL_LESSONS[index - 1]["id"] in st.session_state.completed
+    return lesson_id in st.session_state.completed or index == 0 or ALL_LESSONS[index - 1]["id"] in st.session_state.completed
 
 def open_lesson(lesson_id):
     st.session_state.active_lesson = lesson_id
