@@ -85,7 +85,7 @@ if not configured_users:
     st.title("🍀 Learn Language Academy by Parth")
     st.error("No learner accounts are configured.")
     st.markdown("Add learner accounts in Streamlit → App settings → Secrets:")
-    st.code('[users]\n"Parth Sharma" = "YOUR_PASSWORD"\n"User 2" = "ANOTHER_PASSWORD"', language="toml")
+    st.code('[users]\nAdmin = "YOUR_ADMIN_PASSWORD"\n"Parth Sharma" = "YOUR_LEARNER_PASSWORD"\n"User 2" = "ANOTHER_PASSWORD"', language="toml")
     st.stop()
 
 if not st.session_state.get("active_user"):
