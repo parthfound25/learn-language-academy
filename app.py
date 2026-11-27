@@ -219,6 +219,13 @@ def get_lesson_content(lesson_id):
             return bank[lesson_id]
     return None
 
+def shuffled_question(question_data, seed):
+    question, options, answer, explanation = question_data
+    order = list(range(len(options)))
+    random.Random(str(seed)).shuffle(order)
+    shuffled_options = [options[index] for index in order]
+    return question, shuffled_options, order.index(answer), explanation
+
 # ---------------------------------------------------------------------
 # Complete Lesson 1 content. Teaching language: simple English.
 # Canadian French notes are labelled; broad standard pronunciation first.
