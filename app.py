@@ -2083,7 +2083,7 @@ elif page == "Practice":
     practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
-    lesson_bank = LESSON_1 if selected_id == 1 else (A1_LESSONS[selected_id] if selected_id in A1_LESSONS else (A2_LESSONS[selected_id] if selected_id in A2_LESSONS else (B1_LESSONS[selected_id] if selected_id in B1_LESSONS else (B2_LESSONS[selected_id] if selected_id in B2_LESSONS else (C1_LESSONS[selected_id] if selected_id in C1_LESSONS else C2_LESSONS[selected_id])))))
+    lesson_bank = get_lesson_content(selected_id)
     question_bank = lesson_bank["exercises"] + lesson_bank["assessment"]
     if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
         st.session_state.practice_questions = random.sample(question_bank, 10)
