@@ -7,6 +7,7 @@ from b1_lessons import B1_LESSONS
 from b2_lessons import B2_LESSONS
 from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
+from curriculum_extensions import EXTENSION_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -534,7 +535,10 @@ def refresh_achievements():
         st.toast(f"Achievement unlocked: {title}", icon="🏆")
 
 def lesson_is_unlocked(lesson_id):
-    return lesson_id == 1 or (lesson_id - 1) in st.session_state.completed
+    index = COURSE_INDEX.get(lesson_id)
+    if index is None:
+        return False
+    return index == 0 or ALL_LESSONS[index - 1]["id"] in st.session_state.completed
 
 def open_lesson(lesson_id):
     st.session_state.active_lesson = lesson_id
