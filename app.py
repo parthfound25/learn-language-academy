@@ -832,9 +832,9 @@ def render_authored_a2_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_a2_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_a2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_a2_lesson_{lesson_id}"):
@@ -952,9 +952,9 @@ def render_authored_b1_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_b1_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_b1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_b1_lesson_{lesson_id}"):
@@ -1072,9 +1072,9 @@ def render_authored_b2_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_b2_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_b2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_b2_lesson_{lesson_id}"):
@@ -1191,9 +1191,9 @@ def render_authored_c1_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_c1_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_c1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_c1_lesson_{lesson_id}"):
@@ -1311,9 +1311,9 @@ def render_authored_c2_lesson(lesson_id):
     st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
     if lesson_id in st.session_state.completed:
         st.success(f"Lesson {lesson_id} is already marked complete.")
-    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_c2_lesson_{lesson_id}"):
+    elif st.button(f"Mark Lesson {course_number(lesson_id)} complete · Earn 25 XP", type="primary", key=f"complete_c2_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
+        st.success(f"Lesson {course_number(lesson_id)} completed! You earned 25 XP. Your next lesson in the learning path is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_c2_lesson_{lesson_id}"):
@@ -1586,7 +1586,7 @@ if page == "Home":
     with a:
         st.markdown(f'<div class="stat"><div class="stat-number">⭐ {st.session_state.xp}</div><div class="stat-label">TOTAL XP</div></div>', unsafe_allow_html=True)
     with b:
-        st.markdown(f'<div class="stat"><div class="stat-number">{len(st.session_state.completed)}/90</div><div class="stat-label">LESSONS COMPLETED</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="stat"><div class="stat-number">{len(set(st.session_state.completed).intersection(COURSE_INDEX))}/{COURSE_TOTAL}</div><div class="stat-label">LESSONS COMPLETED</div></div>', unsafe_allow_html=True)
     with c:
         st.markdown(f'<div class="stat"><div class="stat-number">{st.session_state.practice_rounds}</div><div class="stat-label">PRACTICE ROUNDS</div></div>', unsafe_allow_html=True)
     with d:
@@ -1602,7 +1602,7 @@ if page == "Home":
     else:
         next_lesson = next((x for x in ALL_LESSONS if x["id"] not in st.session_state.completed), None)
         if next_lesson:
-            st.markdown(f"**Lesson {next_lesson['id']} · {next_lesson['title']}**")
+            st.markdown(f"**Lesson {course_number(next_lesson['id'])} · {next_lesson['title']}**")
             if get_lesson_content(next_lesson["id"]) is not None:
                 st.success("This lesson is ready. Continue your learning journey!")
                 if st.button(f"Open Lesson {course_number(next_lesson['id'])}", type="primary", key="home_open_next_lesson"):
