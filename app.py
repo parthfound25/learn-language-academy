@@ -1,6 +1,7 @@
 import hmac
 import random
 import streamlit as st
+from a1_lessons import A1_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -555,6 +556,125 @@ def page_header(kicker, title, subtitle=None):
     if subtitle:
         st.markdown(f'<p class="muted">{subtitle}</p>', unsafe_allow_html=True)
 
+def render_authored_a1_lesson(lesson_id):
+    lesson = A1_LESSONS[lesson_id]
+    st.markdown(f'<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.title(lesson["title"])
+    st.markdown(f"**Goal:** {lesson['goal']}")
+    st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
+    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
+    with tabs[0]:
+        st.subheader("Essential vocabulary")
+        st.write("Learn each word with its meaning, an approximate pronunciation guide, IPA and an example.")
+        for french, meaning, pronunciation, ipa, example in lesson["vocabulary"]:
+            with st.container(border=True):
+                left, right = st.columns([1, 2])
+                with left:
+                    st.markdown(f"### {french}")
+                    st.caption(f"Say it: {pronunciation}")
+                    st.caption(f"IPA: {ipa}")
+                with right:
+                    st.write(meaning)
+                    st.markdown(f"*{example}*")
+    with tabs[1]:
+        st.subheader("Grammar and usage")
+        for title, explanation in lesson["grammar"]:
+            with st.expander(title, expanded=True):
+                st.write(explanation)
+        st.info("Canadian French note: these lessons teach broadly understood standard French first, and identify common Quebec usage differences where relevant.")
+    with tabs[2]:
+        st.subheader("Useful expressions")
+        for phrase, meaning, context in lesson["expressions"]:
+            with st.container(border=True):
+                st.markdown(f"**{phrase}** — {meaning}")
+                st.caption(context)
+    with tabs[3]:
+        st.subheader("French sentences in context")
+        for french, english, explanation in lesson["examples"]:
+            with st.container(border=True):
+                st.markdown(f"### {french}")
+                st.write(english)
+                st.caption(explanation)
+    with tabs[4]:
+        st.subheader("Practical conversations")
+        for title, dialogue, translation in lesson["conversations"]:
+            st.markdown(f"**{title}**")
+            for speaker, line in dialogue:
+                st.markdown(f"- **{speaker}:** {line}")
+            with st.expander("Show English translation"):
+                st.write(translation)
+    with tabs[5]:
+        st.subheader("Practice exercises")
+        st.write("Choose an answer and check it. Mistakes never block progress.")
+        for index, (question, options, answer, explanation) in enumerate(lesson["exercises"]):
+            selected = st.radio(question, options, index=None, key=f"a1_l{lesson_id}_exercise_{index}")
+            if st.button("Check", key=f"a1_l{lesson_id}_check_{index}"):
+                if selected is None:
+                    st.warning("Choose an answer first.")
+                elif options.index(selected) == answer:
+                    st.success("Correct! " + explanation)
+                else:
+                    st.error("Not quite. " + explanation)
+    with tabs[6]:
+        st.subheader("Speaking practice")
+        st.write("No microphone or recording is required. Read aloud and practise the patterns.")
+        for index, instruction in enumerate(lesson["speaking"], start=1):
+            st.markdown(f"{index}. {instruction}")
+    with tabs[7]:
+        st.subheader("What you learned")
+        for item in lesson["summary"]:
+            st.markdown(f"- {item}")
+    with tabs[8]:
+        st.subheader(f"Lesson {lesson_id} assessment")
+        st.write("20 questions · One point each · No hearts, lives or failure lockout.")
+        responses = []
+        for index, (question, options, answer, explanation) in enumerate(lesson["assessment"]):
+            selected = st.radio(question, options, index=None, key=f"a1_l{lesson_id}_assessment_{index}")
+            responses.append((selected, options, answer, explanation))
+        if st.button(f"Submit Lesson {lesson_id} assessment", type="primary", key=f"a1_l{lesson_id}_submit"):
+            unanswered = sum(1 for selected, _, _, _ in responses if selected is None)
+            if unanswered:
+                st.warning(f"Please answer all 20 questions. Remaining: {unanswered}.")
+            else:
+                score = sum(1 for selected, options, answer, _ in responses if options.index(selected) == answer)
+                st.session_state[f"a1_l{lesson_id}_score"] = score
+                st.session_state[f"a1_l{lesson_id}_submitted"] = True
+                st.rerun()
+        if st.session_state.get(f"a1_l{lesson_id}_submitted", False):
+            score = st.session_state[f"a1_l{lesson_id}_score"]
+            st.metric("Your score", f"{score}/20", f"{score * 5}%")
+            if score >= 18:
+                st.success("Excellent work! You have a strong grasp of this lesson.")
+            elif score >= 14:
+                st.success("Good progress! Review the explanations for any missed answers.")
+            else:
+                st.info("Keep practising. You can review the lesson and retake the assessment.")
+            for index, (question, options, answer, explanation) in enumerate(lesson["assessment"]):
+                selected = st.session_state.get(f"a1_l{lesson_id}_assessment_{index}")
+                if selected != options[answer]:
+                    st.markdown(f"**{index + 1}. {question}**")
+                    st.caption(f"Correct answer: {options[answer]}. {explanation}")
+            if st.button("Retake assessment", key=f"a1_l{lesson_id}_retake"):
+                st.session_state[f"a1_l{lesson_id}_submitted"] = False
+                for index in range(len(lesson["assessment"])):
+                    st.session_state.pop(f"a1_l{lesson_id}_assessment_{index}", None)
+                st.rerun()
+    st.markdown("---")
+    st.subheader("Complete this lesson")
+    st.write("Your assessment score does not block completion. Finish studying, then mark the lesson complete to unlock the next chapter.")
+    if lesson_id in st.session_state.completed:
+        st.success(f"Lesson {lesson_id} is already marked complete.")
+    elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_a1_lesson_{lesson_id}"):
+        mark_lesson_complete(lesson_id)
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.session_state.page = "Learning Path"
+        st.rerun()
+    if st.button("Back to Learning Path", key=f"back_a1_lesson_{lesson_id}"):
+        st.session_state.page = "Learning Path"
+        st.rerun()
+
+
 def render_lesson_one():
     lesson = ALL_LESSONS[0]
     st.markdown('<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF 90</div>', unsafe_allow_html=True)
@@ -754,22 +874,23 @@ elif page == "Learning Path":
                 with col1:
                     icon = "✅" if completed else ("🌱" if unlocked else "🔒")
                     st.markdown(f"**{icon} Lesson {lesson_id}: {title}**")
-                    st.caption("Complete lesson available now" if lesson_id == 1 else ("Next lesson in sequence · Content coming next" if lesson_id == 2 else "On the course roadmap"))
+                    has_content = lesson_id == 1 or lesson_id in A1_LESSONS
+                    st.caption(("Complete lesson available now" if lesson_id == 1 else "Full lesson available · Unlocks in sequence") if has_content else "On the course roadmap · Content coming later")
                 with col2:
-                    if lesson_id == 1:
-                        st.button("Review" if completed else "Start", key=f"path_lesson_{lesson_id}", type="primary" if not completed else "secondary", on_click=open_lesson, args=(1,))
-                    elif not unlocked:
+                    if not unlocked:
                         st.button("Locked", key=f"path_locked_{lesson_id}", disabled=True)
-                    elif lesson_id == 2:
-                        st.button("Coming next", key=f"path_next_{lesson_id}", disabled=True)
+                    elif has_content:
+                        st.button("Review" if completed else "Start", key=f"path_lesson_{lesson_id}", type="primary" if not completed else "secondary", on_click=open_lesson, args=(lesson_id,))
                     else:
                         st.button("Coming soon", key=f"path_soon_{lesson_id}", disabled=True)
 
 elif page == "Lesson":
     if st.session_state.active_lesson == 1:
         render_lesson_one()
+    elif st.session_state.active_lesson in A1_LESSONS:
+        render_authored_a1_lesson(st.session_state.active_lesson)
     else:
-        st.warning("The detailed content for this lesson has not been added yet. Lesson 1 is the current completed-content milestone.")
+        st.warning("This lesson is on the roadmap; its full content will be added in a later course update.")
         if st.button("Return to Learning Path"):
             st.session_state.page = "Learning Path"
             st.rerun()
@@ -1260,14 +1381,12 @@ elif page == "Vocabulary":
 
 elif page == "Practice":
     page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
-    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"])]
+    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and (item["id"] == 1 or item["id"] in A1_LESSONS)]
     practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
-    if selected_id != 1:
-        st.info("Practice questions for this lesson will become available when its full lesson content is added.")
-    else:
-        question_bank = LESSON_1["exercises"] + LESSON_1["assessment"]
+    lesson_bank = LESSON_1 if selected_id == 1 else A1_LESSONS[selected_id]
+    question_bank = lesson_bank["exercises"] + lesson_bank["assessment"]
         if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
             st.session_state.practice_questions = random.sample(question_bank, 10)
             st.session_state.practice_lesson_active = selected_id
