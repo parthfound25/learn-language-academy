@@ -775,7 +775,7 @@ elif page == "Lesson":
             st.rerun()
 
 elif page == "Vocabulary":
-    page_header("YOUR WORD BANK", "French foundations & vocabulary", "Your reference library grows as new lesson vocabulary is unlocked. Review the foundations any time, then explore the words and topics added by each lesson.")
+    page_header("YOUR WORD BANK", "French foundations & vocabulary", "A growing reference library. New everyday topics appear automatically as you unlock the lessons where they are taught.")
 
     def french_number_under_100(number):
         units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
@@ -789,8 +789,7 @@ elif page == "Vocabulary":
             return tens[number]
         if number < 70:
             base, remainder = divmod(number, 10)
-            word = tens[base * 10]
-            return word + (" et un" if remainder == 1 else ("-" + units[remainder] if remainder else ""))
+            return tens[base * 10] + (" et un" if remainder == 1 else ("-" + units[remainder] if remainder else ""))
         if number < 80:
             remainder = number - 60
             return "soixante et onze" if number == 71 else "soixante-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
@@ -798,6 +797,9 @@ elif page == "Vocabulary":
             return "quatre-vingts"
         remainder = number - 80
         return "quatre-vingt-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
+
+    def vocab_entries(pairs, note=""):
+        return [(fr, en, "", "", note or f"{fr} = {en}") for fr, en in pairs]
 
     number_entries = [
         (french_number_under_100(n), str(n), "", "", f"{n} = {french_number_under_100(n)}")
@@ -822,32 +824,112 @@ elif page == "Vocabulary":
             ("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),
             ("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),
             ("X","eeks"),("Y","ee-grek"),("Z","zed")]],
-        "Numbers 0–100": number_entries,
-        "Hundreds & thousands": larger_number_entries,
-        "Days of the week": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
-            ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
-            ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday")]],
-        "Months": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
-            ("janvier","January"),("février","February"),("mars","March"),("avril","April"),("mai","May"),
-            ("juin","June"),("juillet","July"),("août","August"),("septembre","September"),
-            ("octobre","October"),("novembre","November"),("décembre","December")]],
-        "Seasons": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
-            ("le printemps","spring"),("l'été","summer"),("l'automne","autumn/fall"),("l'hiver","winter")]],
-        "Colours": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
-            ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
-            ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),("rose","pink"),
-            ("orange","orange"),("violet / violette","purple")]],
     }
 
-    # Add lesson-specific collections here as each full lesson is authored.
-    # A collection appears automatically once that lesson is unlocked.
-    lesson_vocabulary_collections = {
-        1: {"name": "Lesson 1 · Alphabet & pronunciation", "entries": LESSON_1["vocabulary"]},
-        4: {"name": "Lesson 4 · Numbers & counting", "entries": number_entries + larger_number_entries},
+    # Topic collections are released with their matching lesson, not all at once.
+    # Keep adding entries here as each lesson is written; unlocked topics appear automatically.
+    lesson_topic_collections = {
+        1: ("Lesson 1 · Alphabet & pronunciation", LESSON_1["vocabulary"]),
+        2: ("Greetings & polite expressions", vocab_entries([
+            ("Bonjour","Hello / Good morning"),("Bonsoir","Good evening"),("Salut","Hi / Bye"),
+            ("Au revoir","Goodbye"),("À bientôt","See you soon"),("À demain","See you tomorrow"),
+            ("Merci","Thank you"),("Merci beaucoup","Thank you very much"),("S'il vous plaît","Please"),
+            ("De rien","You're welcome"),("Excusez-moi","Excuse me"),("Pardon","Sorry / Pardon"),
+            ("Comment ça va ?","How are you?"),("Ça va bien","I'm doing well"),("Et vous ?","And you?"),
+            ("Enchanté(e)","Nice to meet you")
+        ])),
+        3: ("Personal information & introductions", vocab_entries([
+            ("Je m'appelle…","My name is…"),("Comment vous appelez-vous ?","What is your name?"),
+            ("Quel âge avez-vous ?","How old are you?"),("J'ai … ans","I am … years old"),
+            ("Je viens de…","I come from…"),("J'habite à…","I live in…"),("Je parle anglais","I speak English"),
+            ("la langue","language"),("le pays","country"),("la ville","city"),("l'adresse","address"),
+            ("le numéro de téléphone","phone number"),("l'étudiant / l'étudiante","student")
+        ])),
+        4: ("Numbers & counting · 0–100 and beyond", number_entries + larger_number_entries),
+        5: ("Days, months, seasons & dates", vocab_entries([
+            ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
+            ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday"),
+            ("janvier","January"),("février","February"),("mars","March"),("avril","April"),
+            ("mai","May"),("juin","June"),("juillet","July"),("août","August"),("septembre","September"),
+            ("octobre","October"),("novembre","November"),("décembre","December"),
+            ("le printemps","spring"),("l'été","summer"),("l'automne","autumn / fall"),("l'hiver","winter"),
+            ("aujourd'hui","today"),("demain","tomorrow"),("hier","yesterday"),("la date","date")
+        ])),
+        6: ("Time, clock & daily time expressions", vocab_entries([
+            ("Quelle heure est-il ?","What time is it?"),("Il est une heure","It is one o'clock"),
+            ("Il est deux heures","It is two o'clock"),("midi","noon"),("minuit","midnight"),
+            ("et quart","quarter past"),("et demie","half past"),("moins le quart","quarter to"),
+            ("le matin","morning"),("l'après-midi","afternoon"),("le soir","evening"),
+            ("la nuit","night"),("tôt","early"),("tard","late"),("maintenant","now"),
+            ("plus tard","later"),("à quelle heure ?","at what time?"),("l'horloge","clock"),
+            ("la montre","watch")
+        ])),
+        7: ("Nouns, gender & articles", vocab_entries([
+            ("le livre","the book · masculine"),("la table","the table · feminine"),
+            ("un garçon","a boy · masculine"),("une fille","a girl · feminine"),
+            ("l'école","the school · vowel-starting noun"),("les amis","the friends · plural"),
+            ("un / une","a, an"),("le / la / l'","the · singular"),("les","the · plural"),
+            ("des","some · plural"),("masculin","masculine"),("féminin","feminine"),
+            ("singulier","singular"),("pluriel","plural"),("un nom","a noun")
+        ])),
+        8: ("Subject pronouns & être", vocab_entries([
+            ("je","I"),("tu","you · informal singular"),("il","he / it"),("elle","she / it"),
+            ("on","we / one / people"),("nous","we"),("vous","you · formal or plural"),
+            ("ils","they · masculine or mixed"),("elles","they · feminine"),
+            ("être","to be"),("je suis","I am"),("tu es","you are"),("il est","he is"),
+            ("elle est","she is"),("nous sommes","we are"),("vous êtes","you are"),
+            ("ils sont","they are")
+        ])),
+        9: ("Avoir & possession", vocab_entries([
+            ("avoir","to have"),("j'ai","I have"),("tu as","you have"),("il a","he has"),
+            ("elle a","she has"),("nous avons","we have"),("vous avez","you have"),
+            ("ils ont","they have"),("mon / ma / mes","my"),("ton / ta / tes","your · informal"),
+            ("son / sa / ses","his / her / its"),("notre / nos","our"),
+            ("votre / vos","your · formal or plural"),("leur / leurs","their")
+        ])),
+        10: ("Adjectives & describing people", vocab_entries([
+            ("grand / grande","tall / big"),("petit / petite","short / small"),
+            ("jeune","young"),("vieux / vieille","old"),("gentil / gentille","kind"),
+            ("intelligent / intelligente","intelligent"),("drôle","funny"),("sympathique","friendly"),
+            ("beau / belle","handsome / beautiful"),("content / contente","happy"),
+            ("fatigué / fatiguée","tired"),("sérieux / sérieuse","serious")
+        ])),
+        11: ("Family members & relationships", vocab_entries([
+            ("la famille","family"),("la mère","mother"),("le père","father"),
+            ("les parents","parents"),("la sœur","sister"),("le frère","brother"),
+            ("la fille","daughter / girl"),("le fils","son"),("la grand-mère","grandmother"),
+            ("le grand-père","grandfather"),("les grands-parents","grandparents"),
+            ("la tante","aunt"),("l'oncle","uncle"),("la cousine","female cousin"),
+            ("le cousin","male cousin"),("la femme","wife / woman"),("le mari","husband"),
+            ("l'enfant","child"),("les enfants","children"),("un ami / une amie","a friend"),
+            ("un collègue / une collègue","a colleague"),("un voisin / une voisine","a neighbour")
+        ])),
+        12: ("Colours, objects & describing things", vocab_entries([
+            ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
+            ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),
+            ("rose","pink"),("orange","orange"),("violet / violette","purple"),
+            ("un objet","an object"),("une chose","a thing"),("la couleur","colour"),
+            ("clair / claire","light"),("foncé / foncée","dark")
+        ])),
+        13: ("Food, drinks & restaurant vocabulary", vocab_entries([
+            ("le pain","bread"),("le fromage","cheese"),("le lait","milk"),("l'eau","water"),
+            ("le café","coffee"),("le thé","tea"),("le jus","juice"),("la pomme","apple"),
+            ("la banane","banana"),("le poulet","chicken"),("le poisson","fish"),
+            ("le riz","rice"),("les légumes","vegetables"),("les fruits","fruit"),
+            ("le menu","menu"),("l'addition","the bill"),("Je voudrais…","I would like…")
+        ])),
+        14: ("Everyday activities & present-tense verbs", vocab_entries([
+            ("parler","to speak"),("manger","to eat"),("aimer","to like / love"),("habiter","to live"),
+            ("travailler","to work"),("étudier","to study"),("écouter","to listen"),
+            ("regarder","to watch"),("marcher","to walk"),("jouer","to play"),
+            ("tous les jours","every day"),("souvent","often"),("parfois","sometimes"),
+            ("toujours","always"),("jamais","never")
+        ])),
     }
-    for lesson_id, collection in lesson_vocabulary_collections.items():
+
+    for lesson_id, (collection_name, entries) in lesson_topic_collections.items():
         if lesson_is_unlocked(lesson_id):
-            vocabulary_groups[collection["name"]] = collection["entries"]
+            vocabulary_groups[collection_name] = entries
 
     chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
     search_word = st.text_input("Search this collection", placeholder="Search a French word or English meaning")
@@ -855,7 +937,7 @@ elif page == "Vocabulary":
     if search_word.strip():
         needle = search_word.strip().lower()
         entries = [entry for entry in entries if needle in " ".join(str(x) for x in entry).lower()]
-    st.caption(f"{len(entries)} entries · Collections from unlocked lessons appear automatically")
+    st.caption(f"{len(entries)} entries · New topics appear as you unlock their lessons")
     for fr, meaning, pron, ipa, example in entries:
         with st.container(border=True):
             left, right = st.columns([1, 2])
