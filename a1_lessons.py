@@ -1335,8 +1335,9 @@ def build_lesson(lesson_id):
     conversations = source["conversations"] + expansion.get("conversations", [])
     speaking = source["speaking"] + expansion.get("speaking", [])
     summary = source["summary"] + expansion.get("summary", [])
-    exercises = _make_questions(vocab, 12) + expansion.get("exercises", [])
-    assessment = _make_questions(vocab, 20)
+    question_bank = _make_questions(vocab, len(vocab) * 2)
+    exercises = question_bank[:12] + expansion.get("exercises", [])
+    assessment = question_bank[12:]
     return {
         "id": lesson_id,
         "title": source["title"],
