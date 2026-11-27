@@ -132,16 +132,21 @@ def reset_learner_data(username: str, invalidate_active_sessions: bool = True) -
         return False
     now = _now().isoformat()
     try:
-        client.table("learner_progress").update({
-            "xp": 0,
-            "completed_lessons": [],
-            "active_lesson": 1,
-            "practice_rounds": 0,
-            "practice_correct": 0,
-            "practice_total": 0,
-            "achievements": [],
-            "updated_at": now,
-        }).eq("username", username).execute()
+        # Upsert both available courses so even a missing/partial learner row
+        # is guaranteed to exist in a fully reset state.
+        for language in ("Canadian French", "Angolan Portuguese"):
+            client.table("learner_progress").upsert({
+                "username": username,
+                "language": language,
+                "xp": 0,
+                "completed_lessons": [],
+                "active_lesson": 1,
+                "practice_rounds": 0,
+                "practice_correct": 0,
+                "practice_total": 0,
+                "achievements": [],
+                "updated_at": now,
+            }, on_conflict="username,language").execute()
 
         client.table("learner_sessions").update({
             "duration_seconds": 0,

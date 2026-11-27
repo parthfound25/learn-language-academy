@@ -91,6 +91,8 @@ if not configured_users:
     st.stop()
 
 if not st.session_state.get("active_user"):
+    if st.session_state.pop("activity_session_expired_notice", False):
+        st.warning("Your session was reset by the administrator. Please sign in again to load your reset course progress.")
     st.title("🍀 Learn Language Academy by Parth")
     st.caption("Your personal language-learning journey starts here.")
     with st.form("username_login_form"):
@@ -124,6 +126,26 @@ if not st.session_state.get("active_user"):
         else:
             st.error("Incorrect username or password.")
     st.stop()
+
+# An administrator reset invalidates the learner's existing session. Force that
+# browser session back to login so old in-memory course state cannot be displayed.
+if (
+    st.session_state.active_user.casefold() != ADMIN_USERNAME.casefold()
+    and st.session_state.get("activity_session_initialized")
+    and st.session_state.get("activity_session_id")
+    and not session_is_active(st.session_state.activity_session_id)
+):
+    clear_transient_learning_state()
+    for key in (
+        "xp", "completed", "active_lesson", "page", "practice_rounds",
+        "practice_correct", "practice_total", "earned_achievements",
+        "selected_language", "activity_session_id", "activity_session_started_at",
+        "activity_session_initialized", "main_navigation",
+    ):
+        st.session_state.pop(key, None)
+    st.session_state.pop("active_user", None)
+    st.session_state.activity_session_expired_notice = True
+    st.rerun()
 
 # Record a durable login and keep a lightweight heartbeat while the learner is
 # using the app. The heartbeat runs every minute even during reading time.
