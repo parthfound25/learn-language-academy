@@ -261,7 +261,8 @@ def display_lesson_title(course_item):
     title = course_item["title"]
     if st.session_state.get("selected_language") == "Angolan Portuguese":
         replacements = {
-            "French Alphabet": "Portuguese Alphabet", "Verb ÊTRE": "Verbs SER and ESTAR",
+            "French Alphabet": "Portuguese Alphabet", "Native French Speech": "Angolan Portuguese Speech",
+            "Academic French": "Academic Portuguese", "Verb ÊTRE": "Verbs SER and ESTAR",
             "Verb AVOIR": "Verb TER", "Passé Composé": "Pretérito Perfeito",
             "Imparfait": "Pretérito Imperfeito", "Future Simple": "Future Tense",
             "Subjunctive Present": "Present Subjunctive", "Canadian French": "Angolan Portuguese",
