@@ -70,7 +70,18 @@ class CourseCurriculumTests(unittest.TestCase):
                         self.assertLess(answer, len(options))
                         self.assertTrue(explanation.strip())
 
-    def test_extension_assessments_do_not_repeat_questions(self):
+    def test_all_lessons_have_unique_vocabulary_headwords(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            vocabulary = lesson.get("vocabulary", lesson.get("vocab", []))
+            headwords = [entry[0].strip().casefold() for entry in vocabulary]
+            with self.subTest(lesson_id=lesson_id):
+                self.assertEqual(len(headwords), len(set(headwords)))
+
+    def test_all_assessments_do_not_repeat_questions(self):
         all_lessons = {}
         for bank in BANKS:
             all_lessons.update(bank)
