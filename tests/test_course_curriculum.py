@@ -28,7 +28,7 @@ class CourseCurriculumTests(unittest.TestCase):
     def test_extension_ids_are_complete(self):
         self.assertEqual(set(EXTENSION_LESSONS), set(range(91, 108)))
 
-    def test_total_course_count_is_102(self):
+    def test_total_course_count_is_107(self):
         # Lesson 1 is authored in app.py; 2-90 are the six original content banks.
         self.assertEqual(1 + sum(len(bank) for bank in BANKS) + len(EXTENSION_LESSONS), 107)
 
