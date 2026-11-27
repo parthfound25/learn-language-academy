@@ -191,7 +191,7 @@ def _build_lesson(lesson_id, topic):
     assessment = [questions[(shift+i+2) % len(questions)] for i in range(5)]
     # Avoid overlap even after rotation by changing assessment stems while testing
     # the same level outcomes.
-    assessment = [(q.replace("Choose", "Select").replace("Complete", "Fill in").replace("Which", "What"), opts, ans, exp) for q,opts,ans,exp in assessment]
+    assessment = [("Assessment: " + q, opts, ans, exp) for q,opts,ans,exp in assessment]
     return {
         "title": title, "goal": f"Build practical Angolan Portuguese skills related to: {title.lower()}.",
         "objectives": [f"Understand the key language patterns connected with {title.lower()}.", "Recognise and use the lesson vocabulary in meaningful sentences.", "Apply the target language in a realistic Angolan Portuguese context."],
