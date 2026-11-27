@@ -194,7 +194,7 @@ def _build(lesson_id):
         vocab.append((french, meaning, pronunciation, ipa, f"Il faut comprendre « {french} » dans son contexte. — Understand « {french} » in context."))
     grammar = GRAMMAR[lesson_id]
     exercises = []
-    for i, item in enumerate(vocab[:10]):
+    for i, item in enumerate(vocab[:5]):
         options = [item[1], vocab[(i+1)%10][1], vocab[(i+2)%10][1], vocab[(i+3)%10][1]]
         exercises.append((f"What does « {item[0]} » mean?", options, 0, f"« {item[0]} » means {item[1]}."))
     for i, item in enumerate(grammar[:5]):
