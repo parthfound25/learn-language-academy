@@ -528,5 +528,198 @@ LESSON_DATA = {
 ("What does pourquoi ask?", ["where","when","why","how many"], 2, "Pourquoi means why.")
 ]
 },
+21: {
+"title": "Prepositions of Place and Movement",
+"goal": "Describe where people and objects are, explain destinations and movement, and choose common French prepositions with places.",
+"vocab": [
+("dans","in; inside","dahn","/dɑ̃/","Les clés sont dans le sac."),
+("sur","on; on top of","sür","/syʁ/","Le livre est sur la table."),
+("sous","under","soo","/su/","Le chat est sous la chaise."),
+("devant","in front of","duh-vahn","/də.vɑ̃/","La voiture est devant la maison."),
+("derrière","behind","deh-ree-air","/dɛ.ʁjɛʁ/","Le jardin est derrière l'école."),
+("entre","between","ahn-truh","/ɑ̃tʁ/","La banque est entre le café et la poste."),
+("à côté de","next to","ah koh-tay duh","/a ko.te də/","Le parc est à côté de la bibliothèque."),
+("près de","near","preh duh","/pʁɛ də/","J'habite près du centre."),
+("loin de","far from","lwahn duh","/lwɛ̃ də/","L'hôtel est loin de la gare."),
+("en face de","opposite; across from","ahn fahs duh","/ɑ̃ fas də/","La pharmacie est en face de l'hôpital."),
+("à gauche de","to the left of","ah gohsh duh","/a ɡoʃ də/","Le musée est à gauche de la banque."),
+("à droite de","to the right of","ah drwaht duh","/a dʁwat də/","Tournez à droite après le pont."),
+("chez","at/to someone's home or place","shay","/ʃe/","Je vais chez mon ami."),
+("vers","towards; in the direction of","vehr","/vɛʁ/","Marchez vers la sortie."),
+("à travers","through; across","ah trah-vehr","/a tʁa.vɛʁ/","Nous marchons à travers le parc.")
+],
+"grammar": [
+("Prepositions show relationships","A preposition links a noun or pronoun to another part of the sentence. It can show location (sur la table), destination (à Montréal), origin (de Toronto) or movement (vers la porte). Learn a preposition together with a complete example because English and French do not always use the same one."),
+("Basic location: dans, sur and sous","Dans means inside or within: dans la boîte. Sur means on or on top of a surface: sur la table. Sous means under: sous le lit. These describe where something is, not necessarily where it is moving. Ask Où est…? to practise: Où est le téléphone ? Il est dans mon sac."),
+("Relative position: devant, derrière and entre","Devant means in front of; derrière means behind; entre means between. Use entre with two reference points: entre la banque et le café. The preposition does not change for masculine or feminine nouns."),
+("Distance and nearby places","À côté de means next to; près de means near; loin de means far from; en face de means opposite/across from. De combines with le to make du and with les to make des: près du parc, à côté des magasins. It does not combine with la or l': près de la gare, près de l'école."),
+("Left and right","À gauche de and à droite de identify the left or right side of a landmark: La poste est à gauche de la banque. For directions without a following landmark, say tournez à gauche or tournez à droite. Notice the difference between à droite (turn/right) and à droite de (to the right of something)."),
+("À, en and au with destinations","Use à with many cities: à Montréal, à Paris. Use en with feminine countries and countries beginning with a vowel: en France, en Angola. Use au with masculine countries: au Canada. Use aux with plural countries: aux États-Unis. Country gender and exceptions should be learned with the country name."),
+("Chez for a person or professional","Chez means at or to someone's home or place of business: chez Marie, chez mes parents, chez le médecin, chez le dentiste. It is not normally used for a building simply because a person works there; use au bureau for at the office."),
+("Movement and direction","Vers means towards: marcher vers la sortie. À travers means through/across: passer à travers le parc. Jusqu'à means as far as/up to: marcher jusqu'à la station. Use these to describe movement rather than a fixed position."),
+("Contractions with de","De + le becomes du; de + les becomes des. Examples: près du musée, en face des bureaux. De + la and de + l' remain separate: près de la rivière, près de l'aéroport. À also contracts: à + le = au; à + les = aux."),
+("Canadian French note","The location and movement prepositions are shared across Canadian French. Local place names and everyday vocabulary may differ, but the grammar is the same. In Quebec, you will commonly hear autobus and dépanneur in local contexts; learn place vocabulary alongside the prepositions.")
+],
+"expressions": [
+("Où se trouve la station ?","Where is the station located?","A polite way to ask for a location."),
+("C'est juste à côté.","It's right next door.","Juste adds emphasis."),
+("Pas très loin d'ici.","Not very far from here.","A useful direction response."),
+("En face de la banque.","Across from the bank.","Short location answer."),
+("Au coin de la rue.","At the street corner.","Useful landmark phrase."),
+("Tout droit.","Straight ahead.","Common direction instruction."),
+("Tournez à gauche.","Turn left.","Polite/formal or plural command."),
+("C'est au bout de la rue.","It's at the end of the street.","Bout means end.")
+],
+"examples": [
+("Le téléphone est sur le bureau, à côté de l'ordinateur.","The phone is on the desk, next to the computer.","Sur gives the surface; à côté de gives relative position."),
+("La pharmacie se trouve en face de l'hôpital.","The pharmacy is opposite the hospital.","En face de is followed by the landmark."),
+("Nous habitons près du centre-ville.","We live near downtown.","De + le contracts to du."),
+("Le chat dort sous la table.","The cat is sleeping under the table.","Sous marks a lower position."),
+("Je vais chez le dentiste après le travail.","I'm going to the dentist after work.","Chez is used with a professional."),
+("Marchez vers le pont, puis traversez le parc.","Walk towards the bridge, then cross the park.","Vers gives direction; traversez gives movement across."),
+("La bibliothèque est entre l'école et la mairie.","The library is between the school and the town hall.","Entre introduces two reference points."),
+("Elle va au Canada en hiver et en France en été.","She goes to Canada in winter and to France in summer.","Au is used with masculine Canada; en with feminine France.")
+],
+"conversations": [
+("Finding a pharmacy", [("A","Excusez-moi, où se trouve la pharmacie ?"),("B","Elle est en face de la banque."),("A","C'est loin d'ici ?"),("B","Non, pas du tout. Allez tout droit jusqu'au feu, puis tournez à gauche."),("A","Merci. Elle est à côté du café ?"),("B","Oui, exactement.")], "A: Excuse me, where is the pharmacy? B: It's opposite the bank. A: Is it far from here? B: No, not at all. Go straight to the traffic light, then turn left. A: Is it next to the café? B: Yes, exactly."),
+("Explaining where you live", [("A","Tu habites où maintenant ?"),("B","J'habite près du parc, derrière la bibliothèque."),("A","C'est loin de ton travail ?"),("B","Non, le bureau est à côté de la station d'autobus."),("A","C'est pratique !"),("B","Oui, je peux marcher au travail.")], "A: Where do you live now? B: I live near the park, behind the library. A: Is it far from your work? B: No, the office is next to the bus station. A: That's convenient! B: Yes, I can walk to work.")
+],
+"exercises": [
+("Choose the preposition for 'under the chair'.", ["sur la chaise","sous la chaise","dans la chaise","devant la chaise"], 1, "Sous means under."),
+("Complete: Le café est ___ la banque et la poste.", ["entre","loin","chez","vers"], 0, "Entre is used between two places."),
+("Choose the correct contraction: près ___ parc.", ["de le","du","de la","des"], 1, "De + le contracts to du."),
+("How do you say 'opposite the school'?", ["à côté l'école","en face de l'école","sur l'école","chez l'école"], 1, "En face de means opposite."),
+("Choose the correct phrase for 'at the doctor's'.", ["à le médecin","chez le médecin","dans le médecin","sur le médecin"], 1, "Chez is used with professionals."),
+("Complete: Je vais ___ Canada.", ["en","au","à","aux"], 1, "Canada is masculine: au Canada."),
+("Choose the correct destination: I live in Angola.", ["à Angola","au Angola","en Angola","aux Angola"], 2, "Angola begins with a vowel and takes en in this usage."),
+("Which means 'towards the exit'?", ["sous la sortie","vers la sortie","chez la sortie","entre la sortie"], 1, "Vers indicates direction towards."),
+("Complete: La poste est à droite ___ la banque.", ["du","de la","au","à"], 1, "De + la remains de la."),
+("Choose the correct direction command for 'Turn left'.", ["Tournez à gauche.","Tournez de gauche.","Tournez chez gauche.","Tournez en gauche."], 0, "The expression is tourner à gauche."),
+("Which phrase means 'next to the station'?", ["à côté de la station","loin la station","sur station","vers de station"], 0, "À côté de is followed by de and the landmark."),
+("Choose the correct plural contraction: en face ___ magasins.", ["de les","du","des","aux"], 2, "De + les contracts to des.")
+],
+"speaking": [
+"Describe your room using dans, sur, sous, devant and derrière.",
+"Explain where five local places are in relation to one another.",
+"Give a short route using tout droit, à gauche, à droite and jusqu'à.",
+"Make five destination sentences using à, en, au and aux.",
+"Role-play asking a stranger where a station, pharmacy or café is.",
+"Read both dialogues aloud, then explain the route without looking at the text."
+],
+"summary": ["Prepositions express location, destination, origin and movement.","Dans = in, sur = on, sous = under; devant = in front, derrière = behind, entre = between.","À côté de, près de, loin de and en face de describe relative location.","De + le = du; de + les = des. À + le = au; à + les = aux.","Use chez for someone's home or a professional's place.","Use à with many cities, en with feminine/vowel-starting countries, au with masculine countries and aux with plural countries.","Vers and à travers describe movement and direction."],
+"assessment": [
+("What does derrière mean?", ["in front of","behind","between","under"], 1, "Derrière means behind."),
+("Choose the correct phrase: The keys are in the bag.", ["Les clés sont sur le sac.","Les clés sont dans le sac.","Les clés sont sous le sac.","Les clés sont devant le sac."], 1, "Dans means inside/in."),
+("Complete: près ___ musée.", ["de le","du","de la","au"], 1, "De + le becomes du."),
+("Which means 'between the school and the park'?", ["entre l'école et le parc","sous l'école et le parc","chez l'école et le parc","vers l'école et le parc"], 0, "Entre introduces two reference points."),
+("Choose the correct phrase for 'at my parents' home'.", ["chez mes parents","sur mes parents","dans mes parents","à mes parents"], 0, "Chez means at/to someone's home."),
+("Complete: Elle habite ___ Montréal.", ["en","au","à","aux"], 2, "Use à with many city names."),
+("Choose the correct form: ___ États-Unis.", ["au","en","à","aux"], 3, "The country name is plural: aux États-Unis."),
+("Which phrase means 'far from the station'?", ["près de la station","loin de la station","en face de la station","à côté de la station"], 1, "Loin de means far from."),
+("Choose the correct phrase for 'to the right of the bank'.", ["à droite de la banque","à droite la banque","au droite de la banque","chez droite banque"], 0, "Use à droite de + landmark."),
+("Which word means 'towards'?", ["vers","sous","entre","chez"], 0, "Vers indicates movement in a direction."),
+("Complete: en face ___ bureaux.", ["du","de la","des","au"], 2, "De + les contracts to des."),
+("Which phrase is used with a dentist?", ["chez le dentiste","dans le dentiste","sur le dentiste","entre le dentiste"], 0, "Chez is used for a professional's place.")
+]
+},
+22: {
+"title": "House, Rooms and Household Objects",
+"goal": "Name rooms and household objects, describe where things are and talk about basic household tasks and features.",
+"vocab": [
+("une maison","house","ün meh-zohn","/yn mɛ.zɔ̃/","Notre maison est grande."),
+("un appartement","apartment","uhn ah-par-tuh-mahn","/œ̃ a.paʁ.tə.mɑ̃/","J'habite dans un appartement."),
+("une pièce","room","ün pyess","/yn pjɛs/","Il y a trois pièces."),
+("la cuisine","kitchen","lah kwee-zeen","/la kɥi.zin/","La cuisine est propre."),
+("le salon","living room","luh sah-lohn","/lə sa.lɔ̃/","Nous regardons la télé au salon."),
+("la chambre","bedroom","lah shahm-bruh","/la ʃɑ̃bʁ/","Ma chambre est petite."),
+("la salle de bains","bathroom","lah sahl duh behn","/la sal də bɛ̃/","La salle de bains est à l'étage."),
+("les toilettes","toilet; restroom","lay twah-let","/le twa.lɛt/","Où sont les toilettes ?"),
+("un couloir","hallway","uhn koo-lwahr","/œ̃ ku.lwaʁ/","Le couloir est étroit."),
+("un escalier","staircase","uhn ess-kah-lyay","/œ̃ ɛs.ka.lje/","L'escalier mène à l'étage."),
+("une fenêtre","window","ün fuh-netr","/yn fə.nɛtʁ/","J'ouvre la fenêtre."),
+("une porte","door","ün port","/yn pɔʁt/","Ferme la porte, s'il te plaît."),
+("un canapé","sofa","uhn kah-nah-pay","/œ̃ ka.na.pe/","Le canapé est confortable."),
+("un réfrigérateur","refrigerator","uhn ray-free-zhay-rah-tuhr","/œ̃ ʁe.fʁi.ʒe.ʁa.tœʁ/","Le lait est dans le réfrigérateur."),
+("un évier","sink","uhn ay-vyay","/œ̃ e.vje/","Les assiettes sont dans l'évier."),
+("un placard","cupboard; closet","uhn plah-kar","/œ̃ pla.kaʁ/","Les verres sont dans le placard."),
+("un lit","bed","uhn lee","/œ̃ li/","Le lit est près de la fenêtre."),
+("une armoire","wardrobe; cabinet","ün ar-mwahr","/yn aʁ.mwaʁ/","Mes vêtements sont dans l'armoire."),
+("un tapis","rug; carpet","uhn tah-pee","/œ̃ ta.pi/","Il y a un tapis sous la table."),
+("un loyer","rent","uhn lwah-yay","/œ̃ lwa.je/","Le loyer est payé chaque mois.")
+],
+"grammar": [
+("Naming rooms with articles","Learn each noun with its article because French nouns have grammatical gender: la cuisine, le salon, la chambre. The article is part of the vocabulary. Use un/une for an indefinite item and le/la/l' for a specific one: une fenêtre (a window), la fenêtre (the window)."),
+("Describing what a home has: il y a","Il y a means there is or there are and does not change for singular or plural: Il y a une cuisine; il y a deux chambres. To say there isn't/aren't, use il n'y a pas de: Il n'y a pas de garage. After a negative, un/une/des usually changes to de/d'."),
+("Describing size and condition","Use être + adjective: La chambre est grande; le salon est lumineux; les pièces sont propres. Adjectives generally agree with the noun in gender and number: petit/petite/petits/petites. Many adjectives follow the noun, while common size and beauty adjectives often come before it."),
+("Location of household objects","Use the prepositions from the previous lesson: Le tapis est sous la table; le canapé est devant la fenêtre; les verres sont dans le placard. For multiple objects, make the verb plural: Le livre est… / Les livres sont…"),
+("Possessive adjectives for rooms and belongings","Use mon/ma/mes (my), ton/ta/tes (your informal), son/sa/ses (his/her), notre/nos (our), votre/vos (your formal/plural), leur/leurs (their). Agreement follows the noun owned: ma chambre, mon salon, mes fenêtres. Before a feminine noun beginning with a vowel, use mon/ton/son for smoother pronunciation: mon armoire."),
+("Talking about floors and levels","Étage means floor/storey. Au rez-de-chaussée means on the ground floor; au premier étage means on the first floor in French usage (the floor above ground level). En haut means upstairs/above and en bas means downstairs/below. Be aware that floor numbering conventions differ between countries."),
+("Household tasks with faire","Use faire with common chores: faire le ménage (do the cleaning), faire la vaisselle (do the dishes), faire la lessive (do the laundry). These are fixed expressions. You can say Je fais le ménage le samedi or Nous faisons la vaisselle après le repas."),
+("There is / there are questions","Ask Est-ce qu'il y a une cave ? (Is there a basement?) or Y a-t-il un balcon ? (Is there a balcony? formal inversion). For quantity, ask Combien de chambres est-ce qu'il y a ? Keep il y a unchanged."),
+("Canadian housing vocabulary","In Quebec and parts of Canada, un dépanneur is a neighbourhood convenience store, not a repair person. A logement can mean a dwelling or rental unit. Un condo is commonly used for a condominium. Regional housing terms vary, so learn the local word in context."),
+("A practical home description","Organise a description from general to specific: type of home, number of rooms, size/condition, then where objects are. Example: J'habite dans un appartement. Il y a deux chambres. Le salon est lumineux et le canapé est près de la fenêtre. This sequence makes a clear, natural paragraph.")
+],
+"expressions": [
+("Fais comme chez toi.","Make yourself at home.","Informal welcome."),
+("Entrez, je vous en prie.","Come in, please.","Polite invitation."),
+("C'est au premier étage.","It's on the first floor.","Useful for locating a room."),
+("Je fais le ménage.","I'm doing the cleaning.","Fixed household expression."),
+("Il faut faire la vaisselle.","The dishes need to be done.","Il faut expresses necessity."),
+("Où est la salle de bains ?","Where is the bathroom?","Useful visitor question."),
+("Le loyer est compris ?","Is the rent included?","Useful when discussing accommodation."),
+("Il y a beaucoup de lumière.","There's lots of light.","A way to describe a bright home.")
+],
+"examples": [
+("J'habite dans un appartement au troisième étage.","I live in an apartment on the third floor.","Dans introduces the dwelling; au marks the floor."),
+("Il y a deux chambres et une grande cuisine.","There are two bedrooms and a large kitchen.","Il y a works with plural nouns too."),
+("Ma chambre est petite, mais elle est très confortable.","My bedroom is small, but it is very comfortable.","Petite agrees with chambre; confortable has the same written form for masculine and feminine."),
+("Les clés sont sur le meuble près de la porte.","The keys are on the piece of furniture near the door.","Location phrases identify the objects precisely."),
+("Nous faisons la lessive le samedi.","We do the laundry on Saturdays.","Faire la lessive is a fixed expression."),
+("Il n'y a pas de balcon dans cet appartement.","There is no balcony in this apartment.","Negative il y a uses pas de."),
+("Mon armoire est à côté du lit.","My wardrobe is next to the bed.","Mon is used before feminine armoire because it begins with a vowel sound."),
+("Les enfants rangent leurs jouets dans le placard.","The children put their toys away in the cupboard.","Leurs agrees with the plural noun jouets.")
+],
+"conversations": [
+("Describing an apartment", [("A","Comment est ton nouvel appartement ?"),("B","Il est assez petit, mais très lumineux."),("A","Combien de chambres est-ce qu'il y a ?"),("B","Il y a deux chambres, une cuisine et un salon."),("A","Où est le balcon ?"),("B","Il est à côté du salon.")], "A: What is your new apartment like? B: It's quite small but very bright. A: How many bedrooms are there? B: There are two bedrooms, a kitchen and a living room. A: Where is the balcony? B: It's next to the living room."),
+("Looking for a rental", [("A","Je cherche un appartement à louer."),("B","Vous voulez combien de chambres ?"),("A","Deux, si possible. Le loyer est-il compris dans les charges ?"),("B","Oui, le chauffage est compris."),("A","Est-ce qu'il y a une buanderie ?"),("B","Oui, au sous-sol.")], "A: I'm looking for an apartment to rent. B: How many bedrooms would you like? A: Two, if possible. Are the utilities included in the rent? B: Yes, heating is included. A: Is there a laundry room? B: Yes, in the basement.")
+],
+"exercises": [
+("Choose the correct article: ___ cuisine.", ["le","la","un","les"], 1, "Cuisine is feminine: la cuisine."),
+("Complete: Il y ___ trois chambres.", ["a","as","ont","est"], 0, "The fixed expression is il y a."),
+("Choose the negative form: There is no garage.", ["Il n'y a pas de garage.","Il n'y a pas un garage.","Il ne y a garage pas.","Il n'a pas garage y."], 0, "Use il n'y a pas de + noun."),
+("Which means 'living room'?", ["la chambre","le salon","la cuisine","le couloir"], 1, "Le salon is the living room."),
+("Complete: ___ armoire est grande. (my)", ["Ma","Mon","Mes","Notre"], 1, "Use mon before a feminine noun beginning with a vowel sound."),
+("Choose the correct adjective agreement: une chambre ___.", ["petit","petite","petits","petites"], 1, "Chambre is feminine singular: petite."),
+("How do you say 'on the ground floor'?", ["au premier étage","au rez-de-chaussée","en haut","au sous-sol"], 1, "Rez-de-chaussée means ground floor."),
+("Choose the correct chore expression for 'do the dishes'.", ["faire la vaisselle","faire le lit","faire la fenêtre","faire le loyer"], 0, "Faire la vaisselle means do the dishes."),
+("Complete: Les livres ___ sur la table.", ["est","sont","sommes","êtes"], 1, "Les livres is plural, so use sont."),
+("Which means 'rent'?", ["un loyer","un évier","un tapis","un placard"], 0, "Un loyer is rent."),
+("Choose the correct sentence.", ["Il y a deux chambres.","Il y ont deux chambres.","Il sont deux chambres.","Il est deux chambres."], 0, "Il y a remains the same with plural nouns."),
+("Complete: Le canapé est à côté ___ fenêtre.", ["du","de la","au","des"], 1, "Fenêtre is feminine: à côté de la fenêtre.")
+],
+"speaking": [
+"Describe your current or ideal home in six sentences, including the number of rooms.",
+"Name ten household objects and say where each one is using a preposition.",
+"Practise possessives: mon, ma, mes, notre and nos with household nouns.",
+"Describe a room using three adjectives and make each adjective agree correctly.",
+"Role-play a rental viewing and ask about the rent, rooms, heating and laundry facilities.",
+"Explain your weekly chores using faire le ménage, faire la vaisselle and faire la lessive."
+],
+"summary": ["Learn household nouns with le/la because every noun has grammatical gender.","Il y a means there is/there are; il n'y a pas de means there is/are not.","Adjectives agree with the noun in gender and number.","Use possessive adjectives that agree with the noun owned; mon can precede a feminine vowel-starting noun.","Use au rez-de-chaussée for ground floor and au premier étage for the floor above it.","Faire le ménage, faire la vaisselle and faire la lessive are common fixed expressions.","Describe a home from general details to rooms, condition and object locations."],
+"assessment": [
+("Which article belongs with chambre?", ["le","la","les","un"], 1, "Chambre is feminine singular: la chambre."),
+("What does il y a mean?", ["there is/there are","there was","there will be","there isn't"], 0, "Il y a expresses existence in the present."),
+("Choose the correct negative sentence.", ["Il n'y a pas de cuisine.","Il n'y a pas une cuisine.","Il ne y a pas cuisine.","Il n'a cuisine pas."], 0, "Use ne...pas de with il y a."),
+("Which word means 'wardrobe'?", ["un lit","une armoire","un évier","un canapé"], 1, "Une armoire is a wardrobe/cabinet."),
+("Complete: ___ chambre est grande. (my)", ["Mon","Ma","Mes","Nos"], 1, "Chambre is feminine singular: ma chambre."),
+("Choose the correct form: une maison ___.", ["grand","grande","grands","grandes"], 1, "Maison is feminine singular: grande."),
+("What is the ground floor?", ["le premier étage","le rez-de-chaussée","le sous-sol","le couloir"], 1, "Rez-de-chaussée is ground floor."),
+("Which phrase means 'do the laundry'?", ["faire la lessive","faire la vaisselle","faire le ménage","faire le lit"], 0, "Faire la lessive means do the laundry."),
+("Complete: Les fenêtres ___ ouvertes.", ["est","sont","sommes","êtes"], 1, "Fenêtres is plural, so use sont."),
+("Which phrase means 'on the third floor'?", ["au troisième étage","au rez-de-chaussée","dans le troisième","chez troisième"], 0, "Use au + ordinal + étage."),
+("Choose the correct sentence.", ["Il y a beaucoup de lumière.","Il y ont beaucoup de lumière.","Il est beaucoup lumière.","Il a y beaucoup de lumière."], 0, "The fixed structure is il y a."),
+("What does le loyer mean?", ["the landlord","the rent","the room","the furniture"], 1, "Le loyer is rent.")
+]
+},
 }
 A2_LESSONS = {lesson_id: data for lesson_id, data in LESSON_DATA.items()}
