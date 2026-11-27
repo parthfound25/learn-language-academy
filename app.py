@@ -1781,20 +1781,8 @@ elif page == "Learning Path":
 elif page == "Lesson":
     if st.session_state.active_lesson == 1:
         render_lesson_one()
-    elif st.session_state.active_lesson in A1_LESSONS:
-        render_authored_a1_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in A2_LESSONS:
-        render_authored_a2_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in B1_LESSONS:
-        render_authored_b1_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in B2_LESSONS:
-        render_authored_b2_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in C1_LESSONS:
-        render_authored_c1_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in C2_LESSONS:
-        render_authored_c2_lesson(st.session_state.active_lesson)
-    elif st.session_state.active_lesson in EXTENSION_LESSONS:
-        render_extension_lesson(st.session_state.active_lesson)
+    elif get_lesson_content(st.session_state.active_lesson) is not None:
+        render_unified_lesson(st.session_state.active_lesson)
     else:
         st.warning("This lesson is on the roadmap; its full content will be added in a later course update.")
         if st.button("Return to Learning Path"):
