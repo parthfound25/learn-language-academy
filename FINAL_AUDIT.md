@@ -91,6 +91,13 @@ The current automated suite loads and structurally checks all 107 Angolan Portug
 - **Correction:** Previously merged fixes include selected A1 IPA corrections, assessment-bank integrity improvements and C2 wording that no longer equates proficiency with native accent imitation.
 - **Required next step:** Conduct a lesson-by-lesson Canadian French editorial pass, explicitly distinguishing standard Canadian French, Quebec colloquial usage and regional variation.
 
+### AP-A2C2-004 — Assessment banks repeat across chapters within each CEFR band
+- **Affected component:** `angolan_portuguese_a2_c2_editorial.py`, A2–C2 exercise and assessment generation.
+- **Problem:** Each CEFR band currently reuses one six-question bank across its chapters. Prefixing the chapter title makes the prompt strings technically distinct, but the underlying questions do not test each chapter's stated topic.
+- **Learner impact:** A learner studying relative clauses, shopping, professional writing or idioms may receive the same generic grammar/strategy questions as other chapters in that level. This weakens construct validity and can give a false impression of mastery.
+- **Correction:** Not fully resolved in this audit branch. The regression work fixes language contamination and A2 level mismatch, but does not pretend the shared bank is chapter-specific.
+- **Required next step:** Write a distinct, objective-mapped practice and assessment bank for every chapter; verify distractors, answer keys and explanations against the lesson content.
+
 ## Learning experience and technical findings
 
 | Feature | Source inspection result | Release implication |
