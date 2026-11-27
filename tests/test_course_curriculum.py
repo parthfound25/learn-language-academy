@@ -28,6 +28,12 @@ class CourseCurriculumTests(unittest.TestCase):
     def test_extension_ids_are_complete(self):
         self.assertEqual(set(EXTENSION_LESSONS), set(range(91, 108)))
 
+    def test_c2_outcomes_do_not_equate_proficiency_with_native_speech(self):
+        for lesson_id, lesson in C2_LESSONS.items():
+            for field in ("title", "goal"):
+                with self.subTest(lesson_id=lesson_id, field=field):
+                    self.assertNotRegex(lesson[field], r"native[- ]level|near[- ]native")
+
     def test_total_course_count_is_107(self):
         # Lesson 1 is authored in app.py; 2-90 are the six original content banks.
         self.assertEqual(1 + sum(len(bank) for bank in BANKS) + len(EXTENSION_LESSONS), 107)
