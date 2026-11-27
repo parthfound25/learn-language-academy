@@ -130,5 +130,5 @@ def _build(lesson_id):
     examples = topic_examples + examples
     topic_conversation = (f"Clarifying {TITLES[lesson_id].lower()}", [("A", f"Comment interprétez-vous « {vocab[0][0]} » ?"), ("B", "Il faut tenir compte du contexte, du sens et du registre."), ("A", "La situation change-t-elle l'interprétation ?"), ("B", "Oui, le contexte permet de préciser le sens.")], f"A: How do you interpret « {vocab[0][0]} »? B: We must take context, meaning and register into account. A: Does the situation change the interpretation? B: Yes, context helps clarify the meaning.")
     conversations = [topic_conversation] + conversations
-    return {"title":TITLES[lesson_id],"goal":GOALS[lesson_id],"vocab":vocab,"vocabulary":vocab,"grammar":grammar,"expressions":EXPRESSIONS,"examples":examples,"conversations":conversations,"exercises":exercises,"speaking":speaking,"summary":summary,"assessment":exercises+APPLICATION}
+    return {"title":TITLES[lesson_id],"goal":GOALS[lesson_id],"vocab":vocab,"vocabulary":vocab,"grammar":grammar,"expressions":EXPRESSIONS,"examples":examples,"conversations":conversations,"exercises":exercises,"speaking":speaking,"summary":summary,"assessment":APPLICATION[:]}
 C2_LESSONS={lesson_id:_build(lesson_id) for lesson_id in range(76,91)}
