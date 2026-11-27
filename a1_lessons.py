@@ -464,11 +464,14 @@ def _make_questions(vocabulary, count=20):
         options = options[correct_position:] + options[:correct_position]
         reverse.append((f"Which French expression means “{meaning}”?", options, (len(options) - correct_position) % len(options), f"The correct French expression is {word}."))
     questions = []
+    seen_prompts = set()
     for index in range(max(len(forward), len(reverse))):
-        if index < len(forward):
-            questions.append(forward[index])
-        if index < len(reverse):
-            questions.append(reverse[index])
+        for bank, position in ((forward, index), (reverse, index)):
+            if position < len(bank):
+                question = bank[position]
+                if question[0] not in seen_prompts:
+                    questions.append(question)
+                    seen_prompts.add(question[0])
     return questions[:count]
 
 
