@@ -277,3 +277,10 @@ PORTUGUESE_LESSONS = {lesson_id: _build_lesson(lesson_id, topic) for lesson_id, 
 from angolan_portuguese_a1_quality import A1_QUALITY_LESSONS
 PORTUGUESE_LESSONS.update(A1_QUALITY_LESSONS)
 
+# Align A1 chapter IDs with the established course roadmap and add the next chapters.
+from angolan_portuguese_a1_lessons_6_17 import A1_NEXT_LESSONS
+A1_NEXT_LESSONS[4] = A1_QUALITY_LESSONS[5]  # Numbers belong in chapter 4.
+A1_NEXT_LESSONS[91] = A1_QUALITY_LESSONS[4]  # Sentence patterns are the A1 extension chapter.
+PORTUGUESE_LESSONS.update(A1_NEXT_LESSONS)
+
+
