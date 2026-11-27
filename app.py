@@ -1332,7 +1332,7 @@ elif page == "Settings":
     st.divider()
     st.subheader("Reset learning progress")
     st.warning("This resets the progress for the account currently signed in: lessons, XP, practice history and achievements. Your username, password and learning-language preference will stay unchanged.")
-    if not st.session_state.get("confirm_progress_reset", False):
+    if not st.session_state.get("show_progress_reset_confirmation", False):
         if st.button("Reset my learning progress", type="secondary", key="start_progress_reset"):
             st.session_state.confirm_progress_reset = True
             st.rerun()
@@ -1340,7 +1340,7 @@ elif page == "Settings":
         st.error(f"Are you sure you want to reset all learning progress for {st.session_state.active_user}? This cannot be undone.")
         confirm_col, cancel_col = st.columns(2)
         with confirm_col:
-            if st.button("Yes, reset my progress", type="primary", key="confirm_progress_reset"):
+            if st.button("Yes, reset my progress", type="primary", key="show_progress_reset_confirmation"):
                 username = st.session_state.active_user
                 language_preference = st.session_state.get("selected_language", "")
                 # Remove this learner's cached progress while retaining their language preference.
@@ -1360,7 +1360,7 @@ elif page == "Settings":
                     if key.startswith(("l1_", "practice_round_")) or key in (
                         "practice_questions", "practice_submitted",
                         "practice_round_score", "practice_lesson_active",
-                        "practice_lesson_select", "confirm_progress_reset",
+                        "practice_lesson_select", "show_progress_reset_confirmation",
                     ):
                         st.session_state.pop(key, None)
                 st.session_state.selected_language = language_preference
