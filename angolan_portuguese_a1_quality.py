@@ -13,7 +13,7 @@ def _lesson(title, goal, objectives, vocabulary, grammar, expressions, examples,
         "title": title, "goal": goal, "objectives": objectives,
         "vocabulary": vocab, "grammar": grammar, "expressions": expressions,
         "examples": examples, "conversations": conversations,
-        "pronunciation": pronunciation, "exercises": exercises,
+        "pronunciation": pronunciation + ["Angolan Portuguese pronunciation varies by region and speaker; use this lesson as a practical starting point, not a single required accent."], "exercises": exercises,
         "assessment": assessment, "speaking": speaking,
         "summary": summary, "homework": homework,
     }
