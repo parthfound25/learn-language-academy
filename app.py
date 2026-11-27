@@ -522,7 +522,7 @@ ACHIEVEMENTS = [
     ("practice_one", "🎯", "Practice makes progress", "Complete your first practice round", lambda: st.session_state.practice_rounds >= 1),
     ("practice_ten", "🔥", "Practice regular", "Complete 10 practice rounds", lambda: st.session_state.practice_rounds >= 10),
     ("thirty_lessons", "🌍", "Language adventurer", "Complete 30 lessons", lambda: len(st.session_state.completed) >= 30),
-    ("all_lessons", "🎓", "Mastery journey", "Complete all 90 lessons", lambda: len(st.session_state.completed) >= 90),
+    ("all_lessons", "🎓", "Mastery journey", "Complete all {COURSE_TOTAL} lessons", lambda: len(st.session_state.completed) >= 90),
 ]
 def refresh_achievements():
     earned = set(st.session_state.earned_achievements)
@@ -605,11 +605,11 @@ def page_header(kicker, title, subtitle=None):
 
 def render_authored_a1_lesson(lesson_id):
     lesson = A1_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
-    st.progress(lesson_id / 90, text=f"Course progress · Lesson {lesson_id} of 90")
+    st.progress(course_number(lesson_id) / COURSE_TOTAL, text=f"Course progress · Lesson {course_number(lesson_id)} of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
     with tabs[0]:
         st.subheader("Essential vocabulary")
@@ -714,7 +714,7 @@ def render_authored_a1_lesson(lesson_id):
         st.success(f"Lesson {lesson_id} is already marked complete.")
     elif st.button(f"Mark Lesson {lesson_id} complete · Earn 25 XP", type="primary", key=f"complete_a1_lesson_{lesson_id}"):
         mark_lesson_complete(lesson_id)
-        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Lesson {lesson_id + 1} is now unlocked.")
+        st.success(f"Lesson {lesson_id} completed! You earned 25 XP. Your next course lesson is now available.")
         st.session_state.page = "Learning Path"
         st.rerun()
     if st.button("Back to Learning Path", key=f"back_a1_lesson_{lesson_id}"):
@@ -725,7 +725,7 @@ def render_authored_a1_lesson(lesson_id):
 
 def render_authored_a2_lesson(lesson_id):
     lesson = A2_LESSONS[lesson_id]
-    st.markdown(f'<div class="eyebrow">A2 · ELEMENTARY · LESSON {lesson_id} OF 90</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="eyebrow">A2 · ELEMENTARY · LESSON {course_number(lesson_id)} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown(f"**Goal:** {lesson['goal']}")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 30–45 minutes")
@@ -1426,11 +1426,11 @@ def render_extension_lesson(lesson_id):
 
 def render_lesson_one():
     lesson = ALL_LESSONS[0]
-    st.markdown('<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF 90</div>', unsafe_allow_html=True)
+    st.markdown('<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
     st.title(lesson["title"])
     st.markdown("**Goal:** Recognise the French alphabet, understand essential sound patterns, and read simple French words.")
     st.caption("Canadian French focus · Explanations in English · Suggested study time: 35–45 minutes")
-    st.progress(1 / 90, text="Course progress · Lesson 1 of 90")
+    st.progress(1 / COURSE_TOTAL, text=f"Course progress · Lesson 1 of {COURSE_TOTAL}")
     tabs = st.tabs(["1 · Vocabulary", "2 · Grammar", "3 · Expressions", "4 · Examples", "5 · Conversations", "6 · Exercises", "7 · Speaking", "8 · Summary", "9 · Answer key & test"])
 
     with tabs[0]:
@@ -1578,7 +1578,7 @@ if page == "Home":
     <div class="hero">
       <div class="eyebrow">YOUR {st.session_state.selected_language.upper()} JOURNEY</div>
       <div class="hero-title">Bonjour, {username}! 🇨🇦</div>
-      <div class="hero-copy">A structured 90-lesson journey from A1 beginner to C2 mastery. Learn step by step, with progress and XP — never hearts or lives.</div>
+      <div class="hero-copy">A structured {COURSE_TOTAL}-lesson journey from A1 beginner to C2 mastery. Learn step by step, with progress and XP — never hearts or lives.</div>
     </div>
     """, unsafe_allow_html=True)
     accuracy = 100 * st.session_state.practice_correct / st.session_state.practice_total if st.session_state.practice_total else 0
@@ -1612,7 +1612,7 @@ if page == "Home":
             else:
                 st.info("This lesson is on the course roadmap. Its full content will be added in a later course update.")
         else:
-            st.success("You have completed all 90 lessons!")
+            st.success("You have completed all {COURSE_TOTAL} lessons!")
 
 elif page == "Learning Path":
     page_header("YOUR COURSE", f"{st.session_state.selected_language} · A1 to C2", f"A complete {COURSE_TOTAL}-lesson learning path, expanded with additional foundations, skills and mastery practice.")
