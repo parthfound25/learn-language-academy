@@ -156,6 +156,8 @@ def _level_key(level):
 def _angolan_title(title):
     replacements = {
         "French Alphabet": "Portuguese Alphabet",
+        "Native French Speech": "Angolan Portuguese Speech",
+        "Academic French": "Academic Portuguese",
         "Verb ÊTRE": "Verbs SER and ESTAR",
         "Verb AVOIR": "Verb TER",
         "Passé Composé": "Pretérito Perfeito",
