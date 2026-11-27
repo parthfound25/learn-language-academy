@@ -21,7 +21,7 @@ def clear_transient_learning_state():
     for key in list(st.session_state.keys()):
         if key.startswith(("unified_l", "practice_round_")) or key in (
             "practice_questions", "practice_submitted", "practice_round_score",
-            "practice_lesson_active",
+            "practice_lesson_active", "practice_round_responses",
         ):
             st.session_state.pop(key, None)
 
@@ -754,9 +754,11 @@ def render_unified_lesson(lesson_id):
             st.metric("Assessment score", f"{score}/{len(prepared_assessment)}", f"{score / len(prepared_assessment) * 100:.0f}%")
             for index, (question, options, answer, explanation) in enumerate(prepared_assessment):
                 response = st.session_state.get(f"{assessment_key}_{attempt}_{index}")
-                if response != options[answer]:
-                    st.markdown(f"**{index + 1}. {question}**")
-                    st.caption(f"Correct answer: {options[answer]}. {explanation}")
+                st.markdown(f"**{index + 1}. {question}**")
+                if response == options[answer]:
+                    st.success("Correct. " + explanation)
+                else:
+                    st.error(f"Not quite. Correct answer: {options[answer]}. {explanation}")
             if st.button("Retake assessment", key=f"{assessment_key}_retake"):
                 st.session_state[attempt_key] = attempt + 1
                 st.session_state.pop(f"{assessment_key}_score", None)
@@ -1391,9 +1393,14 @@ elif page == "Practice":
         unique_questions.setdefault(question_data[0], question_data)
     question_bank = [shuffled_question(item, f"practice-{selected_id}-{index}") for index, item in enumerate(unique_questions.values())]
     if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
+        # A lesson switch must not reuse the previous lesson's selected radio answers.
+        for key in list(st.session_state.keys()):
+            if key.startswith("practice_round_"):
+                st.session_state.pop(key, None)
         st.session_state.practice_questions = random.sample(question_bank, 10)
         st.session_state.practice_lesson_active = selected_id
         st.session_state.practice_submitted = False
+        st.session_state.pop("practice_round_responses", None)
     if "practice_submitted" not in st.session_state:
         st.session_state.practice_submitted = False
     if st.session_state.practice_submitted:
@@ -1404,9 +1411,17 @@ elif page == "Practice":
         st.progress(score / 10)
         st.success("Practice round completed · +15 XP earned")
         st.caption("Your next attempt will use a different shuffled set of questions.")
+        for index, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
+            response = st.session_state.practice_round_responses[index]
+            st.markdown(f"**{index + 1}. {question}**")
+            if response == options[answer]:
+                st.success("Correct. " + explanation)
+            else:
+                st.error(f"Not quite. Correct answer: {options[answer]}. {explanation}")
         if st.button("Try again · New 10 questions", type="primary", key="new_practice_round"):
             st.session_state.practice_questions = random.sample(question_bank, 10)
             st.session_state.practice_submitted = False
+            st.session_state.pop("practice_round_responses", None)
             st.rerun()
     else:
         for i, (question, options, answer, explanation) in enumerate(st.session_state.practice_questions):
@@ -1418,6 +1433,7 @@ elif page == "Practice":
             else:
                 score = sum(1 for response, (_, options, answer, _) in zip(responses, st.session_state.practice_questions) if options.index(response) == answer)
                 st.session_state.practice_round_score = score
+                st.session_state.practice_round_responses = responses
                 st.session_state.practice_rounds += 1
                 st.session_state.practice_correct += score
                 st.session_state.practice_total += 10
