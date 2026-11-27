@@ -248,17 +248,17 @@ LESSON_DATA = {
 10:{
 "title":"Common Adjectives and Describing People","goal":"Describe appearance, personality and feelings while placing and agreeing common adjectives correctly.",
 "vocab":[
-("grand / grande","tall; big","grahn / grahnd","/ɡʁɑ̃/","Il est grand."),
-("petit / petite","short; small","puh-tee / puh-teet","/pə.ti/","La petite maison."),
+("grand / grande","tall; big","grahn / grahnd","masc. /ɡʁɑ̃/; fém. /ɡʁɑ̃d/","Il est grand."),
+("petit / petite","short; small","puh-tee / puh-teet","masc. /pə.ti/; fém. /pə.tit/","La petite maison."),
 ("jeune","young","zhuhn","/ʒœn/","Elle est jeune."),
-("vieux / vieille","old","vyuh / vyay","/vjø/","Un vieil ami."),
-("beau / belle","beautiful; handsome","boh / bell","/bo/","C'est une belle ville."),
+("vieux / vieille","old","vyuh / vyay","masc. /vjø/; fém. /vjɛj/","Un vieil ami."),
+("beau / belle","beautiful; handsome","boh / bell","masc. /bo/; fém. /bɛl/","C'est une belle ville."),
 ("joli / jolie","pretty","zho-lee","/ʒɔ.li/","Une jolie robe."),
-("gentil / gentille","kind","zhahn-tee / zhahn-teey","/ʒɑ̃.ti/","Il est gentil."),
+("gentil / gentille","kind","zhahn-tee / zhahn-teey","masc. /ʒɑ̃.ti/; fém. /ʒɑ̃.tij/","Il est gentil."),
 ("sympathique","nice; friendly","san-pah-teek","/sɛ̃.pa.tik/","Elle est sympathique."),
-("intelligent / intelligente","intelligent","an-tell-ee-zhahn / ahnt","/ɛ̃.te.li.ʒɑ̃/","Un étudiant intelligent."),
+("intelligent / intelligente","intelligent","an-tell-ee-zhahn / ahnt","masc. /ɛ̃.te.li.ʒɑ̃/; fém. /ɛ̃.te.li.ʒɑ̃t/","Un étudiant intelligent."),
 ("drôle","funny","drohl","/dʁol/","Mon ami est drôle."),
-("sérieux / sérieuse","serious","say-ree-uh / say-ree-uhz","/se.ʁjø/","Elle est sérieuse."),
+("sérieux / sérieuse","serious","say-ree-uh / say-ree-uhz","masc. /se.ʁjø/; fém. /se.ʁjøz/","Elle est sérieuse."),
 ("fatigué / fatiguée","tired","fah-tee-gay","/fa.ti.ɡe/","Je suis fatigué.")
 ],
 "grammar":[
@@ -311,14 +311,14 @@ LESSON_DATA = {
 "vocab":[
 ("rouge","red","roozh","/ʁuʒ/","Une pomme rouge."),
 ("bleu / bleue","blue","bluh / bluh","/blø/","Un sac bleu."),
-("vert / verte","green","vair / vair-tuh","/vɛʁ/","Une porte verte."),
+("vert / verte","green","vair / vair-tuh","masc. /vɛʁ/; fém. /vɛʁt/","Une porte verte."),
 ("jaune","yellow","zhohn","/ʒon/","Un livre jaune."),
 ("noir / noire","black","nwahr / nwahr","/nwaʁ/","Une voiture noire."),
-("blanc / blanche","white","blahn / blahnsh","/blɑ̃/","Une chemise blanche."),
-("gris / grise","grey","gree / greez","/ɡʁi/","Un mur gris."),
+("blanc / blanche","white","blahn / blahnsh","masc. /blɑ̃/; fém. /blɑ̃ʃ/","Une chemise blanche."),
+("gris / grise","grey","gree / greez","masc. /ɡʁi/; fém. /ɡʁiz/","Un mur gris."),
 ("orange","orange","oh-rahnzh","/ɔ.ʁɑ̃ʒ/","Des fleurs orange."),
 ("rose","pink","rohz","/ʁoz/","Une robe rose."),
-("violet / violette","purple","vee-oh-lay / vee-oh-let","/vjɔ.lɛ/","Une boîte violette."),
+("violet / violette","purple","vee-oh-lay / vee-oh-let","masc. /vjɔ.lɛ/; fém. /vjɔ.lɛt/","Une boîte violette."),
 ("un sac","a bag","uhn sak","/œ̃ sak/","Mon sac est noir."),
 ("une clé","a key","ün clay","/yn kle/","Voici une clé.")
 ],
