@@ -1788,9 +1788,7 @@ elif page == "Learning Path":
                         st.button("Coming soon", key=f"path_soon_{lesson_id}", disabled=True)
 
 elif page == "Lesson":
-    if st.session_state.active_lesson == 1:
-        render_lesson_one()
-    elif get_lesson_content(st.session_state.active_lesson) is not None:
+    if get_lesson_content(st.session_state.active_lesson) is not None:
         render_unified_lesson(st.session_state.active_lesson)
     else:
         st.warning("This lesson is on the roadmap; its full content will be added in a later course update.")
