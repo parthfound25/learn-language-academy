@@ -1323,6 +1323,144 @@ def render_authored_c2_lesson(lesson_id):
 
 
 
+def render_unified_lesson(lesson_id):
+    lesson = get_lesson_content(lesson_id)
+    course_item = ALL_LESSONS[COURSE_INDEX[lesson_id]]
+    number = course_number(lesson_id)
+    level_label = course_item["level"].split("–")[0].strip()
+    vocabulary = lesson.get("vocabulary", lesson.get("vocab", []))
+    grammar = lesson.get("grammar", [])
+    expressions = lesson.get("expressions", [])
+    examples = lesson.get("examples", [])
+    conversations = lesson.get("conversations", [])
+    exercises = lesson.get("exercises", [])
+    assessment = lesson.get("assessment", exercises)
+    speaking = lesson.get("speaking", [])
+    summary = lesson.get("summary", [])
+    objectives = lesson.get("objectives") or [lesson.get("goal", "Understand and use the target language in context."), "Use the lesson vocabulary in original sentences.", "Apply the grammar and expressions in a realistic exchange."]
+    pronunciation = lesson.get("pronunciation") or ["Read each vocabulary item aloud, using the IPA as a reference and the English hint only as an approximation.", "Identify the two or three most difficult sounds in this lesson and practise them in complete words and phrases.", "Read the example sentences in phrase groups, paying attention to liaison, rhythm and intonation.", "Notice regional variation without assuming that one Canadian French accent represents every speaker."]
+    homework = lesson.get("homework") or ["Write eight original sentences using the lesson vocabulary and grammar.", "Adapt one dialogue to your own life and read both roles aloud.", "Write a short paragraph or message using at least five target expressions.", "Review the summary and create a personal list of five items to revisit."]
+    st.markdown(f'<div class="eyebrow">{level_label} · LESSON {number} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
+    st.title(lesson["title"])
+    st.markdown(f"**Learning goal:** {lesson.get('goal', 'Develop accurate and practical French communication.')}")
+    st.caption("Canadian French focus · English explanations · Suggested study time: 35–55 minutes")
+    st.progress(number / COURSE_TOTAL, text=f"Course progress · Lesson {number} of {COURSE_TOTAL}")
+    tabs = st.tabs(["1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
+    with tabs[0]:
+        st.subheader("What you will learn")
+        for objective in objectives:
+            st.markdown(f"- {objective}")
+        st.info("Suggested method: study the explanations, say the examples aloud, complete the exercises, then do the homework without looking at the answers.")
+    with tabs[1]:
+        st.subheader("Vocabulary")
+        for french, meaning, pronunciation_hint, ipa, example in vocabulary:
+            with st.container(border=True):
+                left, right = st.columns([1, 2])
+                with left:
+                    st.markdown(f"### {french}")
+                    st.caption(f"Say it: {pronunciation_hint}")
+                    st.caption(f"IPA: {ipa}")
+                with right:
+                    st.write(meaning)
+                    st.markdown(f"*{example}*")
+    with tabs[2]:
+        st.subheader("Grammar and usage")
+        for title, explanation in grammar:
+            with st.expander(title, expanded=True):
+                st.write(explanation)
+        st.info("Canadian French note: learn the broadly understood standard form first; regional vocabulary and spoken forms should be labelled by region and register.")
+    with tabs[3]:
+        st.subheader("Useful expressions")
+        for phrase, meaning, context in expressions:
+            with st.container(border=True):
+                st.markdown(f"**{phrase}** — {meaning}")
+                st.caption(context)
+        st.subheader("Practical examples")
+        for french, english, explanation in examples:
+            with st.container(border=True):
+                st.markdown(f"**{french}**")
+                st.write(english)
+                st.caption(explanation)
+    with tabs[4]:
+        st.subheader("Dialogues and conversations")
+        for title, dialogue, translation in conversations:
+            st.markdown(f"**{title}**")
+            for speaker, line in dialogue:
+                st.markdown(f"- **{speaker}:** {line}")
+            with st.expander("Show English translation"):
+                st.write(translation)
+    with tabs[5]:
+        st.subheader("Pronunciation guidance")
+        for instruction in pronunciation:
+            st.markdown(f"- {instruction}")
+        st.caption("IPA is more precise than English-style pronunciation hints. Accent and pronunciation vary among French speakers, including across Canada.")
+    with tabs[6]:
+        st.subheader("Interactive exercises")
+        st.write("Check each answer immediately and read the explanation. Mistakes never block lesson completion.")
+        for index, (question, options, answer, explanation) in enumerate(exercises):
+            selected = st.radio(question, options, index=None, key=f"unified_l{lesson_id}_exercise_{index}")
+            if st.button("Check answer", key=f"unified_l{lesson_id}_check_{index}"):
+                if selected is None:
+                    st.warning("Choose an answer first.")
+                elif options.index(selected) == answer:
+                    st.success("Correct! " + explanation)
+                else:
+                    st.error("Not quite. " + explanation)
+    with tabs[7]:
+        st.subheader("Speaking and practical activities")
+        for index, instruction in enumerate(speaking, start=1):
+            st.markdown(f"{index}. {instruction}")
+        st.subheader("Lesson review")
+        for item in summary:
+            st.markdown(f"- {item}")
+    with tabs[8]:
+        st.subheader("Homework and independent practice")
+        for index, task in enumerate(homework, start=1):
+            st.markdown(f"{index}. {task}")
+        st.divider()
+        st.subheader("Lesson assessment")
+        st.write(f"{len(assessment)} questions · Review the feedback after submitting. You can retry at any time.")
+        assessment_key = f"unified_l{lesson_id}_assessment"
+        with st.form(f"{assessment_key}_form"):
+            for index, (question, options, answer, explanation) in enumerate(assessment):
+                st.radio(f"{index + 1}. {question}", options, index=None, key=f"{assessment_key}_{index}")
+            submitted = st.form_submit_button("Submit lesson assessment", type="primary")
+        if submitted:
+            responses = [st.session_state.get(f"{assessment_key}_{index}") for index in range(len(assessment))]
+            if any(response is None for response in responses):
+                st.warning(f"Please answer all questions. Answered: {sum(response is not None for response in responses)}/{len(assessment)}.")
+            else:
+                score = sum(1 for response, (_, options, answer, _) in zip(responses, assessment) if options.index(response) == answer)
+                st.session_state[f"{assessment_key}_score"] = score
+                st.session_state[f"{assessment_key}_submitted"] = True
+                st.rerun()
+        if st.session_state.get(f"{assessment_key}_submitted", False):
+            score = st.session_state.get(f"{assessment_key}_score", 0)
+            st.metric("Assessment score", f"{score}/{len(assessment)}", f"{score / len(assessment) * 100:.0f}%")
+            for index, (question, options, answer, explanation) in enumerate(assessment):
+                response = st.session_state.get(f"{assessment_key}_{index}")
+                if response != options[answer]:
+                    st.markdown(f"**{index + 1}. {question}**")
+                    st.caption(f"Correct answer: {options[answer]}. {explanation}")
+            if st.button("Retake assessment", key=f"{assessment_key}_retake"):
+                for index in range(len(assessment)):
+                    st.session_state.pop(f"{assessment_key}_{index}", None)
+                st.session_state.pop(f"{assessment_key}_score", None)
+                st.session_state.pop(f"{assessment_key}_submitted", None)
+                st.rerun()
+    st.markdown("---")
+    st.subheader("Complete this lesson")
+    if lesson_id in st.session_state.completed:
+        st.success("This lesson is already marked complete.")
+    elif st.button(f"Mark Lesson {number} complete · Earn 25 XP", type="primary", key=f"complete_unified_lesson_{lesson_id}"):
+        mark_lesson_complete(lesson_id)
+        st.success("Lesson completed! You earned 25 XP. Your next course lesson is now available.")
+        st.session_state.page = "Learning Path"
+        st.rerun()
+    if st.button("Back to Learning Path", key=f"back_unified_lesson_{lesson_id}"):
+        st.session_state.page = "Learning Path"
+        st.rerun()
+
 def render_extension_lesson(lesson_id):
     lesson = EXTENSION_LESSONS[lesson_id]
     number = course_number(lesson_id)
