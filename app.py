@@ -1645,7 +1645,7 @@ elif page == "Vocabulary":
 
 elif page == "Practice":
     page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
-    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and (item["id"] == 1 or item["id"] in A1_LESSONS or item["id"] in A2_LESSONS)]
+    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and (item["id"] == 1 or item["id"] in A1_LESSONS or item["id"] in A2_LESSONS or item["id"] in B1_LESSONS)]
     practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
