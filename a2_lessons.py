@@ -1018,5 +1018,203 @@ LESSON_DATA = {
 ("What is a good response after a meal?", ["C'était délicieux !","Je suis réservation.","L'addition est faim.","Je voudrais table."], 0, "C'était délicieux means it was delicious.")
 ]
 },
+26: {
+"title": "Transportation and Asking for Directions",
+"goal": "Talk about common transport, buy tickets, ask for and understand directions, and describe a simple journey.",
+"vocab": [
+("un autobus","bus","uhn oh-toh-büs","/œ̃ o.to.bys/","Je prends l'autobus."),
+("un métro","subway; metro","uhn may-troh","/œ̃ me.tʁo/","Le métro arrive dans deux minutes."),
+("un train","train","uhn trehn","/œ̃ tʁɛ̃/","Le train part à midi."),
+("un tramway","tram","uhn trahm-way","/œ̃ tʁam.wɛ/","Le tramway s'arrête ici."),
+("un taxi","taxi","uhn tak-see","/œ̃ tak.si/","Nous prenons un taxi."),
+("un vélo","bicycle","uhn vay-loh","/œ̃ ve.lo/","Je vais au travail à vélo."),
+("une voiture","car","ün vwah-tür","/yn vwa.tyʁ/","Elle conduit une voiture."),
+("un billet","ticket","uhn bee-yay","/œ̃ bi.je/","J'achète un billet aller-retour."),
+("un aller simple","one-way ticket","uhn ah-lay sahmpl","/œ̃ a.le sɛ̃pl/","Je voudrais un aller simple."),
+("un aller-retour","return ticket","uhn ah-lay ruh-toor","/œ̃ a.le ʁə.tuʁ/","Un aller-retour pour Ottawa."),
+("un quai","platform","uhn keh","/œ̃ kɛ/","Le train part du quai trois."),
+("un arrêt","stop","uhn ah-ray","/œ̃ a.ʁɛ/","Descendez au prochain arrêt."),
+("une station","station","ün stah-syohn","/yn sta.sjɔ̃/","La station est près d'ici."),
+("un horaire","schedule","uhn oh-rehr","/œ̃ ɔ.ʁɛʁ/","Je consulte l'horaire."),
+("un retard","delay","uhn ruh-tar","/œ̃ ʁə.taʁ/","Le train a dix minutes de retard."),
+("une correspondance","connection; transfer","ün koh-rehs-pohn-dahnss","/yn kɔ.ʁɛs.pɔ̃.dɑ̃s/","Je dois faire une correspondance."),
+("monter","to get on; go up","mohn-tay","/mɔ̃.te/","Montez dans le train."),
+("descendre","to get off; go down","day-sahn-druh","/de.sɑ̃dʁ/","Je descends à la prochaine station."),
+("tourner","to turn","toor-nay","/tuʁ.ne/","Tournez à droite."),
+("traverser","to cross","trah-vehr-say","/tʁa.vɛʁ.se/","Traversez la rue.")
+],
+"grammar": [
+("Choosing a mode of transport","Use en with many enclosed or motorised modes: en autobus, en métro, en train, en voiture. Use à with walking and many two-wheeled modes: à pied, à vélo. For a specific vehicle, use dans: monter dans le bus, monter dans la voiture. Usage can vary by expression, so learn the common combinations."),
+("Taking and using transport","Prendre means to take: prendre l'autobus, prendre le train. Use prendre + definite article for a transport service. Use aller en voiture or voyager en train to describe how you travel. For boarding, monter dans; for getting off, descendre de: Je descends du train."),
+("Asking for directions politely","Start with Excusez-moi, pour aller à… ? or Excusez-moi, comment est-ce que je peux aller à… ? Use pourriez-vous m'indiquer… for a more polite request. Add s'il vous plaît and merci. Avoid beginning abruptly with an imperative when asking a stranger."),
+("Direction verbs and commands","Common commands include allez (go), continuez (continue), tournez (turn), traversez (cross), prenez (take) and descendez (get off). Use the vous command when speaking politely to a stranger: Tournez à gauche; prenez la deuxième rue."),
+("Explaining a route in sequence","Use d'abord (first), ensuite (then), puis (then), après (afterwards) and enfin (finally). Example: D'abord, prenez le métro; ensuite, changez à la station centrale; enfin, descendez à la troisième station. Sequence words help the listener follow each step."),
+("Tickets and destinations","Ask Un aller simple ou un aller-retour ? (one-way or return?). Use pour + destination: Un billet pour Toronto, s'il vous plaît. Ask À quelle heure part le prochain train ? and De quel quai part-il ? Use partir de to identify the departure platform."),
+("Time, duration and delays","Dans dix minutes means in ten minutes; pendant dix minutes means for ten minutes; depuis dix minutes means for ten minutes up to now. A train en retard is delayed. Le train a dix minutes de retard means the train is ten minutes late."),
+("Transfers and route changes","Faire une correspondance means to transfer/change lines. Changer à la station centrale means change at Central Station. Use jusqu'à for as far as: Allez jusqu'à la prochaine station. Follow the route and confirm the direction of the train before boarding."),
+("Prepositions with destinations","Use à for many cities and named stations: à Toronto, à la station. Use jusqu'à to mean as far as. Use vers to indicate towards. Remember contractions: au centre-ville (à + le), aux arrêts (à + les)."),
+("Canadian French note","Autobus is very common in Quebec and formal Canadian usage; bus is also widely understood. In many Canadian cities, you may hear station de métro, arrêt d'autobus and carte OPUS in Montreal-specific contexts. Transit names and ticket systems vary by city.")
+],
+"expressions": [
+("Où est l'arrêt d'autobus ?","Where is the bus stop?","Useful when looking for a stop."),
+("Un billet pour le centre-ville, s'il vous plaît.","A ticket to downtown, please.","Simple ticket request."),
+("À quelle heure part le prochain train ?","What time does the next train leave?","Ask about departure."),
+("Est-ce que ce bus va à l'aéroport ?","Does this bus go to the airport?","Confirm the route."),
+("Je dois changer de ligne.","I have to change lines.","Useful for transfers."),
+("Le train a du retard.","The train is delayed.","Common travel update."),
+("Je descends au prochain arrêt.","I'm getting off at the next stop.","Tell someone where you leave."),
+("C'est à combien de minutes à pied ?","How many minutes away on foot is it?","Ask about walking distance.")
+],
+"examples": [
+("Je vais à l'université en autobus tous les matins.","I go to university by bus every morning.","En autobus describes the mode of transport."),
+("Nous prenons le métro jusqu'au centre-ville.","We take the metro to downtown.","Prendre + definite article."),
+("Descendez à la troisième station après le pont.","Get off at the third station after the bridge.","Vous command descendez."),
+("Pour aller à la gare, tournez à gauche au feu.","To get to the station, turn left at the traffic light.","Pour aller à introduces the destination."),
+("Le train part du quai quatre à dix heures quinze.","The train leaves from platform four at 10:15.","Partir de identifies the platform."),
+("Je dois faire une correspondance à la station centrale.","I have to transfer at Central Station.","Faire une correspondance is a fixed phrase."),
+("Le bus a quinze minutes de retard à cause de la neige.","The bus is fifteen minutes late because of the snow.","Avoir du retard describes a delay."),
+("Est-ce que je peux acheter un aller-retour ici ?","Can I buy a return ticket here?","Aller-retour means return ticket.")
+],
+"conversations": [
+("Buying a train ticket", [("A","Bonjour. Un billet pour Québec, s'il vous plaît."),("B","Un aller simple ou un aller-retour ?"),("A","Un aller-retour. À quelle heure part le prochain train ?"),("B","À onze heures vingt, du quai deux."),("A","Merci. Est-ce qu'il y a une correspondance ?"),("B","Non, le train est direct.")], "A: Hello. A ticket to Quebec City, please. B: One-way or return? A: Return. What time does the next train leave? B: At 11:20, from platform two. A: Thank you. Is there a transfer? B: No, the train is direct."),
+("Asking a passer-by", [("A","Excusez-moi, comment aller à la bibliothèque ?"),("B","Continuez tout droit et tournez à droite après le pont."),("A","C'est loin à pied ?"),("B","Non, environ cinq minutes."),("A","Est-ce que je dois traverser la rue ?"),("B","Oui, au passage pour piétons.")], "A: Excuse me, how do I get to the library? B: Continue straight and turn right after the bridge. A: Is it far on foot? B: No, about five minutes. A: Do I have to cross the street? B: Yes, at the pedestrian crossing.")
+],
+"exercises": [
+("Choose the usual phrase for travelling by train.", ["à train","en train","dans train","au train"], 1, "Use en train for the mode of transport."),
+("Complete: Je vais au travail ___ vélo.", ["en","à","au","dans"], 1, "Use à vélo."),
+("What does un aller-retour mean?", ["one-way ticket","return ticket","platform","delay"], 1, "Aller-retour is a return ticket."),
+("Choose the correct command for 'Turn right'.", ["Tournez à droite.","Tournez de droite.","Tournez en droite.","Tournez droite à."], 0, "The expression is tourner à droite."),
+("Complete: Je descends ___ train.", ["du","au","en","à"], 0, "Descendre de + le contracts to du."),
+("Which means 'platform'?", ["un quai","un arrêt","un retard","un horaire"], 0, "Un quai is a platform."),
+("Choose the correct question about departure time.", ["À quelle heure part le train ?","À quelle heure le train partir ?","Quand le train part-il à heure ?","Quelle heure le train partir ?"], 0, "À quelle heure asks at what time; part agrees with train."),
+("Complete: Le train a dix minutes de ___.", ["correspondance","retard","station","billet"], 1, "Avoir du retard means to be delayed."),
+("Which phrase means 'change lines'?", ["changer de ligne","descendre la ligne","tourner la ligne","prendre de ligne"], 0, "Changer de ligne means change lines."),
+("Choose the polite direction request.", ["Excusez-moi, pourriez-vous m'indiquer la gare ?","Indique gare !","Tu gare où ?","Moi gare."], 0, "Pourriez-vous is a polite conditional request."),
+("What does jusqu'à mean?", ["from","as far as; until","behind","between"], 1, "Jusqu'à indicates an endpoint."),
+("Choose the correct phrase for 'by bus' in common Quebec usage.", ["en autobus","à autobus","au autobus","dans autobus"], 0, "En autobus is common Canadian French.")
+],
+"speaking": [
+"Explain how you travel to work or school using en voiture, en autobus, à vélo or à pied.",
+"Give a route from your home to a familiar place using at least five commands.",
+"Role-play buying a one-way and return ticket and asking about departure time.",
+"Ask five questions about a bus or train route, including stops and transfers.",
+"Describe what you would do if your train were delayed.",
+"Read both dialogues aloud and practise polite requests to strangers."
+],
+"summary": ["Use en with many transport modes and à pied/à vélo for walking and cycling.","Prendre l'autobus/le train means take the bus/train; monter dans and descendre de describe boarding and leaving.","Use polite requests such as Excusez-moi and pourriez-vous m'indiquer…","Use vous commands for directions: tournez, traversez, prenez, descendez.","Aller simple is one-way; aller-retour is return; quai is platform.","Faire une correspondance means transfer; avoir du retard means be delayed.","Autobus is very common in Canadian French, especially Quebec."],
+"assessment": [
+("How do you say 'by car'?", ["à voiture","en voiture","au voiture","dans voiture"], 1, "En voiture is the usual mode phrase."),
+("Choose the correct phrase for 'on foot'.", ["en pied","à pied","au pied","dans pied"], 1, "The expression is à pied."),
+("What is an aller simple?", ["return ticket","one-way ticket","platform","bus stop"], 1, "Aller simple is one-way."),
+("Complete: Descendez ___ prochain arrêt.", ["au","à la","du","en"], 0, "Descendez au prochain arrêt: à + le = au."),
+("Which word means platform?", ["quai","retard","billet","horaire"], 0, "Un quai is a platform."),
+("Choose the correct question.", ["À quelle heure part le train ?","À quelle heure partent le train ?","À quel heure part le train ?","Quelle heure le train partir ?"], 0, "Train is singular and heure is feminine."),
+("What does faire une correspondance mean?", ["buy a ticket","make a transfer","miss a train","cross a street"], 1, "It means to change lines or transfer."),
+("Complete: Le bus a cinq minutes de ___.", ["retard","quai","vélo","billet"], 0, "Avoir du retard means be late/delayed."),
+("Which is a polite direction request?", ["Pourriez-vous m'indiquer la station ?","Indique la station !","Station où ?","Tu m'indiquer station ?"], 0, "Pourriez-vous is polite."),
+("What does traverser mean?", ["to turn","to cross","to wait","to board"], 1, "Traverser means to cross."),
+("Choose the correct Canadian French phrase.", ["un arrêt d'autobus","un arrêt de voiture","un arrêt de trainnement","un arrêt en autobus"], 0, "Arrêt d'autobus means bus stop."),
+("Which phrase means 'get off at the next stop'?", ["Je descends au prochain arrêt.","Je monte au prochain arrêt.","Je prends au prochain arrêt.","Je tourne au prochain arrêt."], 0, "Descendre means get off.")
+]
+},
+27: {
+"title": "Weather, Nature and Seasons",
+"goal": "Describe the weather and seasons, discuss simple forecasts and use common expressions about temperature and nature.",
+"vocab": [
+("le temps","weather","luh tahn","/lə tɑ̃/","Quel temps fait-il ?"),
+("la météo","weather forecast","lah may-tay-oh","/la me.te.o/","Je regarde la météo."),
+("le soleil","sun","luh soh-lay","/lə sɔ.lɛj/","Le soleil brille."),
+("la pluie","rain","lah plwee","/la plɥi/","Il y a de la pluie."),
+("la neige","snow","lah nezh","/la nɛʒ/","La neige tombe."),
+("le vent","wind","luh vahn","/lə vɑ̃/","Il y a beaucoup de vent."),
+("un nuage","cloud","uhn nü-ahzh","/œ̃ nɥ.aʒ/","Un nuage cache le soleil."),
+("un orage","thunderstorm","uhn oh-rahzh","/œ̃ ɔ.ʁaʒ/","Un orage arrive ce soir."),
+("la température","temperature","lah tahm-pay-rah-tür","/la tɑ̃.pe.ʁa.tyʁ/","La température baisse."),
+("un degré","degree","uhn duh-gray","/œ̃ də.ɡʁe/","Il fait dix degrés."),
+("le printemps","spring","luh prahn-tahn","/lə pʁɛ̃.tɑ̃/","Au printemps, les fleurs poussent."),
+("l'été","summer","lay-tay","/le.te/","En été, il fait chaud."),
+("l'automne","autumn; fall","loh-tohn","/lɔ.tɔn/","Les feuilles tombent en automne."),
+("l'hiver","winter","lee-vehr","/li.vɛʁ/","En hiver, il neige."),
+("un arbre","tree","uhn ar-bruh","/œ̃ aʁbʁ/","Cet arbre est très vieux."),
+("une feuille","leaf","ün fuh-yuh","/yn fœj/","Une feuille tombe."),
+("une rivière","river","ün ree-vyehr","/yn ʁi.vjɛʁ/","La rivière est calme."),
+("une forêt","forest","ün foh-reh","/yn fɔ.ʁɛ/","Nous marchons dans la forêt."),
+("ensoleillé","sunny","ahn-soh-lay-yay","/ɑ̃.sɔ.le.je/","Il fait un temps ensoleillé."),
+("nuageux","cloudy","nü-ah-zhuh","/nɥ.a.ʒø/","Le ciel est nuageux.")
+],
+"grammar": [
+("The expression il fait for weather","Use il fait + adjective or temperature: Il fait chaud (it's hot), il fait froid (it's cold), il fait beau (the weather is nice), il fait mauvais (the weather is bad). The il is impersonal; it does not refer to a specific man or object."),
+("Weather verbs with il","Some weather verbs are impersonal: il pleut (it's raining), il neige (it's snowing), il vente (it's windy, less common in everyday speech in some regions). Use il y a for conditions or things present: il y a du vent, il y a des nuages."),
+("Seasons and prepositions","Use au printemps, en été, en automne and en hiver. Seasons are generally introduced with au or en depending on the expression. To say in the spring, au printemps is standard; en été, en automne and en hiver are common."),
+("Temperature and degrees","Say Il fait vingt degrés or La température est de vingt degrés. For below zero, say moins cinq degrés. Use monter (rise) and baisser/descendre (fall) for temperature changes: La température baisse cette nuit."),
+("Adjectives describing the sky and weather","Use être + adjective: Le ciel est nuageux; la journée est ensoleillée. Adjectives agree with the noun: un ciel nuageux, une journée ensoleillée, des journées ensoleillées. Beau has irregular forms before nouns and in weather expression il fait beau."),
+("Talking about forecasts","Use demain (tomorrow), aujourd'hui (today), ce soir (tonight), cette nuit (tonight) and la semaine prochaine (next week). The forecast may use the future: Il fera beau demain (it will be nice tomorrow). This future form will be studied more deeply later."),
+("Nature and location","Use dans la forêt, au bord de la rivière, près du lac and à la montagne. Use en pleine nature to mean out in nature. Remember contractions: au bord de + le = au bord du lac."),
+("Comparing seasons","Use plus...que, moins...que and aussi...que: L'hiver est plus froid que l'automne. You can also use préférer: Je préfère le printemps à l'hiver. Remember the article before season names when they are subjects or objects."),
+("Canadian weather vocabulary","In Canada, weather conversations often include la neige, le verglas (freezing rain/ice), le déneigement (snow removal) and une tempête de neige (snowstorm). In Quebec, slush may be called de la gadoue. These are useful regional words, especially in winter."),
+("Asking about the weather","Ask Quel temps fait-il ? or Quelle est la météo aujourd'hui ? In casual speech, people may say Il fait comment ? Answer with a full expression: Il fait frais et il y a du vent.")
+],
+"expressions": [
+("Il fait un froid de canard !","It's freezing cold!","Informal idiom for very cold weather."),
+("Quel beau temps !","What lovely weather!","A positive reaction."),
+("Il pleut des cordes.","It's pouring rain.","Common idiom."),
+("Prends ton parapluie.","Take your umbrella.","Informal advice."),
+("La météo annonce de la neige.","The forecast predicts snow.","Annoncer means forecast/announce."),
+("Il fait doux aujourd'hui.","It's mild today.","Doux means mild/gentle."),
+("On dirait qu'il va pleuvoir.","It looks like it's going to rain.","On dirait means it looks/seems."),
+("Attention au verglas !","Watch out for freezing rain/ice!","Important Canadian winter warning.")
+],
+"examples": [
+("En hiver, il fait souvent moins dix degrés ici.","In winter, it's often minus ten degrees here.","Moins indicates below zero."),
+("Demain, il fera soleil et la température montera.","Tomorrow it will be sunny and the temperature will rise.","Future forms describe a forecast."),
+("Il pleut depuis ce matin, mais il ne fait pas froid.","It has been raining since this morning, but it isn't cold.","Depuis marks an action continuing from the past."),
+("Au printemps, les arbres deviennent verts.","In spring, the trees become green.","Au printemps is the season phrase."),
+("L'automne est plus frais que l'été.","Autumn is cooler than summer.","Comparative plus...que."),
+("Il y a du vent près de la rivière.","It's windy near the river.","Il y a + du vent."),
+("La météo annonce une tempête de neige pour demain.","The forecast predicts a snowstorm for tomorrow.","Annonce + noun."),
+("Le trottoir est glissant à cause du verglas.","The sidewalk is slippery because of freezing rain/ice.","Verglas is a useful Canadian winter word.")
+],
+"conversations": [
+("Planning a weekend", [("A","Quel temps fera-t-il samedi ?"),("B","La météo annonce du soleil, mais il fera frais."),("A","On peut marcher dans la forêt alors."),("B","Bonne idée. Prends une veste, il y aura du vent."),("A","Est-ce qu'il va pleuvoir ?"),("B","Non, probablement pas.")], "A: What will the weather be like Saturday? B: The forecast predicts sunshine, but it will be cool. A: We can walk in the forest then. B: Good idea. Take a jacket; it will be windy. A: Is it going to rain? B: No, probably not."),
+("Talking about winter", [("A","Tu aimes l'hiver au Canada ?"),("B","Oui, mais je n'aime pas le verglas."),("A","Il neige beaucoup dans ta région ?"),("B","Oui, et il fait parfois moins vingt degrés."),("A","Il faut de bonnes bottes !"),("B","Absolument, et un manteau chaud.")], "A: Do you like winter in Canada? B: Yes, but I don't like freezing rain/ice. A: Does it snow a lot in your region? B: Yes, and sometimes it's minus twenty degrees. A: You need good boots! B: Absolutely, and a warm coat.")
+],
+"exercises": [
+("Complete: Il ___ chaud aujourd'hui.", ["fait","est","a","va"], 0, "Use il fait chaud for it's hot."),
+("Which means 'it's raining'?", ["Il neige.","Il pleut.","Il vente.","Il fait beau."], 1, "Il pleut means it's raining."),
+("Choose the correct season phrase for 'in winter'.", ["au hiver","en hiver","à hiver","dans hiver"], 1, "Use en hiver."),
+("Complete: Il fait moins cinq ___.", ["temps","nuages","degrés","soleils"], 2, "Temperature is expressed in degrés."),
+("Which means 'cloudy'?", ["ensoleillé","nuageux","glissant","chaud"], 1, "Nuageux means cloudy."),
+("Choose the correct adjective agreement: une journée ___.", ["ensoleillé","ensoleillée","ensoleillés","ensoleillées"], 1, "Journée is feminine singular: ensoleillée."),
+("What is verglas?", ["sunshine","freezing rain/ice","a forest","a river"], 1, "Verglas is a Canadian winter term for ice from freezing rain."),
+("Complete: Il y a ___ vent.", ["du","de la","des","un"], 0, "Vent is masculine: du vent."),
+("Which phrase means 'It's pouring rain'?", ["Il pleut des cordes.","Il fait doux.","Il fait beau.","Il neige des arbres."], 0, "Il pleut des cordes is an idiom for heavy rain."),
+("Choose the correct comparison.", ["L'hiver est plus froid que l'été.","L'hiver est plus froide que l'été.","L'hiver est plus froid de l'été.","L'hiver plus froid que est l'été."], 0, "Hiver is masculine, so froid is masculine; use que."),
+("Complete: La température ___ demain.", ["montera","monter","montes","montent"], 0, "La température is singular; montera is future."),
+("Which asks 'What's the weather like?'", ["Quel temps fait-il ?","Quelle heure fait-il ?","Où temps est-il ?","Qui fait le temps ?"], 0, "Quel temps fait-il is the standard weather question.")
+],
+"speaking": [
+"Give a short weather report for today and tomorrow using at least five weather expressions.",
+"Describe your favourite season and compare it with another season.",
+"Practise temperatures above and below zero.",
+"Explain what you wear or do during a Canadian snowstorm.",
+"Read both conversations aloud and role-play making outdoor plans.",
+"Describe a natural place using forêt, rivière, arbre, feuille and météo vocabulary."
+],
+"summary": ["Use il fait chaud/froid/beau/mauvais for common weather descriptions.","Use il pleut and il neige for rain and snow; il y a du vent for wind.","Say au printemps, en été, en automne and en hiver.","Use degrés and moins for temperatures below zero.","Adjectives describing weather agree with the noun: une journée ensoleillée.","Verglas, déneigement and tempête de neige are useful Canadian winter words.","Ask Quel temps fait-il ? to start a weather conversation."],
+"assessment": [
+("Which is correct for 'It's cold'?", ["Il est froid.","Il fait froid.","Il a froid temps.","Il froid fait."], 1, "The weather expression is il fait froid."),
+("What does il neige mean?", ["It's raining","It's snowing","It's windy","It's sunny"], 1, "Neiger means to snow."),
+("Choose the correct phrase: ___ printemps.", ["En","Au","À","Dans le"], 1, "The standard expression is au printemps."),
+("Complete: Il fait vingt ___.", ["degrés","degré","temps","nuages"], 0, "Use degrés for temperature."),
+("Which adjective means cloudy?", ["nuageux","ensoleillé","doux","glissant"], 0, "Nuageux means cloudy."),
+("Choose the correct agreement.", ["une journée ensoleillé","une journée ensoleillée","une journée ensoleillés","une journée ensoleillées"], 1, "Journée is feminine singular."),
+("What does verglas mean?", ["snow removal","freezing rain/ice","heat wave","sunshine"], 1, "Verglas is ice caused by freezing rain."),
+("Which phrase means 'It looks like it's going to rain'?", ["On dirait qu'il va pleuvoir.","Il fait un froid de canard.","La pluie est soleil.","Il neige des cordes."], 0, "On dirait que expresses it looks/seems that."),
+("Choose the correct comparison.", ["L'été est plus chaud que l'hiver.","L'été est plus chaude que l'hiver.","L'été est plus chaud de l'hiver.","L'été plus chaud que l'hiver est."], 0, "Été is masculine; use plus chaud que."),
+("Complete: Il y a ___ nuages.", ["du","de la","des","au"], 2, "Nuages is plural: des nuages."),
+("Which is an idiom for very cold weather?", ["Il fait un froid de canard.","Il pleut des cordes.","Il fait doux.","Quel beau temps !"], 0, "Un froid de canard means very cold."),
+("Which question asks about the weather?", ["Quel temps fait-il ?","Combien fait-il ?","Qui fait-il ?","Quel temps est-ce que tu fais ?"], 0, "Quel temps fait-il is the standard question.")
+]
+},
 }
 A2_LESSONS = {lesson_id: data for lesson_id, data in LESSON_DATA.items()}
