@@ -77,7 +77,7 @@ class AngolanPortugueseA2C2EditorialTests(unittest.TestCase):
             "C2": "precision",
         }
         for level, ids in LEVEL_IDS.items():
-            grammar = " ".join(text for lesson_id in ids for _, text in PORTUGUESE_LESSONS[lesson_id]["grammar"]).casefold()
+            grammar = " ".join(part for lesson_id in ids for pair in PORTUGUESE_LESSONS[lesson_id]["grammar"] for part in pair).casefold()
             self.assertIn(expected[level], grammar)
 
 
