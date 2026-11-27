@@ -70,6 +70,12 @@ class CourseCurriculumTests(unittest.TestCase):
                         self.assertLess(answer, len(options))
                         self.assertTrue(explanation.strip())
 
+    def test_extension_assessments_do_not_repeat_questions(self):
+        for lesson_id, lesson in EXTENSION_LESSONS.items():
+            prompts = [question[0] for question in lesson["assessment"]]
+            with self.subTest(lesson_id=lesson_id):
+                self.assertEqual(len(prompts), len(set(prompts)))
+
     def test_extensions_include_objectives_pronunciation_and_homework(self):
         for lesson_id, lesson in EXTENSION_LESSONS.items():
             with self.subTest(lesson_id=lesson_id):
