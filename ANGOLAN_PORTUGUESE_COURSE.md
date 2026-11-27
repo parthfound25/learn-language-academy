@@ -112,14 +112,14 @@ This course reuses the Canadian French course's 107-chapter learning path and sh
 5. **Idiomatic Angolan Portuguese and Regional Expressions**
 6. **Colloquial Angolan Portuguese and Spoken Contractions**
 7. **Angolan Portuguese Sociolinguistics, Identity and Register**
-8. **Understanding Fast Native French Speech**
+8. **Understanding Fast Angolan Portuguese Speech**
 9. **Critical Listening, Note-Taking and Media Analysis**
 10. **Professional Emails, Reports and Formal Writing**
 11. **Meetings, Negotiations and Presentations**
 12. **Expressing Complex Opinions and Abstract Ideas**
 13. **Academic Reading, Synthesis and Referencing**
 14. **Literature, Books and Advanced Reading**
-15. **Cultural References and French-Canadian Society**
+15. **Cultural References and Angolan Society**
 16. **Humour, Sarcasm, Irony and Nuance**
 17. **Advanced Listening and Spontaneous Speaking**
 18. **C1 Comprehensive Revision and Assessment**
@@ -131,7 +131,7 @@ This course reuses the Canadian French course's 107-chapter learning path and sh
 3. **Advanced Idioms, Proverbs and Expressions**
 4. **Sophisticated Vocabulary and Synonyms**
 5. **Subtle Grammar, Register and Stylistic Choices**
-6. **Advanced Literary and Academic French**
+6. **Advanced Literary and Academic Portuguese**
 7. **Persuasive and Rhetorical Communication**
 8. **Complex Professional and Business Communication**
 9. **Understanding Cultural and Historical References**
