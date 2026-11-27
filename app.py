@@ -8,6 +8,7 @@ from b2_lessons import B2_LESSONS
 from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
+from curriculum_extensions import EXTENSION_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -1553,6 +1554,8 @@ elif page == "Lesson":
         render_authored_c1_lesson(st.session_state.active_lesson)
     elif st.session_state.active_lesson in C2_LESSONS:
         render_authored_c2_lesson(st.session_state.active_lesson)
+    elif st.session_state.active_lesson in EXTENSION_LESSONS:
+        render_extension_lesson(st.session_state.active_lesson)
     else:
         st.warning("This lesson is on the roadmap; its full content will be added in a later course update.")
         if st.button("Return to Learning Path"):
@@ -2076,7 +2079,7 @@ elif page == "Vocabulary":
 
 elif page == "Practice":
     page_header("PRACTICE CENTRE", "Choose a lesson to practise", "Each round contains 10 questions. Finish a round to see your score and earn XP; retry for a newly shuffled set. Practice never blocks lesson progress.")
-    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and (item["id"] == 1 or item["id"] in A1_LESSONS or item["id"] in A2_LESSONS or item["id"] in B1_LESSONS or item["id"] in B2_LESSONS or item["id"] in C1_LESSONS or item["id"] in C2_LESSONS)]
+    available_practice = [item for item in ALL_LESSONS if lesson_is_unlocked(item["id"]) and get_lesson_content(item["id"]) is not None]
     practice_labels = [f"Lesson {item['id']} · {item['title']}" for item in available_practice]
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
