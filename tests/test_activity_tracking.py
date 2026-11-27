@@ -24,3 +24,16 @@ def test_activity_tracking_captures_sessions_progress_and_practice():
         "get_admin_activity_data",
     ):
         assert token in module
+
+
+def test_admin_dashboard_is_restricted_to_parth_and_shows_learner_metrics():
+    app = (ROOT / "app.py").read_text(encoding="utf-8")
+    assert 'st.session_state.active_user.casefold() == "parth sharma"' in app
+    assert 'page_options.append("Admin Dashboard")' in app
+    for label in (
+        "Login and logout history", "Lessons cleared", "Practice rounds",
+        "Practice accuracy", "Total recorded learning time", "Recent learning activity",
+    ):
+        assert label in app
+    assert "log_activity_event(" in app
+    assert '@st.fragment(run_every="60s")' in app
