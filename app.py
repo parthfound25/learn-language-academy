@@ -1413,7 +1413,8 @@ def render_unified_lesson(lesson_id):
     with tabs[6]:
         st.subheader("Interactive exercises")
         st.write("Check each answer immediately and read the explanation. Mistakes never block lesson completion.")
-        for index, (question, options, answer, explanation) in enumerate(exercises):
+        for index, question_data in enumerate(exercises):
+            question, options, answer, explanation = shuffled_question(question_data, f"lesson-{lesson_id}-exercise-{index}")
             selected = st.radio(question, options, index=None, key=f"unified_l{lesson_id}_exercise_{index}")
             if st.button("Check answer", key=f"unified_l{lesson_id}_check_{index}"):
                 if selected is None:
@@ -1437,30 +1438,32 @@ def render_unified_lesson(lesson_id):
         st.subheader("Lesson assessment")
         st.write(f"{len(assessment)} questions · Review the feedback after submitting. You can retry at any time.")
         assessment_key = f"unified_l{lesson_id}_assessment"
-        with st.form(f"{assessment_key}_form"):
-            for index, (question, options, answer, explanation) in enumerate(assessment):
-                st.radio(f"{index + 1}. {question}", options, index=None, key=f"{assessment_key}_{index}")
+        attempt_key = f"{assessment_key}_attempt"
+        attempt = st.session_state.get(attempt_key, 0)
+        prepared_assessment = [shuffled_question(item, f"lesson-{lesson_id}-assessment-{index}") for index, item in enumerate(assessment)]
+        with st.form(f"{assessment_key}_form_{attempt}"):
+            for index, (question, options, answer, explanation) in enumerate(prepared_assessment):
+                st.radio(f"{index + 1}. {question}", options, index=None, key=f"{assessment_key}_{attempt}_{index}")
             submitted = st.form_submit_button("Submit lesson assessment", type="primary")
         if submitted:
-            responses = [st.session_state.get(f"{assessment_key}_{index}") for index in range(len(assessment))]
+            responses = [st.session_state.get(f"{assessment_key}_{attempt}_{index}") for index in range(len(prepared_assessment))]
             if any(response is None for response in responses):
-                st.warning(f"Please answer all questions. Answered: {sum(response is not None for response in responses)}/{len(assessment)}.")
+                st.warning(f"Please answer all questions. Answered: {sum(response is not None for response in responses)}/{len(prepared_assessment)}.")
             else:
-                score = sum(1 for response, (_, options, answer, _) in zip(responses, assessment) if options.index(response) == answer)
+                score = sum(1 for response, (_, options, answer, _) in zip(responses, prepared_assessment) if options.index(response) == answer)
                 st.session_state[f"{assessment_key}_score"] = score
                 st.session_state[f"{assessment_key}_submitted"] = True
                 st.rerun()
         if st.session_state.get(f"{assessment_key}_submitted", False):
             score = st.session_state.get(f"{assessment_key}_score", 0)
-            st.metric("Assessment score", f"{score}/{len(assessment)}", f"{score / len(assessment) * 100:.0f}%")
-            for index, (question, options, answer, explanation) in enumerate(assessment):
-                response = st.session_state.get(f"{assessment_key}_{index}")
+            st.metric("Assessment score", f"{score}/{len(prepared_assessment)}", f"{score / len(prepared_assessment) * 100:.0f}%")
+            for index, (question, options, answer, explanation) in enumerate(prepared_assessment):
+                response = st.session_state.get(f"{assessment_key}_{attempt}_{index}")
                 if response != options[answer]:
                     st.markdown(f"**{index + 1}. {question}**")
                     st.caption(f"Correct answer: {options[answer]}. {explanation}")
             if st.button("Retake assessment", key=f"{assessment_key}_retake"):
-                for index in range(len(assessment)):
-                    st.session_state.pop(f"{assessment_key}_{index}", None)
+                st.session_state[attempt_key] = attempt + 1
                 st.session_state.pop(f"{assessment_key}_score", None)
                 st.session_state.pop(f"{assessment_key}_submitted", None)
                 st.rerun()
