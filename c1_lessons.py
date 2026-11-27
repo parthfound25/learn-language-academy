@@ -224,5 +224,9 @@ def _build(lesson_id):
     ]
     summary = [f"Understand and use the central concepts in « {TITLES[lesson_id]} ».","Apply the grammar patterns deliberately, paying attention to meaning, chronology and register.","Choose precise vocabulary and connectors to make complex ideas coherent.","Recognise Canadian French variation while adapting your language to the audience and situation.","Use listening, reading, speaking and writing practice to build flexible advanced communication."]
     assessment = exercises + APPLICATION
+    topic_examples = [(f"Dans le cadre de « {TITLES[lesson_id]} », le terme « {vocab[0][0]} » doit être interprété avec précision.", f"In the context of {TITLES[lesson_id]}, the term « {vocab[0][0]} » must be interpreted precisely.", "This lesson-specific example applies the chapter vocabulary in a precise sentence.")]
+    examples = topic_examples + examples
+    topic_conversation = (f"Clarifying {TITLES[lesson_id].lower()}", [("A", f"Comment interprétez-vous « {vocab[0][0]} » ?"), ("B", "Il faut tenir compte du contexte, du sens et du registre."), ("A", "La situation change-t-elle l'interprétation ?"), ("B", "Oui, le contexte permet de préciser le sens.")], f"A: How do you interpret « {vocab[0][0]} »? B: We must take context, meaning and register into account. A: Does the situation change the interpretation? B: Yes, context helps clarify the meaning.")
+    conversations = [topic_conversation] + conversations
     return {"title":TITLES[lesson_id],"goal":GOALS[lesson_id],"vocab":vocab,"vocabulary":vocab,"grammar":grammar,"expressions":EXPRESSIONS,"examples":examples,"conversations":conversations,"exercises":exercises,"speaking":speaking,"summary":summary,"assessment":assessment}
 C1_LESSONS = {lesson_id:_build(lesson_id) for lesson_id in range(61,76)}
