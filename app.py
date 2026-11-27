@@ -2334,7 +2334,11 @@ elif page == "Practice":
     selected_practice = st.selectbox("Practice lesson", practice_labels, key="practice_lesson_select")
     selected_id = available_practice[practice_labels.index(selected_practice)]["id"]
     lesson_bank = get_lesson_content(selected_id)
-    question_bank = lesson_bank["exercises"] + lesson_bank["assessment"]
+    raw_question_bank = lesson_bank["exercises"] + lesson_bank["assessment"]
+    unique_questions = {}
+    for question_data in raw_question_bank:
+        unique_questions.setdefault(question_data[0], question_data)
+    question_bank = [shuffled_question(item, f"practice-{selected_id}-{index}") for index, item in enumerate(unique_questions.values())]
     if "practice_questions" not in st.session_state or st.session_state.get("practice_lesson_active") != selected_id:
         st.session_state.practice_questions = random.sample(question_bank, 10)
         st.session_state.practice_lesson_active = selected_id
