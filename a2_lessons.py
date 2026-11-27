@@ -1527,5 +1527,4 @@ LESSON_DATA = {
 ]
 }
 }
-}
 A2_LESSONS = {lesson_id: data for lesson_id, data in LESSON_DATA.items()}
