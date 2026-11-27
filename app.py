@@ -8,7 +8,6 @@ from b2_lessons import B2_LESSONS
 from c1_lessons import C1_LESSONS
 from c2_lessons import C2_LESSONS
 from curriculum_extensions import EXTENSION_LESSONS
-from curriculum_extensions import EXTENSION_LESSONS
 
 st.set_page_config(
     page_title="Learn Language Academy by Parth",
@@ -62,8 +61,7 @@ if not st.session_state.get("active_user"):
     st.stop()
 
 # ---------------------------------------------------------------------
-# Course roadmap: preserve the exact 90 lesson titles and numbering.
-# Lesson content is added progressively, one complete lesson at a time.
+# Course roadmap: preserve original lesson IDs while presenting the integrated 107-lesson sequence.
 # ---------------------------------------------------------------------
 LEVELS = {
     "A1 – Absolute Beginner": [
