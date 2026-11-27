@@ -22,10 +22,20 @@ class ActivityTrackingTests(unittest.TestCase):
             "start_session", "heartbeat_session", "end_session",
             "save_progress_snapshot", "load_progress_snapshot",
             "practice_rounds", "practice_correct", "practice_total",
-            "get_admin_activity_data",
+            "get_admin_activity_data", "reset_learner_data", "session_is_active",
         ):
             with self.subTest(token=token):
                 self.assertIn(token, module)
+
+    def test_admin_can_reset_selected_learner_progress_and_time_in_one_click(self):
+        app = (ROOT / "app.py").read_text(encoding="utf-8")
+        module = (ROOT / "activity_tracking.py").read_text(encoding="utf-8")
+        self.assertIn("Reset {selected_learner}'s progress and time spent", app)
+        self.assertIn("reset_learner_data(selected_learner, invalidate_active_sessions=True)", app)
+        self.assertIn('"duration_seconds": 0', module)
+        self.assertIn('"completed_lessons": []', module)
+        self.assertIn('"status": "logged_out", "logout_at": now', module)
+        self.assertIn("session_is_active(st.session_state.activity_session_id)", app)
 
     def test_admin_dashboard_uses_dedicated_admin_username_and_shows_learner_metrics(self):
         app = (ROOT / "app.py").read_text(encoding="utf-8")
