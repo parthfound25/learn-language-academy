@@ -43,7 +43,7 @@ LESSON_DATA = {
 ("l'âge (m.)","age","lahzh","/laʒ/","Quel âge as-tu ?"),
 ("je viens de","I come from","zhuh vyan duh","/ʒə vjɛ̃ də/","Je viens d'Angola."),
 ("j'habite à","I live in","zhah-beet ah","/ʒa.bit a/","J'habite à Luanda."),
-("le pays","country","luh pay-ee","/lə pɛ.i/","Quel est ton pays ?"),
+("le pays","country","luh pay-ee","/lə pɛ.i/","Tu viens de quel pays ?"),
 ("la ville","city","lah veel","/la vil/","La ville est grande."),
 ("la langue","language","lah lahng","/la lɑ̃ɡ/","Quelle langue parles-tu ?"),
 ("je parle","I speak","zhuh parl","/ʒə paʁl/","Je parle anglais."),
@@ -601,7 +601,7 @@ LESSON_EXPANSIONS = {
 "grammar":[
 ("Numbers 0–16 must be learned individually","French number words from zéro through seize do not follow one fully predictable pattern, so learn them as a sequence. Practise them forward, backward and in random order. Pay attention to the nasal vowels in onze, onze-like forms and quinze; the final consonants are not always pronounced the way an English speaker expects."),
 ("Building numbers from 17 to 69","From 17 to 19, combine dix with the unit: dix-sept, dix-huit, dix-neuf. The tens are vingt, trente, quarante, cinquante and soixante. Most numbers combine tens and units with a hyphen: vingt-deux, trente-cinq, cinquante-neuf. With 21, 31, 41, 51 and 61, use et un: vingt et un."),
-("The traditional French counting pattern from 70 to 99","In standard French used in Quebec, 70 is soixante-dix (60+10), 71 is soixante et onze, 72 is soixante-douze, and 80 is quatre-vingts (four twenties). 90 is quatre-vingt-dix. In everyday Quebec speech, septante and nonante may also be encountered in some communities or contexts, but soixante-dix and quatre-vingt-dix are widely understood and safe to learn first."),
+("The traditional French counting pattern from 70 to 99","In standard French used in Quebec, 70 is soixante-dix (60+10), 71 is soixante et onze, 72 is soixante-douze, and 80 is quatre-vingts (four twenties). 90 is quatre-vingt-dix. In Quebec and France, soixante-dix and quatre-vingt-dix are the standard forms to learn. You may encounter septante and nonante in Belgium and Switzerland."),
 ("When vingt and cent take an s","Quatre-vingts takes an s when it means exactly eighty and nothing follows it: quatre-vingts. It loses the s when another number follows: quatre-vingt-deux. Cent takes an s when multiplied and not followed by another number: trois cents, but trois cent cinq. Mille is invariable in number names: deux mille."),
 ("Using numbers in age, prices, dates and time","Use avoir + number + ans for age. Use euros or dollars after a price, and use à before a clock time. Dates use cardinal numbers except for the first day of the month: le premier mai, le deux mai. In Quebec, prices are commonly expressed in dollars and cents; practise hearing numbers in realistic price contexts.")
 ],
@@ -930,7 +930,7 @@ LESSON_EXPANSIONS = {
 ],
 "conversations":[
 ("At lunchtime",[("A","Tu as faim ?"),("B","Oui, j'ai très faim. Et toi ?"),("A","J'ai soif. Tu veux de l'eau ?"),("B","Oui, merci. Nous avons aussi du pain ?"),("A","Oui, il y en a dans le sac.")],"A: Are you hungry? B: Yes, I'm very hungry. And you? A: I'm thirsty. Do you want water? B: Yes, thanks. Do we also have bread? A: Yes, there's some in the bag."),
-("Asking for help",[("A","Excusez-moi, vous avez un dictionnaire ?"),("B","Oui, j'en ai un."),("A","Merci. J'ai besoin de vérifier un mot."),("B","Pas de problème. Vous avez besoin d'autre chose ?"),("A","Non, merci beaucoup.")],"A: Excuse me, do you have a dictionary? B: Yes, I have one. A: Thank you. I need to check a word. B: No problem. Do you need anything else? A: No, thank you very much.")
+("Asking for help",[("A","Excusez-moi, vous avez un dictionnaire ?"),("B","Oui, j'ai un dictionnaire."),("A","Merci. J'ai besoin de vérifier un mot."),("B","Pas de problème. Vous avez besoin d'autre chose ?"),("A","Non, merci beaucoup.")],"A: Excuse me, do you have a dictionary? B: Yes, I have one. A: Thank you. I need to check a word. B: No problem. Do you need anything else? A: No, thank you very much.")
 ],
 "speaking":[
 "Recite avoir in all six subject forms and pay attention to the linking /z/ sounds.",
@@ -1045,7 +1045,7 @@ LESSON_EXPANSIONS = {
 "examples":[
 ("Mon père s'appelle André et ma mère s'appelle Lise.","My father's name is André and my mother's name is Lise.","Mon and ma agree with père and mère."),
 ("Mes grands-parents habitent à Québec.","My grandparents live in Quebec City.","Mes is used with a plural noun."),
-("Ma sœur a deux enfants; ce sont mes neveu et nièce.","My sister has two children; they are my nephew and niece.","Avoir introduces family; ce sont identifies a plural group."),
+("Ma sœur a deux enfants : ce sont mon neveu et ma nièce.","My sister has two children: they are my nephew and my niece.","Mon and ma agree separately with neveu and nièce."),
 ("Mon amie et son frère étudient à Montréal.","My friend and her brother study in Montreal.","Mon amie is used before a feminine vowel-starting noun."),
 ("Leurs parents sont très gentils.","Their parents are very kind.","Leurs agrees with plural parents."),
 ("Nous sommes une famille unie et nous nous aidons.","We are a close-knit family and we help one another.","Unie agrees with famille.")
@@ -1170,7 +1170,7 @@ LESSON_EXPANSIONS = {
 ("Je voudrais une soupe et de l'eau, s'il vous plaît.","I would like a soup and some water, please.","Une counts a serving; de l'eau is uncounted."),
 ("Au Québec, le dîner est souvent le repas du midi.","In Quebec, dîner is often the midday meal.","Regional meal vocabulary differs."),
 ("Nous prenons le souper à sept heures.","We have supper at seven.","Souper is common Canadian French usage."),
-("L'addition est comprise ?","Is the service charge included?","Comprise agrees with addition.")
+("Le pourboire est compris ?","Is the tip included?","Pourboire is masculine, so the adjective is compris.")
 ],
 "conversations":[
 ("Ordering at a café",[("A","Bonjour ! Vous désirez ?"),("B","Je voudrais un café et un croissant, s'il vous plaît."),("A","Sur place ou pour emporter ?"),("B","Pour emporter, merci."),("A","Voilà. Bonne journée !"),("B","Merci, bonne journée !")],"A: Hello! What would you like? B: I'd like a coffee and a croissant, please. A: For here or to go? B: To go, thank you. A: Here you are. Have a good day! B: Thank you, have a good day!"),
