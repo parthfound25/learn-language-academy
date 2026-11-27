@@ -68,8 +68,6 @@ def _make_lesson(item):
         return questions
     exercises = make_questions()
     assessment = exercises[:]
-    while len(assessment) < 20:
-        assessment.append(exercises[len(assessment) % len(exercises)])
     speaking = [
         "Read all twelve vocabulary items aloud twice. Focus on nasal vowels, French r and linking between words.",
         "Conjugate the key verbs aloud with je, tu, il/elle, nous, vous and ils/elles.",
