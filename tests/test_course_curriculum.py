@@ -134,6 +134,10 @@ class CourseCurriculumTests(unittest.TestCase):
                 self.assertIn("masc.", entries[headword][3])
                 self.assertIn("fém.", entries[headword][3])
 
+    def test_cedille_ipa_is_correct(self):
+        vocabulary = {entry[0]: entry for entry in EXTENSION_LESSONS[104]["vocabulary"]}
+        self.assertEqual(vocabulary["une cédille"][3], "/yn se.dij/")
+
     def test_extensions_include_objectives_pronunciation_and_homework(self):
         for lesson_id, lesson in EXTENSION_LESSONS.items():
             with self.subTest(lesson_id=lesson_id):
