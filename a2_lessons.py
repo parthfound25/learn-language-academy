@@ -128,6 +128,7 @@ LESSON_DATA = {
 ("What is the correct form for 'we finish'?", ["Nous finissent","Nous finissons","Nous finissez","Nous finis"], 1, "Nous finissons is the correct first-person plural form."),
 ("Which is the safest way to conjugate a new verb?", ["Guess from the English meaning","Identify its infinitive family and match the subject ending","Always add -ent","Use the same ending for every subject"], 1, "Identify the verb family first, then choose the ending for the subject.")
 ]
+},
 17: {
 "title": "Irregular Everyday Verbs",
 "goal": "Use frequent irregular French verbs in the present tense, recognise their changing stems and choose accurate forms in everyday situations.",
@@ -1524,6 +1525,7 @@ LESSON_DATA = {
 ("Choose the correct adjective agreement.", ["une maison grand","une maison grande","une maison grands","une maison grandes"], 1, "Maison is feminine singular: grande."),
 ("What is the best approach when you make a mistake?", ["Stop the lesson permanently","Review the explanation and try again","Lose a life","Skip all future lessons"], 1, "Use mistakes as feedback; the course has no hearts or lives.")
 ]
+}
 }
 }
 A2_LESSONS = {lesson_id: data for lesson_id, data in LESSON_DATA.items()}
