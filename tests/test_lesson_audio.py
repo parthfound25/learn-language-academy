@@ -1,6 +1,6 @@
 import unittest
 
-from lesson_audio import build_lesson_audio_segments
+from lesson_audio import (\n    AudioConfigurationError, build_lesson_audio_segments, _is_missing_object, _raise_storage_error,\n)
 from a1_lessons import A1_LESSONS
 from a2_lessons import A2_LESSONS
 from b1_lessons import B1_LESSONS
@@ -75,7 +75,34 @@ class LessonAudioTests(unittest.TestCase):
         self.assertNotEqual(first[0]["id"], changed[0]["id"])
         self.assertEqual(len({x["id"] for x in first}), len(first))
 
-    def test_unknown_language_is_rejected(self):
+
+    def test_supabase_http_400_for_missing_object_is_treated_as_not_generated(self):
+        class Response:
+            status_code = 400
+            text = ""
+            def json(self):
+                return {"error": "Object not found", "message": "Object not found"}
+        self.assertTrue(_is_missing_object(Response()))
+
+    def test_missing_bucket_has_actionable_setup_error(self):
+        class Response:
+            status_code = 400
+            text = ""
+            def json(self):
+                return {"error": "Bucket not found", "message": "Bucket not found"}
+            def raise_for_status(self):
+                raise AssertionError("Should raise an actionable configuration error first")
+        with self.assertRaisesRegex(AudioConfigurationError, "lesson-audio.*supabase/lesson_audio_storage.sql"):
+            _raise_storage_error(Response(), "canadian-french/lesson-1/manifest.json")
+
+    def test_unrelated_http_400_is_not_silently_treated_as_missing_audio(self):
+        class Response:
+            status_code = 400
+            text = "Invalid authentication header"
+            def json(self):
+                return {"message": "Invalid authentication header"}
+        self.assertFalse(_is_missing_object(Response()))
+\n    def test_unknown_language_is_rejected(self):
         with self.assertRaises(ValueError):
             build_lesson_audio_segments({}, 1, "Spanish")
 
