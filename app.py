@@ -821,8 +821,9 @@ def render_unified_lesson(lesson_id):
             audio_manifest = load_lesson_audio(lesson_id, language_name, st.secrets)
             if audio_manifest:
                 st.session_state[audio_state_key] = audio_manifest
-        except AudioConfigurationError:
+        except AudioConfigurationError as exc:
             audio_manifest = None
+            st.info(str(exc))
         except Exception as exc:
             st.warning("Could not load saved lesson audio: " + str(exc))
 
