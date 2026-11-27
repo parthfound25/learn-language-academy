@@ -126,5 +126,9 @@ def _build(lesson_id):
         "Review your performance for precision, coherence, interaction, cultural awareness and register. Set one specific improvement goal."
     ]
     summary=[f"Develop flexible control of « {TITLES[lesson_id]} » across real communication contexts.","Prioritise precise meaning, coherent structure and appropriate register over unnecessary complexity.","Interpret regional variation, implication and cultural context without relying on stereotypes.","Use evidence, qualification and clear reasoning in demanding discussions and writing.","C2 mastery means communicating effectively and independently when language and situations are complex or unfamiliar."]
+    topic_examples = [(f"Dans le cadre de « {TITLES[lesson_id]} », le terme « {vocab[0][0]} » doit être interprété avec précision.", f"In the context of {TITLES[lesson_id]}, the term « {vocab[0][0]} » must be interpreted precisely.", "This lesson-specific example applies the chapter vocabulary in a precise sentence.")]
+    examples = topic_examples + examples
+    topic_conversation = (f"Clarifying {TITLES[lesson_id].lower()}", [("A", f"Comment interprétez-vous « {vocab[0][0]} » ?"), ("B", "Il faut tenir compte du contexte, du sens et du registre."), ("A", "La situation change-t-elle l'interprétation ?"), ("B", "Oui, le contexte permet de préciser le sens.")], f"A: How do you interpret « {vocab[0][0]} »? B: We must take context, meaning and register into account. A: Does the situation change the interpretation? B: Yes, context helps clarify the meaning.")
+    conversations = [topic_conversation] + conversations
     return {"title":TITLES[lesson_id],"goal":GOALS[lesson_id],"vocab":vocab,"vocabulary":vocab,"grammar":grammar,"expressions":EXPRESSIONS,"examples":examples,"conversations":conversations,"exercises":exercises,"speaking":speaking,"summary":summary,"assessment":exercises+APPLICATION}
 C2_LESSONS={lesson_id:_build(lesson_id) for lesson_id in range(76,91)}
