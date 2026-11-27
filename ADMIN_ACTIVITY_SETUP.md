@@ -1,6 +1,6 @@
 # Admin learner activity monitoring
 
-The dedicated **Admin** username has access to the Admin Dashboard. The separate **Parth Sharma** account is an ordinary learner account and appears in learner activity reports like other learners. Role assignment is based on the login username, not a person's display name.
+The dedicated **Admin** username is a monitoring-only account. After sign-in it opens directly to the Admin Dashboard and has no language selection, course, lessons, practice, achievements or learner settings. The separate **Parth Sharma** account is an ordinary learner account and appears in learner activity reports like other learners. Role assignment is based on the login username, not a person's display name.
 
 ## Configure private accounts in Streamlit Secrets
 
@@ -48,7 +48,7 @@ Tracking starts after the SQL migration and Streamlit Secrets are configured. Ea
 
 ## Verification checklist
 
-- Sign in as **Admin** and confirm Admin Dashboard appears.
+- Sign in as **Admin** and confirm it opens directly to Admin Dashboard, with no language selection or learner navigation.
 - Sign in as **Parth Sharma** and confirm Admin Dashboard is absent.
 - Confirm Parth Sharma appears as a learner in Admin Dashboard.
 - Complete a lesson and submit a practice round as a learner.
