@@ -100,18 +100,22 @@ if not st.session_state.get("active_user"):
         if expected_password is not None and hmac.compare_digest(str(expected_password), login_password):
             username = login_username.strip()
             st.session_state.active_user = username
-            preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
-            if not preferred_language and username.casefold() == ADMIN_USERNAME.casefold():
-                preferred_language = "Canadian French"
-            st.session_state.selected_language = preferred_language
-            if preferred_language:
-                load_language_progress(username, preferred_language)
+            is_admin_login = username.casefold() == ADMIN_USERNAME.casefold()
+            if is_admin_login:
+                # Administrators monitor learners only; never initialise a learner course.
+                st.session_state.selected_language = ""
+                st.session_state.page = "Admin Dashboard"
             else:
-                defaults = {"xp": 0, "completed": [], "active_lesson": 1, "practice_rounds": 0, "practice_correct": 0, "practice_total": 0, "earned_achievements": []}
-                for field, default in defaults.items():
-                    st.session_state[field] = list(default) if isinstance(default, list) else default
+                preferred_language = st.session_state.get(f"learner_{username}_selected_language", "") or latest_language_for_user(username)
+                st.session_state.selected_language = preferred_language
+                if preferred_language:
+                    load_language_progress(username, preferred_language)
+                else:
+                    defaults = {"xp": 0, "completed": [], "active_lesson": 1, "practice_rounds": 0, "practice_correct": 0, "practice_total": 0, "earned_achievements": []}
+                    for field, default in defaults.items():
+                        st.session_state[field] = list(default) if isinstance(default, list) else default
+                st.session_state.page = "Home"
             clear_transient_learning_state()
-            st.session_state.page = "Home"
             st.rerun()
         else:
             st.error("Incorrect username or password.")
@@ -679,54 +683,37 @@ def mark_lesson_complete(lesson_id):
 refresh_achievements()
 
 # Sidebar
-# Language choice is the first screen after sign-in.
-if not st.session_state.selected_language:
-    st.title("🌍 Choose your learning language")
-    st.write("Choose an available course. More languages will appear as they are developed.")
-    for language, details in LANGUAGES.items():
-        left, right = st.columns([4, 1])
-        with left:
-            st.markdown(f"### {details['flag']} {language}")
-            st.caption("Available now" if details["status"] == "available" else "Coming soon")
-        with right:
-            if details["status"] == "available":
-                if st.button("Start learning", key=f"choose_{language}", type="primary"):
-                    load_language_progress(st.session_state.active_user, language)
-                    st.session_state[f"learner_{st.session_state.active_user}_selected_language"] = language
-                    clear_transient_learning_state()
-                    st.rerun()
-            else:
-                st.button("Coming soon", key=f"soon_{language}", disabled=True)
-    st.stop()
-
+is_admin_user = st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold()
 with st.sidebar:
     st.markdown("## 🍀 Learn Language Academy")
     st.caption(f"Signed in: {st.session_state.active_user}")
     if st.button("Sign out", use_container_width=True):
         username = st.session_state.active_user
         end_session(st.session_state.get("activity_session_id"), st.session_state.get("activity_session_started_at"))
-        save_language_progress(username)
-        for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
-            st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
+        if not is_admin_user:
+            save_language_progress(username)
+            for field in ("xp", "completed", "active_lesson", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language"):
+                st.session_state[f"learner_{username}_{field}"] = st.session_state.get(field, [] if field in ("completed", "earned_achievements") else 0)
         clear_transient_learning_state()
         st.session_state.pop("active_user", None)
         for key in ("xp", "completed", "active_lesson", "page", "practice_rounds", "practice_correct", "practice_total", "earned_achievements", "selected_language", "activity_session_id", "activity_session_started_at", "activity_session_initialized"):
             st.session_state.pop(key, None)
         st.rerun()
     st.markdown("---")
-    page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
-    if st.session_state.active_user.casefold() == ADMIN_USERNAME.casefold():
-        page_options.append("Admin Dashboard")
-    selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
-    if selected_page != st.session_state.page:
-        # Streamlit reruns automatically when the radio value changes. Update
-        # the route in that same run instead of forcing a second full rerun.
-        st.session_state.page = selected_page
-    st.markdown("---")
-    st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
-    st.progress(min(len(set(st.session_state.completed).intersection(COURSE_INDEX)) / COURSE_TOTAL, 1.0))
-    st.caption(f"{len(set(st.session_state.completed).intersection(COURSE_INDEX))} of {COURSE_TOTAL} lessons completed")
-    st.markdown(f"**⭐ {st.session_state.xp} XP**")
+    if is_admin_user:
+        # The Admin account has one destination and no learner navigation or metrics.
+        st.radio("ADMINISTRATION", ["Admin Dashboard"], index=0, key="admin_only_navigation", disabled=True)
+    else:
+        page_options = ["Home", "Learning Path", "Lesson", "Vocabulary", "Practice", "Achievements", "Settings"]
+        selected_page = st.radio("YOUR LEARNING SPACE", page_options, index=page_options.index(st.session_state.page) if st.session_state.page in page_options else 0)
+        if selected_page != st.session_state.page:
+            # Streamlit reruns automatically when the radio value changes.
+            st.session_state.page = selected_page
+        st.markdown("---")
+        st.markdown(f"**{LANGUAGES[st.session_state.selected_language]['flag']} {st.session_state.selected_language} · English explanations**")
+        st.progress(min(len(set(st.session_state.completed).intersection(COURSE_INDEX)) / COURSE_TOTAL, 1.0))
+        st.caption(f"{len(set(st.session_state.completed).intersection(COURSE_INDEX))} of {COURSE_TOTAL} lessons completed")
+        st.markdown(f"**⭐ {st.session_state.xp} XP**")
 
 def page_header(kicker, title, subtitle=None):
     st.markdown(f'<div class="eyebrow">{kicker}</div>', unsafe_allow_html=True)
@@ -894,7 +881,9 @@ def render_unified_lesson(lesson_id):
 # ---------------------------------------------------------------------
 # Pages
 # ---------------------------------------------------------------------
-page = st.session_state.page
+page = "Admin Dashboard" if is_admin_user else st.session_state.page
+if is_admin_user:
+    st.session_state.page = "Admin Dashboard"
 
 if page == "Admin Dashboard":
     page_header("ADMINISTRATION", "Learner activity dashboard", "Private administrator overview. Learners can only see their own learning space.")
