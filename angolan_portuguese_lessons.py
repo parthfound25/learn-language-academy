@@ -157,7 +157,7 @@ def _lesson_vocab(title, lesson_id):
     pool = _pool_for(title)
     # Rotate the selected pool by chapter so related chapters can revisit vocabulary
     # through a different subset without repeating a headword within one lesson.
-    offset = (lesson_id * 3) % max(1, len(pool) - 6)
+    offset = 0 if lesson_id == 1 else (lesson_id * 3) % max(1, len(pool) - 6)
     selected = pool[offset:offset + 7]
     if len(selected) < 7:
         selected += VOCAB_POOLS["general"][:7-len(selected)]
@@ -182,6 +182,40 @@ def _build_lesson(lesson_id, topic):
         ("Não percebi. Pode explicar?","I did not understand. Could you explain?","Useful for clarification."),
         ("Está bem. Obrigado / obrigada.","All right. Thank you.","Choose obrigado or obrigada according to the speaker's grammatical gender.")
     ]
+    if lesson_id == 1:
+        grammar = [
+            ("The Portuguese alphabet","Portuguese uses 26 letters: A–Z. K, W and Y are included in the modern alphabet, but appear mainly in foreign names, abbreviations and borrowed words. The names of letters are different from English; for example, H is agá, J is jota and W is dáblio. Practise spelling names and place names aloud."),
+            ("Vowels, nasal vowels and common combinations","The vowel letters are A, E, I, O and U; Y appears mainly in borrowed words and names. Portuguese also has nasal vowels, often marked by tilde (ã, õ) or represented in combinations such as am, an, em, en, im, om and um depending on the word. The diphthong ão is especially common. Learn the sound in whole words and listen to Angolan speakers; vowel quality varies across regions and speakers."),
+            ("Stress and written accent marks","Word stress can distinguish words and is not always predictable from English spelling. Acute and circumflex accents mark vowel quality and/or stress; the tilde marks nasalisation in words such as manhã and pão; the grave accent appears in contractions such as à. The cedilla in ç marks an /s/ sound before a, o or u, as in açúcar. Keep all written accents when spelling."),
+            ("Digraphs and consonant sounds","Common letter pairs include ch, lh and nh. In many Portuguese words, nh represents a palatal nasal sound, as in manhã; lh represents a palatal lateral, as in filho; ch is commonly /ʃ/. The pronunciation of r and final s varies among Portuguese varieties, including within Angola. Do not assume one accent represents every Angolan speaker."),
+            ("Syllables and connected speech","Divide unfamiliar words into syllables, identify the stressed syllable, then say the word at a natural pace. In connected speech, neighbouring vowels and consonants may influence each other. Start slowly for clarity, then practise the whole phrase without inserting pauses between every word.")
+        ]
+        examples = [
+            ("O alfabeto português tem vinte e seis letras.", "The Portuguese alphabet has twenty-six letters.", "Vinte e seis is the number 26."),
+            ("A palavra manhã tem um til.", "The word manhã has a tilde.", "The tilde marks the nasal vowel."),
+            ("Filho escreve-se com lh.", "Filho is written with lh.", "LH is a common Portuguese digraph."),
+            ("Como se pronuncia esta palavra?", "How is this word pronounced?", "Use this question when checking pronunciation."),
+            ("Pode soletrar o seu nome, por favor?", "Can you spell your name, please?", "Soletrar means to spell out letter by letter.")
+        ]
+        expressions = [
+            ("Como se escreve ...?","How is ... spelled?","Ask someone to spell a word."),
+            ("Como se pronuncia ...?","How is ... pronounced?","Ask about the pronunciation of a word."),
+            ("Pode soletrar, por favor?","Can you spell it, please?","A polite spelling request."),
+            ("Fale mais devagar, por favor.","Please speak more slowly.","Ask for a slower repetition.")
+        ]
+        conversations = [
+            ("Spelling a name", [("A","Como se escreve o seu nome?"),("B","Escreve-se P-A-R-T-H."),("A","Pode repetir mais devagar?"),("B","Claro. P-A-R-T-H.")], "A: How do you spell your name? B: It is spelled P-A-R-T-H. A: Can you repeat more slowly? B: Of course. P-A-R-T-H."),
+            ("Checking a sound", [("A","Como se pronuncia esta palavra?"),("B","Pronuncia-se manhã."),("A","O til indica um som nasal?"),("B","Sim. Ouça a palavra e repita.")], "A: How is this word pronounced? B: It is pronounced manhã. A: Does the tilde indicate a nasal sound? B: Yes. Listen to the word and repeat.")
+        ]
+    questions = QUESTION_TEMPLATES[key]
+    if lesson_id == 1:
+        questions = [
+            ("Which set contains the five main Portuguese vowel letters?", ["A, E, I, O, U", "B, C, D, F, G", "J, K, L, M, N", "P, Q, R, S, T"], 0, "The five main vowel letters are A, E, I, O and U."),
+            ("Which letters are mainly used in foreign names and borrowed words?", ["A, E and I", "B, C and D", "K, W and Y", "M, N and O"], 2, "K, W and Y are part of the modern alphabet and appear mainly in names and borrowed forms."),
+            ("What does the tilde mark in manhã?", ["A plural ending", "Nasalisation", "A silent consonant", "A question"], 1, "The tilde marks nasalisation in the vowel."),
+            ("Which letter pair appears in filho?", ["nh", "ch", "lh", "rr"], 2, "Filho is written with the digraph lh."),
+            ("What is the best way to learn a new word's stress?", ["Guess from English spelling", "Memorise the spelling only", "Ignore the stressed syllable", "Listen to the word and practise its stressed syllable"], 3, "Portuguese stress is important; learn it with the whole word.")
+        ]
     conversations = [
         ("A short everyday exchange", [("A","Bom dia! Como está?"),("B","Estou bem, obrigado/a. E você?"),("A","Também estou bem. Está a aprender português?"),("B","Sim, estou a aprender português de Angola.")], "A: Good morning! How are you? B: I am well, thank you. And you? A: I am well too. Are you learning Portuguese? B: Yes, I am learning Angolan Portuguese."),
         ("Asking for help", [("A","Desculpe, pode ajudar-me?"),("B","Claro. O que precisa?"),("A","Como se diz isto em português?"),("B","Diz-se ..."),("A","Muito obrigado/a!"),("B","De nada.")], "A: Excuse me, can you help me? B: Of course. What do you need? A: How do you say this in Portuguese? B: It is said ... A: Thank you very much! B: You're welcome.")
