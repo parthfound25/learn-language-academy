@@ -103,6 +103,7 @@ GRAMMAR = {
 ("Literary and specialised language","Interpret figurative language, intertextual references, irony and specialised terminology. Preserve meaning and register when paraphrasing or translating."),
 ("Mediation and synthesis","Combine information from several sources, attribute claims, resolve apparent contradictions and reformulate complex material for a different audience."),
 ("Capstone communication","Demonstrate flexible, accurate communication across formal, informal, academic and professional settings. C2 is advanced proficiency, not a requirement to imitate a native accent.")
+]
 }
 
 QUESTION_TEMPLATES = {
