@@ -56,6 +56,18 @@ class CourseCurriculumTests(unittest.TestCase):
                 self.assertGreaterEqual(len(lesson["speaking"]), 2)
                 self.assertGreaterEqual(len(lesson["summary"]), 2)
 
+    def test_multiple_choice_options_are_four_distinct_choices(self):
+        all_lessons = {}
+        for bank in BANKS:
+            all_lessons.update(bank)
+        all_lessons.update(EXTENSION_LESSONS)
+        for lesson_id, lesson in all_lessons.items():
+            for section in ("exercises", "assessment"):
+                for question, options, answer, explanation in lesson[section]:
+                    with self.subTest(lesson_id=lesson_id, section=section, question=question):
+                        self.assertEqual(len(options), 4)
+                        self.assertEqual(len(options), len(set(options)))
+
     def test_all_question_answer_indexes_are_valid(self):
         all_lessons = {}
         for bank in BANKS:
