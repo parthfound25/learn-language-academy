@@ -45,6 +45,8 @@ if not st.session_state.get("active_user"):
             st.session_state.practice_total = st.session_state.get(f"learner_{username}_practice_total", 0)
             st.session_state.earned_achievements = st.session_state.get(f"learner_{username}_earned_achievements", [])
             st.session_state.selected_language = st.session_state.get(f"learner_{username}_selected_language", "")
+            for transient_key in ("practice_questions", "practice_submitted", "practice_round_score", "practice_lesson_active"):
+                st.session_state.pop(transient_key, None)
             st.session_state.page = "Home"
             st.rerun()
         else:
@@ -502,6 +504,9 @@ def mark_lesson_complete(lesson_id):
         st.session_state.xp += 25
         refresh_achievements()
 
+# Reconcile milestones for returning users.
+refresh_achievements()
+
 # Sidebar
 # Language choice is the first screen after sign-in.
 if not st.session_state.selected_language:
@@ -899,9 +904,14 @@ elif page == "Settings":
             st.success("Test account progress reset for this session.")
             st.rerun()
 
-# Persist this learner's progress within the current Streamlit session.
+# Session-level per-user cache only. Official launch will move this to durable database storage.
 if st.session_state.get("active_user"):
     current_username = st.session_state.active_user
     st.session_state[f"learner_{current_username}_xp"] = st.session_state.get("xp", 0)
-    st.session_state[f"learner_{current_username}_completed"] = st.session_state.get("completed", [])
+    st.session_state[f"learner_{current_username}_completed"] = list(st.session_state.get("completed", []))
     st.session_state[f"learner_{current_username}_active_lesson"] = st.session_state.get("active_lesson", 1)
+    st.session_state[f"learner_{current_username}_practice_rounds"] = st.session_state.get("practice_rounds", 0)
+    st.session_state[f"learner_{current_username}_practice_correct"] = st.session_state.get("practice_correct", 0)
+    st.session_state[f"learner_{current_username}_practice_total"] = st.session_state.get("practice_total", 0)
+    st.session_state[f"learner_{current_username}_earned_achievements"] = list(st.session_state.get("earned_achievements", []))
+    st.session_state[f"learner_{current_username}_selected_language"] = st.session_state.get("selected_language", "")
