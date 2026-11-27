@@ -42,10 +42,10 @@ class AngolanPortugueseA1EditorialTests(unittest.TestCase):
                 self.assertTrue(explanation)
 
     def test_angolan_context_and_portuguese_specific_grammar(self):
-        lesson_5 = PORTUGUESE_LESSONS[5]
-        vocab = {entry[0] for entry in lesson_5["vocabulary"]}
+        lesson_4 = PORTUGUESE_LESSONS[4]
+        vocab = {entry[0] for entry in lesson_4["vocabulary"]}
         self.assertIn("o preço", vocab)
-        self.assertTrue(any("kwanza" in example[0].lower() for example in lesson_5["examples"]))
+        self.assertTrue(any("kwanza" in example[0].lower() for example in lesson_4["examples"]))
         lesson_3 = PORTUGUESE_LESSONS[3]
         grammar_text = " ".join(text for _, text in lesson_3["grammar"]).lower()
         self.assertIn("ter", grammar_text)
