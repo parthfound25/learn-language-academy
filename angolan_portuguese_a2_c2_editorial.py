@@ -127,6 +127,16 @@ SCENARIOS = {
 "C2": ["mediating a complex public discussion","editing an executive statement","delivering a nuanced debate contribution","synthesising conflicting reports","reviewing a literary or cultural argument","adapting a speech for distinct audiences","evaluating rhetorical choices in broadcast media"]
 }
 
+# Portuguese scenario labels are used inside Portuguese example sentences. Keep the
+# English labels above for objectives, speaking prompts and homework instructions.
+SCENARIO_PT = {
+"A2": ["as compras no mercado em Luanda","a vida em casa com a família","pedir indicações no bairro","fazer um pedido num restaurante","planear uma viagem entre províncias","uma consulta num centro de saúde","comprar roupa e confirmar os tamanhos","organizar um horário de estudo"],
+"B1": ["contar uma viagem a Benguela","explicar uma mudança no trabalho","falar sobre estudos e planos profissionais","descrever hábitos da infância","resolver um mal-entendido com um colega","dar uma opinião sobre um projecto comunitário","planear uma viagem com amigos"],
+"B2": ["apresentar uma proposta aos colegas","debater um anúncio de serviço público","comparar duas opções de política pública","relatar o que um participante disse","avaliar uma notícia","negociar o prazo de um projecto","explicar um processo técnico"],
+"C1": ["redigir um relatório analítico","moderar uma reunião profissional","avaliar uma entrevista radiofónica","sintetizar fontes académicas","apresentar resultados de uma investigação comunitária","analisar um excerto literário","comparar o uso da língua em diferentes contextos"],
+"C2": ["mediar um debate público complexo","rever uma declaração executiva","apresentar um argumento num debate","sintetizar relatórios com conclusões divergentes","analisar um argumento literário ou cultural","adaptar um discurso a públicos diferentes","avaliar escolhas retóricas nos meios de comunicação"]
+}
+
 def _make_question(prefix, template, index):
     prompt, options, answer, explanation = template
     return (f"{prefix} — {prompt}", list(options), answer, explanation)
@@ -144,13 +154,14 @@ def apply_editorial(lessons, topics, vocab_pools, pool_for):
             topic["title"] = title
             lesson["title"] = title
             scenario = SCENARIOS[level][(lesson_id + pos) % len(SCENARIOS[level])]
+            scenario_pt = SCENARIO_PT[level][(lesson_id + pos) % len(SCENARIO_PT[level])]
             pool = pool_for(title)
             offset = (lesson_id * 2) % max(1, len(pool) - 6)
             selected = pool[offset:offset + 8]
             if len(selected) < 8:
                 selected += vocab_pools["general"][:8-len(selected)]
             lesson["vocabulary"] = [
-                (pt, en, hint, "Angolan Portuguese context where applicable", f"Hoje usamos {pt} {scenario}.")
+                (pt, en, hint, "Angolan Portuguese context where applicable", f"A expressão «{pt}» pode ser útil em contextos como {scenario_pt}.")
                 for pt, en, hint in selected
             ]
             lesson["goal"] = f"Use Angolan Portuguese confidently for {title.lower()}, with accurate grammar and an appropriate register."
@@ -175,7 +186,7 @@ def apply_editorial(lessons, topics, vocab_pools, pool_for):
                 ("É importante ter em conta que ...", "It is important to bear in mind that ...", "Introduce a qualification or relevant limitation.")
             ]
             lesson["examples"] = [
-                (f"Hoje vamos analisar {core[0]} {scenario}.", f"Today we are going to analyse {core[0]} {scenario}.", "The sentence places the chapter vocabulary in a realistic Angolan setting."),
+                (f"Em contextos como {scenario_pt}, a expressão «{core[0]}» pode ser útil.", f"In contexts such as {scenario}, the expression «{core[0]}» can be useful.", "The Portuguese example and its English translation keep the scenario in the same language as the sentence."),
                 (f"É necessário compreender o contexto antes de tirar uma conclusão.", "It is necessary to understand the context before drawing a conclusion.", "An impersonal evaluation followed by an infinitive."),
                 (f"Embora existam diferenças regionais, a comunicação pode ser clara e respeitosa.", "Although regional differences exist, communication can be clear and respectful.", "Embora introduces a concessive clause."),
                 (f"A proposta foi discutida e as recomendações foram registadas.", "The proposal was discussed and the recommendations were recorded.", "A passive construction foregrounds the proposal and recommendations."),
