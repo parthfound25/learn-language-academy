@@ -775,18 +775,55 @@ elif page == "Lesson":
             st.rerun()
 
 elif page == "Vocabulary":
-    page_header("YOUR WORD BANK", "French foundations & vocabulary", "A reference library for the building blocks of French, alongside the vocabulary from your lessons.")
+    page_header("YOUR WORD BANK", "French foundations & vocabulary", "Your reference library grows as new lesson vocabulary is unlocked. Review the foundations any time, then explore the words and topics added by each lesson.")
+
+    def french_number_under_100(number):
+        units = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
+                 "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"]
+        if number <= 16:
+            return units[number]
+        if number < 20:
+            return "dix-" + units[number - 10]
+        tens = {20: "vingt", 30: "trente", 40: "quarante", 50: "cinquante", 60: "soixante"}
+        if number in tens:
+            return tens[number]
+        if number < 70:
+            base, remainder = divmod(number, 10)
+            word = tens[base * 10]
+            return word + (" et un" if remainder == 1 else ("-" + units[remainder] if remainder else ""))
+        if number < 80:
+            remainder = number - 60
+            return "soixante et onze" if number == 71 else "soixante-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
+        if number == 80:
+            return "quatre-vingts"
+        remainder = number - 80
+        return "quatre-vingt-" + (units[remainder] if remainder <= 16 else "dix-" + units[remainder - 10])
+
+    number_entries = [
+        (french_number_under_100(n), str(n), "", "", f"{n} = {french_number_under_100(n)}")
+        for n in range(0, 101)
+    ]
+    larger_number_values = [
+        (100, "cent"), (200, "deux cents"), (300, "trois cents"), (400, "quatre cents"),
+        (500, "cinq cents"), (600, "six cents"), (700, "sept cents"), (800, "huit cents"),
+        (900, "neuf cents"), (1000, "mille"), (2000, "deux mille"), (3000, "trois mille"),
+        (4000, "quatre mille"), (5000, "cinq mille"), (6000, "six mille"),
+        (7000, "sept mille"), (8000, "huit mille"), (9000, "neuf mille"),
+        (10000, "dix mille"), (100000, "cent mille"), (1000000, "un million"),
+    ]
+    larger_number_entries = [
+        (word, f"{value:,}".replace(",", " "), "", "", f"{value:,} = {word}")
+        for value, word in larger_number_values
+    ]
+
     vocabulary_groups = {
         "Alphabet & letter names": [(a, b, "", "", f"Letter {a} is pronounced approximately {b}.") for a, b in [
             ("A","ah"),("B","bay"),("C","say"),("D","day"),("E","uh"),("F","eff"),("G","zhay"),("H","ahsh"),
             ("I","ee"),("J","zhee"),("K","kah"),("L","ell"),("M","emm"),("N","enn"),("O","oh"),("P","pay"),
             ("Q","kü"),("R","air"),("S","ess"),("T","tay"),("U","ü"),("V","vay"),("W","doo-bluh-vay"),
             ("X","eeks"),("Y","ee-grek"),("Z","zed")]],
-        "Numbers 0–20": [(fr, en, "", "", f"{fr} = {en}") for fr, en in [
-            ("zéro","zero"),("un","one"),("deux","two"),("trois","three"),("quatre","four"),("cinq","five"),
-            ("six","six"),("sept","seven"),("huit","eight"),("neuf","nine"),("dix","ten"),("onze","eleven"),
-            ("douze","twelve"),("treize","thirteen"),("quatorze","fourteen"),("quinze","fifteen"),
-            ("seize","sixteen"),("dix-sept","seventeen"),("dix-huit","eighteen"),("dix-neuf","nineteen"),("vingt","twenty")]],
+        "Numbers 0–100": number_entries,
+        "Hundreds & thousands": larger_number_entries,
         "Days of the week": [(fr, en, "", "", f"{fr} means {en}.") for fr, en in [
             ("lundi","Monday"),("mardi","Tuesday"),("mercredi","Wednesday"),("jeudi","Thursday"),
             ("vendredi","Friday"),("samedi","Saturday"),("dimanche","Sunday")]],
@@ -800,15 +837,25 @@ elif page == "Vocabulary":
             ("rouge","red"),("bleu / bleue","blue"),("vert / verte","green"),("jaune","yellow"),
             ("noir / noire","black"),("blanc / blanche","white"),("gris / grise","grey"),("rose","pink"),
             ("orange","orange"),("violet / violette","purple")]],
-        "Lesson 1 vocabulary": LESSON_1["vocabulary"],
     }
+
+    # Add lesson-specific collections here as each full lesson is authored.
+    # A collection appears automatically once that lesson is unlocked.
+    lesson_vocabulary_collections = {
+        1: {"name": "Lesson 1 · Alphabet & pronunciation", "entries": LESSON_1["vocabulary"]},
+        4: {"name": "Lesson 4 · Numbers & counting", "entries": number_entries + larger_number_entries},
+    }
+    for lesson_id, collection in lesson_vocabulary_collections.items():
+        if lesson_is_unlocked(lesson_id):
+            vocabulary_groups[collection["name"]] = collection["entries"]
+
     chosen_group = st.selectbox("Choose a vocabulary collection", list(vocabulary_groups.keys()))
     search_word = st.text_input("Search this collection", placeholder="Search a French word or English meaning")
     entries = vocabulary_groups[chosen_group]
     if search_word.strip():
         needle = search_word.strip().lower()
         entries = [entry for entry in entries if needle in " ".join(str(x) for x in entry).lower()]
-    st.caption(f"{len(entries)} entries")
+    st.caption(f"{len(entries)} entries · Collections from unlocked lessons appear automatically")
     for fr, meaning, pron, ipa, example in entries:
         with st.container(border=True):
             left, right = st.columns([1, 2])
