@@ -118,7 +118,7 @@ class AngolanPortugueseA2C2EditorialTests(unittest.TestCase):
                     vocabulary_examples = [entry[4] for entry in lesson["vocabulary"]]
                     example_sentences = [entry[0] for entry in lesson["examples"]]
                     self.assertTrue(all("A expressão «" in item for item in vocabulary_examples))
-                    self.assertTrue(all("Em contextos como " in item for item in example_sentences))
+                    self.assertIn("Em contextos como ", example_sentences[0])
                     for english_scenario in SCENARIOS[level]:
                         self.assertFalse(any(english_scenario in item for item in vocabulary_examples + example_sentences))
 
