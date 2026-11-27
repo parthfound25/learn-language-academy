@@ -1323,6 +1323,107 @@ def render_authored_c2_lesson(lesson_id):
 
 
 
+def render_extension_lesson(lesson_id):
+    lesson = EXTENSION_LESSONS[lesson_id]
+    number = course_number(lesson_id)
+    st.markdown(f'<div class="eyebrow">{lesson["level"].split("–")[0].strip()} · COURSE EXTENSION · LESSON {number} OF {COURSE_TOTAL}</div>', unsafe_allow_html=True)
+    st.title(lesson["title"])
+    st.markdown(f"**Goal:** {lesson['goal']}")
+    st.caption("Canadian French focus · English explanations · Suggested study time: 40–55 minutes")
+    st.progress(number / COURSE_TOTAL, text=f"Course progress · Lesson {number} of {COURSE_TOTAL}")
+    tabs = st.tabs(["1 · Objectives", "2 · Vocabulary", "3 · Grammar", "4 · Expressions & examples", "5 · Conversations", "6 · Pronunciation", "7 · Exercises", "8 · Speaking & review", "9 · Homework & assessment"])
+    with tabs[0]:
+        st.subheader("By the end of this lesson, you can…")
+        for objective in lesson["objectives"]:
+            st.markdown(f"- {objective}")
+        st.info("Study the explanations first, then practise each objective in your own French sentences.")
+    with tabs[1]:
+        st.subheader("Vocabulary")
+        for french, meaning, pronunciation, ipa, example in lesson["vocabulary"]:
+            with st.container(border=True):
+                left, right = st.columns([1, 2])
+                with left:
+                    st.markdown(f"### {french}")
+                    st.caption(f"Say it: {pronunciation}")
+                    st.caption(f"IPA: {ipa}")
+                with right:
+                    st.write(meaning)
+                    st.markdown(f"*{example}*")
+    with tabs[2]:
+        st.subheader("Grammar and usage")
+        for title, explanation in lesson["grammar"]:
+            with st.expander(title, expanded=True):
+                st.write(explanation)
+    with tabs[3]:
+        st.subheader("Useful expressions")
+        for phrase, meaning, context in lesson["expressions"]:
+            st.markdown(f"**{phrase}** — {meaning}")
+            st.caption(context)
+        st.subheader("Examples in context")
+        for french, english, explanation in lesson["examples"]:
+            with st.container(border=True):
+                st.markdown(f"**{french}**")
+                st.write(english)
+                st.caption(explanation)
+    with tabs[4]:
+        st.subheader("Practical conversations")
+        for title, dialogue, translation in lesson["conversations"]:
+            st.markdown(f"**{title}**")
+            for speaker, line in dialogue:
+                st.markdown(f"- **{speaker}:** {line}")
+            with st.expander("Show English translation"):
+                st.write(translation)
+    with tabs[5]:
+        st.subheader("Pronunciation guidance")
+        for instruction in lesson["pronunciation"]:
+            st.markdown(f"- {instruction}")
+        st.caption("IPA is a reference system; English-style pronunciation hints are approximations, not exact substitutes.")
+    with tabs[6]:
+        st.subheader("Exercises")
+        st.write("Answer each question and check the explanation. Mistakes never block progress.")
+        for index, (question, options, answer, explanation) in enumerate(lesson["exercises"]):
+            selected = st.radio(question, options, index=None, key=f"ext_l{lesson_id}_exercise_{index}")
+            if st.button("Check", key=f"ext_l{lesson_id}_check_{index}"):
+                if selected is None:
+                    st.warning("Choose an answer first.")
+                elif options.index(selected) == answer:
+                    st.success("Correct! " + explanation)
+                else:
+                    st.error("Not quite. " + explanation)
+    with tabs[7]:
+        st.subheader("Speaking and review")
+        for index, instruction in enumerate(lesson["speaking"], start=1):
+            st.markdown(f"{index}. {instruction}")
+        st.subheader("Lesson summary")
+        for item in lesson["summary"]:
+            st.markdown(f"- {item}")
+    with tabs[8]:
+        st.subheader("Independent homework")
+        for index, task in enumerate(lesson["homework"], start=1):
+            st.markdown(f"{index}. {task}")
+        st.subheader("Lesson assessment")
+        for index, (question, options, answer, explanation) in enumerate(lesson["assessment"]):
+            selected = st.radio(question, options, index=None, key=f"ext_l{lesson_id}_assessment_{index}")
+            if st.button("Check assessment answer", key=f"ext_l{lesson_id}_assessment_check_{index}"):
+                if selected is None:
+                    st.warning("Choose an answer first.")
+                elif options.index(selected) == answer:
+                    st.success("Correct! " + explanation)
+                else:
+                    st.error("Review this point: " + explanation)
+    st.markdown("---")
+    st.subheader("Complete this lesson")
+    if lesson_id in st.session_state.completed:
+        st.success("This lesson is already marked complete.")
+    elif st.button(f"Mark Lesson {number} complete · Earn 25 XP", type="primary", key=f"complete_extension_lesson_{lesson_id}"):
+        mark_lesson_complete(lesson_id)
+        st.success("Lesson completed! You earned 25 XP. Your next course lesson is now available.")
+        st.session_state.page = "Learning Path"
+        st.rerun()
+    if st.button("Back to Learning Path", key=f"back_extension_lesson_{lesson_id}"):
+        st.session_state.page = "Learning Path"
+        st.rerun()
+
 def render_lesson_one():
     lesson = ALL_LESSONS[0]
     st.markdown('<div class="eyebrow">A1 · ABSOLUTE BEGINNER · LESSON 1 OF 90</div>', unsafe_allow_html=True)
